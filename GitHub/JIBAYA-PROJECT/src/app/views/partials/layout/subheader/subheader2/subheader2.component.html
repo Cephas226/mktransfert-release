@@ -1,0 +1,401 @@
+<!-- begin:: Content Head -->
+<div class="kt-subheader kt-grid__item" [hidden]="subheaderService.disabled$ | async" id="kt_subheader" >
+	<div class="kt-subheader__main">
+ 
+			<div *ngIf="router.url === '/demo2/kt-company-list'">
+	
+				<div class="example-button-row-nav">
+					<button mat-button color="primary" (click)="dashboard()">DASHBOARD
+							<i class="material-icons">
+									chevron_right
+									</i>
+					</button>
+			<div class="kt-space-20"></div>
+			<div class="kt-space-20"></div>
+			<kt-headeraction></kt-headeraction>
+			</div>
+		</div>
+		<div>
+	
+			<div class="example-button-row-nav">
+				<button mat-button color="primary" (click)="dashboard()">DASHBOARD
+						<i class="material-icons">
+								chevron_right
+								</i>
+				</button>
+				<button mat-button>Plan comptable
+						<i class="material-icons">
+								chevron_right
+								</i>
+				</button>
+		<div class="kt-space-20"></div>
+		<div class="kt-space-20"></div>
+		<kt-headeraction></kt-headeraction>
+		</div>
+	</div>
+<!-- <div *ngIf="router.url === '/demo2/kt-tableauliasse'">
+	
+	<div class="example-button-row-nav">
+		<button mat-button color="primary" (click)="dashboard()">DASHBOARD
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button (click)="modules()">MODULES
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		 <button mat-button (click)="liasse()">EXERCICES
+				<i class="material-icons">
+						chevron_right
+						</i>
+		 </button>
+		<button mat-button (click)="liasssechoice()">JIBAYA LIASSE
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button (click)="tabexercices()">TABLEAU LIASSE</button><br>
+	 
+	 
+ 
+</div>
+ 
+
+<div class="kt-space-20"></div>
+<div class="kt-space-20"></div>
+
+</div> -->
+<div *ngIf="router.url === '/demo2/kt-dotation'">
+	
+	<div class="example-button-row-nav">
+		<button mat-button color="primary" (click)="dashboard()">DASHBOARD
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button (click)="modules()">MODULES
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button (click)="liasse()">EXERCICES
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button (click)="liasssechoice()">JIBAYA LIASSE
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button (click)="dotation()">DOTATION</button>
+   </div>
+
+
+<div class="kt-space-20"></div>
+<div class="kt-space-20"></div>
+
+</div>
+
+<div *ngIf="router.url === '/demo2/kt-balance'">
+		<div class="example-button-row-nav">
+				<button mat-button color="primary" (click)="dashboard()">DASHBOARD
+						<i class="material-icons">
+								chevron_right
+								</i>
+				</button>
+				<button mat-button (click)="modules()">MODULES
+						<i class="material-icons">
+								chevron_right
+								</i>
+				</button>
+				<button mat-button (click)="liasse()">EXERCICES
+						<i class="material-icons">
+								chevron_right
+								</i>
+				</button>
+				<button mat-button (click)="liasssechoice()">JIBAYA LIASSE
+						<i class="material-icons">
+								chevron_right
+								</i>
+				</button>
+				<button mat-button (click)="balance()">BALANCE</button>
+		</div>
+		<div class="kt-space-20"></div>
+		<div class="kt-space-20"></div>
+</div>
+
+<div *ngIf="router.url === '/demo2/kt-liassechoicepage'">
+	<div class="example-button-row-nav">
+			<button mat-button color="primary" (click)="dashboard()">DASHBOARD
+					<i class="material-icons">
+							chevron_right
+							</i>
+			</button>
+			<button mat-button (click)="modules()">MODULES
+					<i class="material-icons">
+							chevron_right
+							</i>
+			</button>
+			<button mat-button (click)="liasse()">EXERCICES
+					<i class="material-icons">
+							chevron_right
+							</i>
+			</button>
+			<button mat-button (click)="liasssechoice()">JIBAYA LIASSE</button>
+	</div>
+	<div class="kt-space-20"></div>
+	<div class="kt-space-20"></div>
+</div>
+
+<div *ngIf="router.url === '/demo2/dashboard'">
+	<div class="example-button-row-nav">
+			<button mat-button color="primary" (click)="dashboard()">DASHBOARD</button>
+	</div>
+	<div class="kt-space-20"></div>
+	<div class="kt-space-20"></div>
+	<kt-headeraction></kt-headeraction>
+</div>
+
+<div *ngIf="true" >
+	<div class="example-button-row-nav">
+		<button mat-button color="primary" (click)="dashboard()">DASHBOARD
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button>MODULES
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+	</div>
+	<div class="kt-space-20"></div>
+	<div class="kt-space-20"></div>
+</div>
+
+<div *ngIf="router.url === '/demo2/kt-jibayaliasse'" >
+	<div class="kt-space-20"></div>
+	<div class="example-button-row-nav">
+		<button mat-button color="primary" (click)="dashboard()">DASHBOARD
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button (click)="modules()">MODULES
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button (click)="liasse()">EXERCICES
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+	</div>
+ 
+	<kt-headeraction></kt-headeraction>
+</div>
+<div *ngIf="router.url === '/demo2/kt-exercices'" >
+	<div class="kt-space-20"></div>
+	<div class="example-button-row-nav">
+		<button mat-button color="primary" (click)="dashboard()">DASHBOARD
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button (click)="modules()">MODULES
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		 
+	</div>
+ 
+	<kt-headeraction></kt-headeraction>
+</div>
+<div *ngIf="router.url === '/demo2/kt-jibayatva'" >
+	<div class="kt-space-20"></div>
+	<div class="example-button-row-nav">
+		<button mat-button color="primary" (click)="dashboard()">DASHBOARD
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button (click)="modules()">MODULES
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button (click)="liasse()">EXERCICES
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button><a class="kt-widget12__desc" routerLink="/demo2/kt-jibayatva">JIBAYA TVA<span class="sr-only">(current)</span>
+		</a>
+		</button>
+	</div>
+	<div class="kt-space-20"></div>
+		<div class="kt-space-20"></div>
+		<kt-headeraction></kt-headeraction>
+	<div class="kt-space-20"></div>
+	<div class="kt-space-20"></div>
+</div>
+<div *ngIf="router.url === '/demo2/kt-jibayasalaire'" >
+	<div class="example-button-row-nav">
+		<button mat-button color="primary" (click)="dashboard()">DASHBOARD
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button (click)="modules()">MODULES
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button (click)="liasse()">EXERCICES
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button><a class="kt-widget12__desc" routerLink="/demo2/kt-jibayasalaire">JIBAYA SALAIRE<span class="sr-only">(current)</span>
+		</a></button>
+	</div>
+	<div class="kt-space-20"></div>
+	<div class="kt-space-20"></div>
+	<kt-headeraction></kt-headeraction>
+	<div class="kt-space-20"></div>
+	<div class="kt-space-20"></div>
+</div>
+<div *ngIf="router.url === '/demo2/kt-jibayaimmo'">
+	<div class="kt-space-20"></div>
+	<div class="example-button-row-nav">
+		<button mat-button color="primary" (click)="dashboard()">DASHBOARD
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button (click)="modules()">MODULES
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button (click)="liasse()">EXERCICES
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button><a class="kt-widget12__desc" routerLink="/demo2/kt-jibayaimmo">JIBAYA IMMO<span class="sr-only">(current)</span></a></button>
+	</div>
+	<div class="kt-space-20"></div>
+		<div class="kt-space-20"></div>
+		<kt-headeraction></kt-headeraction>
+	<div class="kt-space-20"></div>
+	<div class="kt-space-20"></div>
+</div>
+<div *ngIf="router.url === '/demo2/kt-jibayacompta'" >
+	<div class="kt-space-20"></div>
+	<div class="example-button-row-nav">
+		<button mat-button color="primary" (click)="dashboard()">DASHBOARD
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button (click)="modules()">MODULES
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		 
+		<button mat-button><a class="kt-widget12__desc" routerLink="/demo2/kt-jibayacompta">JIBAYA COMPTA<span class="sr-only">(current)</span></a></button>
+	</div>
+	<div class="kt-space-20"></div>
+		<div class="kt-space-20"></div>
+		<kt-headeraction></kt-headeraction>
+	<div class="kt-space-20"></div>
+	<div class="kt-space-20"></div>
+</div>
+<div *ngIf="router.url === '/demo2/kt-jibayabudget'">
+	<div class="kt-space-20"></div>
+	<div class="example-button-row-nav">
+		<button mat-button color="primary" (click)="dashboard()">DASHBOARD
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button (click)="modules()">MODULES
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button (click)="liasse()">EXERCICES
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button><a class="kt-widget12__desc" routerLink="/demo2/kt-jibayabudget">JIBAYA BUDGET<span class="sr-only">(current)</span></a></button>
+	</div>
+	<div class="kt-space-20"></div>
+		<div class="kt-space-20"></div>
+		<kt-headeraction></kt-headeraction>
+	<div class="kt-space-20"></div>
+	<div class="kt-space-20"></div>
+</div>
+<div *ngIf="router.url === '/demo2/kt-jibayacoll'" >
+	<div class="kt-space-20"></div>
+	<div class="example-button-row-nav">
+		<button mat-button color="primary" (click)="dashboard()">DASHBOARD
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button (click)="modules()">MODULES
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button (click)="liasse()">EXERCICES
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button><a class="kt-widget12__desc" routerLink="/demo2/kt-jibayacoll">JIBAYA COLL<span class="sr-only">(current)</span></a></button>
+	</div>
+	<div class="kt-space-20"></div>
+		<div class="kt-space-20"></div>
+		<kt-headeraction></kt-headeraction>
+	<div class="kt-space-20"></div>
+	<div class="kt-space-20"></div>
+</div>
+<div *ngIf="router.url === '/demo2/kt-jibayadoc'" >
+	<div class="kt-space-20"></div>
+	<div class="example-button-row-nav">
+		<button mat-button color="primary" (click)="dashboard()">DASHBOARD
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button (click)="modules()">MODULES
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button (click)="liasse()">EXERCICES
+				<i class="material-icons">
+						chevron_right
+						</i>
+		</button>
+		<button mat-button><a class="kt-widget12__desc" routerLink="/demo2/kt-jibayadoc">JIBAYA DOCUMENT<span class="sr-only">(current)</span></a></button>
+	</div>
+	<div class="kt-space-20"></div>
+		<div class="kt-space-20"></div>
+	<kt-headeraction></kt-headeraction>
+	<div class="kt-space-20"></div>
+	<div class="kt-space-20"></div>
+</div>
+</div>
+</div>
+
