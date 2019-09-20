@@ -7,6 +7,7 @@
     "start": "lite-server",
     "build": "ng build --prod",
     "test": "ng test",
+    "deploy": "ng build --prod --base-href https://lanezozor.github.io/JIBAYA-PROJECT/ && angular-cli-ghpages --branch gh-pages",
     "dev": "lite-server",
     "lint": "ng lint",
     "e2e": "ng e2e"

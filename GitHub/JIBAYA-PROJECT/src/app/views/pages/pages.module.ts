@@ -166,6 +166,7 @@ import { ParametreTableauliasseComponent } from './tableauliasseParametres/param
 		 PlancomptableComponent,
 		 JbJibayatvaComponent,
 		 JbtvaTableComponent,
+		 exportliassecomponent,
 		 HandsontbleComponent,
 		],
 		entryComponents: [
@@ -197,6 +198,7 @@ import { ParametreTableauliasseComponent } from './tableauliasseParametres/param
 		balancesuccesnotif,
 		TableauliasseComponent,
 		tableauliassesuccesnotif,
+		exportliassecomponent,
 		ParametreTableauliasseComponent,
 		plancomptablesuccesnotif,
 		Component1Component, 

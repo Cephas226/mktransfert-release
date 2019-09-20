@@ -83,13 +83,10 @@
       </mat-toolbar> 
     <mat-card-content>
         <mat-card-header>
-            <mat-chip-list aria-label="Fish selection" *ngIf="status; else non_declareBlock">
+            <mat-chip-list aria-label="Fish selection" *ngIf="status;">
                 <mat-chip style="height: 10%"
                 color="primary" selected>déclaré</mat-chip>
-                <ng-template #non_declareBlock>
-                    <mat-chip style="height: 10%"
-                    color="accent" selected>Non-déclaré</mat-chip>
-                </ng-template>
+                 
               </mat-chip-list>   
                   <mat-card-title style="overflow-wrap: break-word;">{{tab_title}}</mat-card-title>
           </mat-card-header>

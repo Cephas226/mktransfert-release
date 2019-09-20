@@ -163,7 +163,7 @@ tolaod(){
   constructor(public FormsListRestApiService:FormsListRestApiService,
               public router: Router,
               public dialog: MatDialog,
-              public dialogRef: MatDialogRef<exportliassecomponent>,
+              // public dialogRef: MatDialogRef<exportliassecomposent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               public snackBar: MatSnackBar,
               private hotRegisterer: HotTableRegisterer,
@@ -217,24 +217,24 @@ progressbar(){
   });
 }
 export(): void {
-  let dialogRef = this.dialog.open(exportliassecomponent, {
-  });
+  // let dialogRef = this.dialog.open(exportliassecomposent, {
+  // });
 
-  dialogRef.afterClosed().subscribe(checked_Report => {
-    this.myspinner()
-    checked_Report.map((r=>{
-      this.route.paramMap.subscribe(params => {
-        this.exercise_id = params.get("id")
-        this.myparam_company = params.get("myparam_company")
-      })
-   if (r.checked==true){
-    this.reportdata.push({id:r.id})
-    this.print()
-   }
-      }))
+  // dialogRef.afterClosed().subscribe(checked_Report => {
+  //   this.myspinner()
+  //   checked_Report.map((r=>{
+  //     this.route.paramMap.subscribe(params => {
+  //       this.exercise_id = params.get("id")
+  //       this.myparam_company = params.get("myparam_company")
+  //     })
+  //  if (r.checked==true){
+  //   this.reportdata.push({id:r.id})
+  //   this.print()
+  //  }
+  //     }))
       
-      this.reportdata=[]
-    });
+  //     this.reportdata=[]
+  //   });
   }
   print(){
   }
@@ -266,10 +266,10 @@ balance(){
   this.router.navigate(['/demo2/kt-balance/'+this.myparam_company+'/'+this.exercise_id])
 }
 succesnotif(){
-  this.snackBar.openFromComponent(tableauliassesuccesnotif, {  
-    duration: 2000,
-    panelClass: ['blue-snackbar']
-    });
+  // this.snackBar.openFromComponent(tableauliassesuccesnotif, {  
+  //   duration: 2000,
+  //   panelClass: ['blue-snackbar']
+  //   });
 }
 increase(){
   this.sidenavWidth =2;
@@ -449,108 +449,108 @@ else {
        }
        
 }
-@Component({
-  selector: 'snack-bar-component-example-snack',
-  template: `
-    <span _ngcontent-c3="" class="example-pizza-party">
-    Succès!!! 🎉
-    </span>`,
-  styles: [`.example-pizza-party { color: #0E9D58; }`],
-  })
-  export class tableauliassesuccesnotif {}
+// @Component({
+//   selector: 'snack-bar-component-example-snack',
+//   template: `
+//     <span _ngcontent-c3="" class="example-pizza-party">
+//     Succès!!! 🎉
+//     </span>`,
+//   styles: [`.example-pizza-party { color: #0E9D58; }`],
+//   })
+//   export class tableauliassesuccesnotif {}
 
-  @Component({
-    selector: 'exportliassecomponent',
-    template: `
+//   @Component({
+//     selector: 'exportliassecomposent',
+//     template: `
       
-    <mat-card>
-    <mat-card-content>
-      <mat-toolbar color="primary">
-      <mat-toolbar-row>
-      <h4 class="mat-dialog-title"> 
-      <i class="material-icons orange600">
-          import_export
-      </i>
-      Exportez vos Rapports
-    </h4>
-      </mat-toolbar-row>
-    </mat-toolbar>
-    <section class="example-section">
-      <div *ngFor="let unit of model.units; let i=index">
-    <mat-checkbox class="example-margin"
-      [(ngModel)]="model.units[i].checked"
-      id="units[{{i}}]" 
-      name="units[{{i}}]"
-    >
-        {{ unit.name }}
-    </mat-checkbox>  
+//     <mat-card>
+//     <mat-card-content>
+//       <mat-toolbar color="primary">
+//       <mat-toolbar-row>
+//       <h4 class="mat-dialog-title"> 
+//       <i class="material-icons orange600">
+//           import_export
+//       </i>
+//       Exportez vos Rapports
+//     </h4>
+//       </mat-toolbar-row>
+//     </mat-toolbar>
+//     <section class="example-section">
+//       <div *ngFor="let unit of model.units; let i=index">
+//     <mat-checkbox class="example-margin"
+//       [(ngModel)]="model.units[i].checked"
+//       id="units[{{i}}]" 
+//       name="units[{{i}}]"
+//     >
+//         {{ unit.name }}
+//     </mat-checkbox>  
     
-  </div>
-    </section>
+//   </div>
+//     </section>
     
-    <div class="kt-separator kt-separator--dashed"></div>
-    </mat-card-content>
-    <div class="button-row">
-<button mat-raised-button  (click)="onNoClick()">Annulez</button>
-<button mat-raised-button color="primary" [mat-dialog-close]="model.units"
-type="submit"  
- cdkFocusInitial>
-    <i class="material-icons">save</i>
-  Sauvegardez</button>
-</div>
-  </mat-card>
+//     <div class="kt-separator kt-separator--dashed"></div>
+//     </mat-card-content>
+//     <div class="button-row">
+// <button mat-raised-button  (click)="onNoClick()">Annulez</button>
+// <button mat-raised-button color="primary" [mat-dialog-close]="model.units"
+// type="submit"  
+//  cdkFocusInitial>
+//     <i class="material-icons">save</i>
+//   Sauvegardez</button>
+// </div>
+//   </mat-card>
   
   
   
   
-  <style>
-  .example-h2 {
-    margin: 10px;
-  }
+//   <style>
+//   .example-h2 {
+//     margin: 10px;
+//   }
   
-  .example-section {
-    display: flex;
-    align-content: center;
-    align-items: center;
-    height: 60px;
-  }
+//   .example-section {
+//     display: flex;
+//     align-content: center;
+//     align-items: center;
+//     height: 60px;
+//   }
   
-  .example-margin {
-    margin: 0 10px;
-  }
+//   .example-margin {
+//     margin: 0 10px;
+//   }
   
   
-  </style>
-    `
-  })
+//   </style>
+//     `
+//   })
  
-  export class exportliassecomponent {
-    myValues=[
-      'Actif','Passif','CPC'
-    ]
+  // export class exportliassecomposent {
+  //   myValues=[
+  //     'Actif','Passif','CPC'
+  //   ]
     
-    model: Offer;
-    changeValueEvent() {
-      // console.log("myValue:", this.myValues);
-    }
+  //   model: Offer;
+  //   changeValueEvent() {
+  //     // console.log("myValue:", this.myValues);
+  //   }
    
-    labelPosition = 'after';
-    disabled = false;
-    constructor(
-      public dialogRef: MatDialogRef<exportliassecomponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any) { 
+  //   labelPosition = 'after';
+  //   disabled = false;
+  //   constructor(
+  //     public dialogRef: MatDialogRef<exportliassecomposent>,
+  //       @Inject(MAT_DIALOG_DATA) public data: any) { 
           
-        }
+  //       }
   
-    onNoClick(): void {
-      this.dialogRef.close();
-    }
+  //   onNoClick(): void {
+  //     this.dialogRef.close();
+  //   }
 
-  ngOnInit() {
-    this.model = new Offer;
-    this.model.units.push(new Unit(1,"Bilan (Actif)", false));
-    this.model.units.push(new Unit(2,"Bilan (Passif)", false));
-    this.model.units.push(new Unit(3,"CPC", false));
-    this.model.units.push(new Unit(4,"ESG", false));
-  }
-  }
+  // ngOnInit() {
+  //   this.model = new Offer;
+  //   this.model.units.push(new Unit(1,"Bilan (Actif)", false));
+  //   this.model.units.push(new Unit(2,"Bilan (Passif)", false));
+  //   this.model.units.push(new Unit(3,"CPC", false));
+  //   this.model.units.push(new Unit(4,"ESG", false));
+  // }
+  // }
