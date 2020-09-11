@@ -35,7 +35,7 @@ class ChooseBeneficiairePage extends StatelessWidget {
               child: ListTile(
                 leading: Icon(
                   FontAwesomeIcons.user,
-                  color: Colors.indigo,
+                  color: Colors.blue,
                 ),
                 onTap: () {  Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterBeneficiairePage()));},
                 title: Text("Particulier"),
@@ -48,7 +48,7 @@ class ChooseBeneficiairePage extends StatelessWidget {
               child: ListTile(
                 leading: Icon(
                   FontAwesomeIcons.building,
-                  color: Colors.indigo,
+                  color: Colors.blue,
                 ),
                 onTap: () {  Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterBeneficiaireEntreprisePage()));},
                 title: Text("Entreprise/organisation"),

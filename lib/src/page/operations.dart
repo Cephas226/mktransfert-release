@@ -187,7 +187,8 @@ class _OperationListPageState extends State<OperationListPage> {
                    const SizedBox(width: 15.0),
                    Text('Status:',style: TextStyle(
                        fontWeight: FontWeight.bold)),
-                   Text('Livré'),
+                   Text('Livré',style: TextStyle(
+                       fontWeight: FontWeight.bold,color:Colors.green)),
                  ]),
                ],
              ),
