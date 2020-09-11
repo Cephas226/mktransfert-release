@@ -1,8 +1,3 @@
-/**
- * Author: Damodar Lohani
- * profile: https://github.com/lohanidamodar
- */
-
 import 'package:flutter/material.dart';
 import 'package:mktransfert/core/presentation/res/assets.dart';
 import 'package:mktransfert/src/utils/oval-right-clipper.dart';
@@ -200,7 +195,7 @@ class DashboardPage extends StatelessWidget {
 
   Container _buildHeader() {
     return Container(
-      padding: const EdgeInsets.fromLTRB(0, 50.0, 0, 32.0),
+      padding: const EdgeInsets.fromLTRB(0, 18.0, 0, 32.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(20.0),

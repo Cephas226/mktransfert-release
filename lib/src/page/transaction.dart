@@ -6,11 +6,13 @@ import 'package:fancy_dialog/fancy_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:mktransfert/core/presentation/res/assets.dart';
 class TransactionPage extends StatefulWidget {
   static final String path = "lib/src/pages/login/auth3.dart";
 
   @override
   _TransactionState createState() => _TransactionState();
+
 }
 
 class _TransactionState extends State<TransactionPage> {
@@ -80,13 +82,15 @@ class _TransactionState extends State<TransactionPage> {
            setState(() {
              _value = value;
            });
-         })
+         },)
     );
   }
   @override
   void initState() {
     super.initState();
     _loadCurrencies();
+    _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
+    _selectedItem = _dropdownMenuItems[0].value;
   }
 
   Future<String> _loadCurrencies() async {
@@ -96,8 +100,9 @@ class _TransactionState extends State<TransactionPage> {
     var responseBody = json.decode(response.body);
     Map curMap = responseBody['rates'];
     currencies = curMap.keys.toList();
+    currencies.where((f) => f=='EUR'||f=='USD').toList();
     setState(() {});
-    print(currencies);
+    print( currencies.where((f) => f=='EUR'||f=='USD').toList());
     return "Success";
   }
 
@@ -109,7 +114,7 @@ class _TransactionState extends State<TransactionPage> {
     setState(() {
       result = (double.parse(fromTextController.text) * (responseBody["rates"][toCurrency])).toStringAsFixed(2);
     });
-    print(result);
+    //print(result);
     return "Success";
   }
 
@@ -124,7 +129,48 @@ class _TransactionState extends State<TransactionPage> {
       toCurrency = value;
     });
   }
-
+  List<DropdownMenuItem<ListItem>> buildDropDownMenuItems(List listItems) {
+    List<DropdownMenuItem<ListItem>> items = List();
+    for (ListItem listItem in listItems) {
+      items.add(
+        DropdownMenuItem(
+          child: Text(listItem.name),
+          value: listItem,
+        ),
+      );
+    }
+    return items;
+  }
+  List<ListItem> _dropdownItems = [
+  ListItem(1,  "Boffa"),
+  ListItem(2,  "Boke"),
+  ListItem(3, "Conakry – Kaloum"),
+  ListItem(4, "Conakry – Madina"),
+  ListItem(5,  "Conakry - Bambeto"),
+  ListItem(6, "Conakry – Enco"),
+  ListItem(7,  "Conakry - Matoto"),
+  ListItem(8, "Conakry – Lambanyi"),
+  ListItem(9, "Cosa - Rond-Point"),
+  ListItem(10, "Conakry - cimenterie carrefour"),
+  ListItem(11, "Conakry – Dabompa"),
+  ListItem(12, "Coyah"),
+  ListItem(13, "Dubreka Km"),
+  ListItem(14, "Fria"),
+  ListItem(15, "Kamsar"),
+  ListItem(16, "Kankan"),
+  ListItem(17, "Kindia"),
+  ListItem(18, "Koundara"),
+  ListItem(19,  "Labe"),
+  ListItem(20, "Lelouma"),
+  ListItem(21, "Mamou"),
+  ListItem(22, "N’Zerekore"),
+  ListItem(23, "Pita"),
+  ListItem(24,"Sangaredji"),
+  ListItem(25,  " Timbi Madina"),
+  ListItem(26,  "Touba"),
+  ];
+  List<DropdownMenuItem<ListItem>> _dropdownMenuItems;
+  ListItem _selectedItem;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,6 +191,7 @@ class _TransactionState extends State<TransactionPage> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
+                    const SizedBox(height: 10.0),
                     ListTile(
                       title: TextField(
                         decoration: InputDecoration(
@@ -173,7 +220,7 @@ class _TransactionState extends State<TransactionPage> {
                           ),
                           trailing: _buildDropButton(),
                         ),
-                    const SizedBox(height: 30.0),
+                    const SizedBox(height: 20.0),
                     Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -186,20 +233,30 @@ class _TransactionState extends State<TransactionPage> {
                                   color: Colors.black, fontWeight: FontWeight.w500),
                             ),
                           ),
-                          const SizedBox(height: 20.0),
-                          DirectSelect(
-                              itemExtent: 35.0,
-                              selectedIndex: selectedIndex1,
-                              child: MySelectionItem(
-                                isForList: false,
-                                title: point_retrait[selectedIndex1],
-                              ),
-                              onSelectedItemChanged: (index) {
-                                setState(() {
-                                  selectedIndex1 = index;
-                                });
-                              },
-                              items: _buildItems1()),
+                          const SizedBox(height: 10.0),
+                          Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: <Widget>[
+                                Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Container(
+                                        padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(5.0),
+                                            border: Border.all()),
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButton(
+                                              value: _selectedItem,
+                                              items: _dropdownMenuItems,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _selectedItem = value;
+                                                });
+                                              }),
+                                        ))),
+                              ]
+                          ),
                           const SizedBox(height: 20.0),
                         ]
                     ),
@@ -390,7 +447,7 @@ class _TransactionState extends State<TransactionPage> {
         icon: Icon(Icons.arrow_drop_down),
         iconSize: 42,
         underline: SizedBox(),
-        items: currencies.map((String value) => DropdownMenuItem(
+        items: currencies.where((f) => f=='USD').toList().map((String value) => DropdownMenuItem(
           value: value,
           child: Container(
             child: Row(
@@ -465,3 +522,9 @@ class MySelectionItem extends StatelessWidget {
     );
   }
 }
+class ListItem {
+  int value;
+  String name;
+  ListItem(this.value, this.name);
+}
+
