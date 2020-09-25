@@ -1,12 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:mktransfert/core/presentation/res/assets.dart';
-import 'package:mktransfert/core/presentation/widget/rounded_bordered_container.dart';
-import 'package:mktransfert/src/page/chooseBeneficiaire.dart';
 
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import 'package:mktransfert/core/presentation/widget/rounded_bordered_container.dart';
 
 import 'package:mktransfert/src/page/transaction.dart';
 
+import 'chooseBeneficiaire.dart';
 import 'navigation.dart';
+import 'operations/beneficiaireOperations.dart';
 
 class BeneficiairePage extends StatefulWidget {
   static final String path = "lib/src/pages/settings/settings1.dart";
@@ -17,6 +19,13 @@ class BeneficiairePage extends StatefulWidget {
 class _BeneficiairePageState extends State<BeneficiairePage> {
   TextEditingController searchController = new TextEditingController();
   String filter;
+  String _nom(dynamic beneficiaire){
+    return beneficiaire['nom'];
+  }
+  String _email(dynamic beneficiaire){
+    return beneficiaire['email'];
+  }
+  _BeneficiairePageState();
 
   @override  initState() {
     searchController.addListener(() {
@@ -25,17 +34,6 @@ class _BeneficiairePageState extends State<BeneficiairePage> {
       });
     });
   }
-  List<Contact> contacts = [
-    Contact(fullName: 'Pratap Kumar', email: 'pratap@example.com',adresse:'Casablanca'),
-    Contact(fullName: 'Jagadeesh', email: 'Jagadeesh@example.com',adresse:'Guinée'),
-    Contact(fullName: 'Srinivas', email: 'Srinivas@example.com',adresse:'Casablanca'),
-    Contact(fullName: 'Narendra', email: 'Narendra@example.com',adresse:'Guinée'),
-    Contact(fullName: 'Sravan ', email: 'Sravan@example.com',adresse:'Casablanca'),
-    Contact(fullName: 'Ranganadh', email: 'Ranganadh@example.com',adresse:'Guinée'),
-    Contact(fullName: 'Karthik', email: 'Karthik@example.com',adresse:'Casablanca'),
-    Contact(fullName: 'Saranya', email: 'Saranya@example.com',adresse:'Guinée'),
-    Contact(fullName: 'Mahesh', email: 'Mahesh@example.com',adresse:'Casablanca'),
-  ];
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -57,16 +55,16 @@ class _BeneficiairePageState extends State<BeneficiairePage> {
                     Navigator.push(context, MaterialPageRoute(builder: (context) =>NavigationPage()),);
                   },
                 ),
-               Container(
-                 child:GestureDetector(
-                     onTap: () {  Navigator.push(context, MaterialPageRoute(
-                         builder: (context) => ChooseBeneficiairePage()));},
-                     child: Text("Ajouter",style: TextStyle(
-                         fontWeight: FontWeight.bold, color: Colors.white),
-                     ),
+                Container(
+                  child:GestureDetector(
+                    onTap: () {  Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => ChooseBeneficiairePage()));},
+                    child: Text("Ajouter",style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
 
-                 ),
-               )
+                  ),
+                )
               ]
           ),
           automaticallyImplyLeading: false,
@@ -96,7 +94,38 @@ class _BeneficiairePageState extends State<BeneficiairePage> {
               ),
             ),
             Flexible(
-              child:ListView.builder(
+              child: FutureBuilder<List<dynamic>>(
+                future: fetchBeneficiaire(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if(snapshot.hasData){
+
+                    return ListView.builder(
+                        padding: EdgeInsets.all(8),
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (BuildContext context, int index){
+                          return
+                            Card(
+                              child: Column(
+                                children: <Widget>[
+                                  ListTile(
+                                    title: Text(_nom(snapshot.data[index])),
+                                    leading: new CircleAvatar(
+                                        backgroundColor: Colors.blue,
+                                        child: Text(
+                                            '${_nom(snapshot.data[index]).substring(0, 1)}')),
+                                  //  subtitle: Text(_email(snapshot.data[index])),
+                                    // trailing: Text(_age(snapshot.data[index])),
+                                  )
+                                ],
+                              ),
+                            );
+                        });
+                  }else {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                },
+              ),
+              /* child:ListView.builder(
                 itemCount: contacts.length,
                 itemBuilder: (context, index) {
                   return filter == null || filter == ""?
@@ -127,14 +156,14 @@ class _BeneficiairePageState extends State<BeneficiairePage> {
                         _onTapItem(context, contacts[index]),
                   ): new Container();
                 },
-              ),
+              ),*/
             ),
           ],
         ),
       ),
     );
   }
-  Widget cartItems(int index) {
+/*  Widget cartItems(int index) {
     return RoundedContainer(
       padding: const EdgeInsets.all(0),
       margin: EdgeInsets.all(10),
@@ -211,8 +240,41 @@ class _BeneficiairePageState extends State<BeneficiairePage> {
         ],
       ),
     );
-  }
+  }*/
 }
+
+/*class Beneficiaire {
+  final String nom;
+  final String prenom;
+  final String email;
+  final String telephone;
+  final String pays;
+  final String info_complementaire;
+  Beneficiaire( {this.nom,
+    this.prenom,
+    this.email,
+    this.telephone,
+    this.pays, this.info_complementaire});
+
+  factory Beneficiaire.fromMap(Map<String, dynamic> json) =>Beneficiaire(
+    nom: json['nom'],
+    prenom: json['prenom'],
+    email: json['email'],
+    telephone: json['telephone'],
+    pays: json['pays'],
+    info_complementaire: json['info_complementaire'],
+  );
+  factory Beneficiaire.fromJson(Map<String, dynamic> data) {
+    return Beneficiaire(
+      nom: data['nom'],
+      prenom: data['prenom'],
+      email: data['email'],
+      telephone: data['telephone'],
+      pays: data['pays'],
+      info_complementaire: data['info_complementaire'],
+    );
+  }
+}*/
 class Contact {
   final String fullName;
   final String email;
@@ -220,8 +282,9 @@ class Contact {
 
   const Contact({this.fullName, this.email,this.adresse});
 }
+
 void _onTapItem(BuildContext context, Contact post) {
- /* Scaffold.of(context).showSnackBar(
+  /* Scaffold.of(context).showSnackBar(
       new SnackBar(content: new Text("Tap on " + ' - ' + post.fullName)));*/
   Navigator.push(context, MaterialPageRoute(builder: (context) =>TransactionPage()),);
 }

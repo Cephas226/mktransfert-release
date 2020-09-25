@@ -62,7 +62,7 @@ class _AccueilPageState extends State<AccueilPage> {
           Align(
             alignment: Alignment.bottomLeft,
             child: FlatButton(
-              child: Text("Sauter"),
+              child: Text("Accueil"),
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(
                     builder: (context) => LoginPage())

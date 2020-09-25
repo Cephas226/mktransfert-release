@@ -1,92 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class Expansionpanel extends StatefulWidget {
+class UserList extends StatelessWidget{
 
-  Expansionpaneltate createState() =>  Expansionpaneltate();
-}
+  final String apiUrl = "https://mktransfert-backend.herokuapp.com/api/tutorials";
 
-class NewItem {
-  bool isExpanded;
-  final String header;
-  final Widget body;
-  final Icon iconpic;
-  NewItem(this.isExpanded, this.header, this.body, this.iconpic);
-}
+  Future<List<dynamic>> fetchUsers() async {
 
+    var result = await http.get(apiUrl);
+    return json.decode(result.body);
 
+  }
+  String _name(dynamic user){
+    return user['nom'];
+  }
 
-class Item {
-  Item({
-    this.expandedValue,
-    this.headerValue,
-    this.isExpanded = false,
-  });
-
-  String expandedValue;
-  String headerValue;
-  bool isExpanded;
-}
-
-@override
-Widget build(BuildContext context) {
- const String _title = 'Flutter Code Sample';
-  return MaterialApp(
-    title: _title,
-    home: Scaffold(
-      appBar: AppBar(title: const Text(_title)),
-      body: Expansionpanel(),
-    ),
-  );
-}
-List<Item> generateItems(int numberOfItems) {
-  return List.generate(numberOfItems, (int index) {
-    return Item(
-      headerValue: 'Panel $index',
-      expandedValue: 'This is item number $index',
-    );
-  });
-}
-
-
-
-class Expansionpaneltate extends State<Expansionpanel>  {
-  List<Item> _data = generateItems(8);
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        child: _buildPanel(),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('User List'),
+      ),
+      body: Container(
+        child: FutureBuilder<List<dynamic>>(
+          future: fetchUsers(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if(snapshot.hasData){
+              print(_name(snapshot.data[0]));
+              return ListView.builder(
+                  padding: EdgeInsets.all(8),
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (BuildContext context, int index){
+                    return
+                      Card(
+                        child: Column(
+                          children: <Widget>[
+                            ListTile(
+                              // leading: CircleAvatar(
+                              //     radius: 30,
+                              //     backgroundImage: NetworkImage(snapshot.data[index]['picture']['large'])),
+                              title: Text(_name(snapshot.data[index])),
+                          /*    subtitle: Text(_location(snapshot.data[index])),
+                              trailing: Text(_age(snapshot.data[index])),*/
+                            )
+                          ],
+                        ),
+                      );
+                  });
+            }else {
+              return Center(child: CircularProgressIndicator());
+            }
+          },
+
+
+        ),
       ),
     );
   }
 
-  Widget _buildPanel() {
-    return ExpansionPanelList(
-      expansionCallback: (int index, bool isExpanded) {
-        setState(() {
-          _data[index].isExpanded = !isExpanded;
-        });
-      },
-      children: _data.map<ExpansionPanel>((Item item) {
-        return ExpansionPanel(
-          headerBuilder: (BuildContext context, bool isExpanded) {
-            return ListTile(
-              title: Text(item.headerValue),
-            );
-          },
-          body: ListTile(
-              title: Text(item.expandedValue),
-              subtitle: Text('To delete this panel, tap the trash can icon'),
-              trailing: Icon(Icons.delete),
-              onTap: () {
-                setState(() {
-                  _data.removeWhere((currentItem) => item == currentItem);
-                });
-              }),
-          isExpanded: item.isExpanded,
-        );
-      }).toList(),
-    );
-  }
 }

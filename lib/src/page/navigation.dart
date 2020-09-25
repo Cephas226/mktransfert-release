@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mktransfert/src/page/profil.dart';
 import 'package:mktransfert/src/page/dashboard.dart';
 import 'package:mktransfert/src/page/operations.dart';
+import 'package:mktransfert/src/page/test.dart';
 import 'package:mktransfert/src/page/transaction.dart';
 
 import 'beneficiaire.dart';
