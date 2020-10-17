@@ -1,63 +1,74 @@
+/// Donut chart with labels example. This is a simple pie chart with a hole in
+/// the middle.
+import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
-class UserList extends StatelessWidget{
+class DonutAutoLabelChart extends StatelessWidget {
+  final List<charts.Series> seriesList;
+  final bool animate;
 
-  final String apiUrl = "https://mktransfert-backend.herokuapp.com/api/tutorials";
+  DonutAutoLabelChart(this.seriesList, {this.animate});
 
-  Future<List<dynamic>> fetchUsers() async {
-
-    var result = await http.get(apiUrl);
-    return json.decode(result.body);
-
-  }
-  String _name(dynamic user){
-    return user['nom'];
+  /// Creates a [PieChart] with sample data and no transition.
+  factory DonutAutoLabelChart.withSampleData() {
+    return new DonutAutoLabelChart(
+      _createSampleData(),
+      // Disable animations for image tests.
+      animate: true,
+    );
   }
 
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('User List'),
-      ),
-      body: Container(
-        child: FutureBuilder<List<dynamic>>(
-          future: fetchUsers(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if(snapshot.hasData){
-              print(_name(snapshot.data[0]));
-              return ListView.builder(
-                  padding: EdgeInsets.all(8),
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (BuildContext context, int index){
-                    return
-                      Card(
-                        child: Column(
-                          children: <Widget>[
-                            ListTile(
-                              // leading: CircleAvatar(
-                              //     radius: 30,
-                              //     backgroundImage: NetworkImage(snapshot.data[index]['picture']['large'])),
-                              title: Text(_name(snapshot.data[index])),
-                          /*    subtitle: Text(_location(snapshot.data[index])),
-                              trailing: Text(_age(snapshot.data[index])),*/
-                            )
-                          ],
-                        ),
-                      );
-                  });
-            }else {
-              return Center(child: CircularProgressIndicator());
-            }
-          },
-
-
-        ),
-      ),
-    );
+    return new charts.PieChart(seriesList,
+        animate: animate,
+        // Configure the width of the pie slices to 60px. The remaining space in
+        // the chart will be left as a hole in the center.
+        //
+        // [ArcLabelDecorator] will automatically position the label inside the
+        // arc if the label will fit. If the label will not fit, it will draw
+        // outside of the arc with a leader line. Labels can always display
+        // inside or outside using [LabelPosition].
+        //
+        // Text style for inside / outside can be controlled independently by
+        // setting [insideLabelStyleSpec] and [outsideLabelStyleSpec].
+        //
+        // Example configuring different styles for inside/outside:
+        //       new charts.ArcLabelDecorator(
+        //          insideLabelStyleSpec: new charts.TextStyleSpec(...),
+        //          outsideLabelStyleSpec: new charts.TextStyleSpec(...)),
+        defaultRenderer: new charts.ArcRendererConfig(
+            arcWidth: 60,
+            arcRendererDecorators: [new charts.ArcLabelDecorator()]));
   }
 
+  /// Create one series with sample hard coded data.
+  static List<charts.Series<LinearSales, int>> _createSampleData() {
+    final data = [
+      new LinearSales(0, 100),
+      new LinearSales(1, 75),
+      new LinearSales(2, 25),
+      new LinearSales(3, 5),
+    ];
+
+    return [
+      new charts.Series<LinearSales, int>(
+        id: 'Sales',
+        domainFn: (LinearSales sales, _) => sales.year,
+        measureFn: (LinearSales sales, _) => sales.sales,
+        data: data,
+        // Set a label accessor to control the text of the arc label.
+        labelAccessorFn: (LinearSales row, _) => '${row.year}: ${row.sales}',
+      )
+    ];
+  }
+}
+
+/// Sample linear data type.
+class LinearSales {
+  final int year;
+  final int sales;
+
+  LinearSales(this.year, this.sales);
 }

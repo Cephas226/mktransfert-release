@@ -39,106 +39,82 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:mktransfert/src/page/operations/beneficiaireOperations.dart';
-
-final String apiUrlBeneficiaire = "http://10.0.2.2:8000/api/beneficiaires";
-class Beneficiaire {
+final String apiUrlUser =  "http://10.0.2.2:8000/api/auth/signup";
+class User {
   int id;
   String nom;
   String prenom;
   String email;
   String telephone;
   String pays;
-  String info_complementaire;
-  Beneficiaire( {
+  String password;
+  String cpassword;
+  User( {
     this.id,
     this.nom,
     this.prenom,
     this.email,
     this.telephone,
-    this.pays, this.info_complementaire});
+    this.pays,
+    this.password,
+    this.cpassword,
+  });
 
-  factory Beneficiaire.fromMap(Map<String, dynamic> json) =>Beneficiaire(
+  factory User.fromMap(Map<String, dynamic> json) =>User(
     nom: json['nom'],
     prenom: json['prenom'],
     email: json['email'],
     telephone: json['telephone'],
     pays: json['pays'],
-    info_complementaire: json['info_complementaire'],
+    password: json['password'],
+    cpassword: json['cpassword'],
   );
-  factory Beneficiaire.fromJson(Map<String, dynamic> data) {
-    return Beneficiaire(
+  factory User.fromJson(Map<String, dynamic> data) {
+    return User(
       nom: data['nom'],
       prenom: data['prenom'],
+      password: data['password'],
       email: data['email'],
       telephone: data['telephone'],
       pays: data['pays'],
-      info_complementaire: data['info_complementaire'],
+      cpassword: data['cpassword'],
     );
   }
-  save() {
-    print('saving user using a web service');
-  }
-  /*
- Future<Beneficiaire> saveMe(
 
+  Future<User> saveMe(
       String nom,
       String prenom,
       String email,
       String telephone,
       String pays,
-      String info_complementaire,
+      String password,
+      String cpassword,
       ) async {
-    final http.Response response = await http.post(
-      'http://10.0.2.2:8000/api/beneficiaires',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'nom': nom,
-        'prenom': prenom,
-        'email': email,
-        'telephone': telephone,
-        "pays": null,
-        "info_complementaire": null
-      }),
-    );
-    print(Beneficiaire.fromJson(json.decode(response.body)));
-    if (response.statusCode == 201) {
-      return Beneficiaire.fromJson(json.decode(response.body));
-    }
-    else {
-      throw Exception('Failed to load Beneficiaire');
-    }
-  }*/
-
-  Future<Beneficiaire> saveMe(
-      String nom,
-      String prenom,
-      String email,
-      String telephone,
-      String pays,
-      String info_complementaire,) async {
     Map data = {
       'nom': nom,
       'prenom': prenom,
-      'email': email,
+     'email': email,
       'telephone': telephone,
-      "pays": pays,
-      "info_complementaire": null
+      'pays': pays,
+      'password': password,
+      'cpassword': cpassword,
     };
 
     final Response response = await post(
-      apiUrlBeneficiaire,
+      'http://10.0.2.2:8000/api/auth/signup',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(data),
     );
+    print(response.statusCode);
     print(jsonEncode(data));
     if (response.statusCode == 200) {
-      return Beneficiaire.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Failed to post Beneficiaire');
+      print('succès User');
+      return User.fromJson(json.decode(response.body));
     }
+   /* else {
+      throw Exception('Failed to post User');
+    }*/
   }
 }

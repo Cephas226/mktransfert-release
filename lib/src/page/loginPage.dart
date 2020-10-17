@@ -3,6 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mktransfert/core/presentation/res/assets.dart';
 import 'package:mktransfert/src/page/navigation.dart';
 
+import 'mesclasses/user.model.dart';
+
 class LoginPage extends StatefulWidget {
   static final String path = "lib/src/pages/login/auth3.dart";
 
@@ -39,29 +41,29 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   children: <Widget>[
                     Expanded(
-                        child: ListView(
-                          children: <Widget>[
-                            Image.network('https://firebasestorage.googleapis.com/v0/b/mktransfert-d6990.appspot.com/o/LogoMKWhite_Plan%20de%20travail%201%20copie%204.png?alt=media&token=15bd19f2-0ca8-4058-81cb-bcbdf09201f6', height: 250),
-                            Text(
-                              "Bienvenu",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 30.0,
-                              ),
-                              textAlign: TextAlign.center,
+                      child: ListView(
+                        children: <Widget>[
+                          Image.network('https://firebasestorage.googleapis.com/v0/b/mktransfert-d6990.appspot.com/o/LogoMKWhite_Plan%20de%20travail%201%20copie%204.png?alt=media&token=15bd19f2-0ca8-4058-81cb-bcbdf09201f6', height: 250),
+                          Text(
+                            "Bienvenu",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 30.0,
                             ),
-                            const SizedBox(height: 10.0),
-                            Text(
-                              "Envoyez de l'argent partout en Guinee\n avec des taux défiants toutes concurrences.",
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 18.0,
-                              ),
-                              textAlign: TextAlign.center,
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 10.0),
+                          Text(
+                            "Envoyez de l'argent partout en Guinee\n avec des taux défiants toutes concurrences.",
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 18.0,
                             ),
-                          ],
-                        ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
                     ),
                     Row(
                       children: <Widget>[
@@ -93,12 +95,12 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             child: Text("S'inscrire"),
                             onPressed: () {
-                             /* Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationPage()),);*/
+                              /* Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationPage()),);*/
                               setState(() {
                                 formVisible = true;
                                 _formsIndex = 2;
                               });
-                              },
+                            },
                           ),
                         ),
                         const SizedBox(width: 10.0),
@@ -125,75 +127,75 @@ class _LoginPageState extends State<LoginPage> {
                 child: (!formVisible)
                     ? null
                     : Container(
-                  color: Colors.black54,
-                  alignment: Alignment.center,
-                  child: Column(
-                    children: <Widget>[
-                      const SizedBox(height: 50.0),
-                      Expanded(
-                        child: ListView(
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                RaisedButton(
-                                  textColor: _formsIndex == 1
-                                      ? Colors.white
-                                      : Colors.black,
-                                  color:
-                                  _formsIndex == 1 ? Colors.blue : Colors.white,
-                                  child: Text("Connexion"),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0)),
-                                  onPressed: () {
-                                    /*   Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationPage()),);*/
-                                    setState(() {
-                                      _formsIndex = 1;
-                                    });
-                                  },
-                                ),
-                                const SizedBox(width: 10.0),
-                                RaisedButton(
-                                  textColor: _formsIndex == 2
-                                      ? Colors.white
-                                      : Colors.black,
-                                  color:
-                                  _formsIndex == 2 ? Colors.blue : Colors.white,
-                                  child: Text("S'enregistrer"),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0)),
-                                  onPressed: () {
-                                    /*  Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationPage()),);*/
-                                    setState(() {
-                                      _formsIndex = 2;
-                                    });
-                                  },
-                                ),
-                                const SizedBox(width: 10.0),
-                                IconButton(
-                                  color: Colors.white,
-                                  icon: Icon(Icons.clear),
-                                  onPressed: () {
+                    color: Colors.black54,
+                    alignment: Alignment.center,
+                    child: Column(
+                      children: <Widget>[
+                        const SizedBox(height: 50.0),
+                        Expanded(
+                          child: ListView(
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  RaisedButton(
+                                    textColor: _formsIndex == 1
+                                        ? Colors.white
+                                        : Colors.black,
+                                    color:
+                                    _formsIndex == 1 ? Colors.blue : Colors.white,
+                                    child: Text("Connexion"),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20.0)),
+                                    onPressed: () {
+                                      /*   Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationPage()),);*/
+                                      setState(() {
+                                        _formsIndex = 1;
+                                      });
+                                    },
+                                  ),
+                                  const SizedBox(width: 10.0),
+                                  RaisedButton(
+                                    textColor: _formsIndex == 2
+                                        ? Colors.white
+                                        : Colors.black,
+                                    color:
+                                    _formsIndex == 2 ? Colors.blue : Colors.white,
+                                    child: Text("S'enregistrer"),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20.0)),
+                                    onPressed: () {
+                                      /*  Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationPage()),);*/
+                                      setState(() {
+                                        _formsIndex = 2;
+                                      });
+                                    },
+                                  ),
+                                  const SizedBox(width: 10.0),
+                                  IconButton(
+                                    color: Colors.white,
+                                    icon: Icon(Icons.clear),
+                                    onPressed: () {
 
-                                    setState(() {
-                                      formVisible = false;
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                            Container(
-                              child: AnimatedSwitcher(
-                                duration: Duration(milliseconds: 300),
-                                child:
-                                _formsIndex == 1 ? LoginForm() : SignupPage(),
+                                      setState(() {
+                                        formVisible = false;
+                                      });
+                                    },
+                                  )
+                                ],
                               ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  )
+                              Container(
+                                child: AnimatedSwitcher(
+                                  duration: Duration(milliseconds: 300),
+                                  child:
+                                  _formsIndex == 1 ? LoginForm() : SignupPage(),
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    )
                 ),
               )
             ],
@@ -264,6 +266,8 @@ class _SignupFormState extends State<SignupPage>{
   String _myActivity;
   String _myActivityResult;
   final formKey = new GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _user = User();
   final elements1 = [
     "Guinée",
     "Sénégal",
@@ -327,110 +331,136 @@ class _SignupFormState extends State<SignupPage>{
         color: Colors.white,
         borderRadius: BorderRadius.circular(10.0),
       ),
-      child: Column(
-        children: <Widget>[
-          Expanded(
-            child: ListView(
-              children: <Widget>[
-                ListView(
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.all(10.0),
-                  children: <Widget>[
-                    TextField(
-                      decoration: InputDecoration(
-                        hintText: "Entrer votre nom *",
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 10.0),
-                    TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        hintText: "Entrer votre prenom(s) *",
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 10.0),
-                    TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        hintText: "example@gmail.com *",
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 10.0),
-                    TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        hintText: "Entrer votre téléphone *",
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 10.0),
-                    Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          Padding(
-                              padding: const EdgeInsets.all(0.0),
-                              child: Container(
-                                  padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5.0),
-                                      border: Border.all()),
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton(
-                                        value: _selectedItem,
-                                        items: _dropdownMenuItems,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _selectedItem = value;
-                                          });
-                                        }),
-                                  ))),
-                        ]
-                    ),
-                    const SizedBox(height: 10.0),
-                    TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        hintText: "Mot de passe *",
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 10.0),
-                    TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        hintText: "Confirmer Mot de passe *",
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 10.0),
-                    SizedBox(
-                      width: double.infinity,
-                      child:RaisedButton(
-                        color: Colors.blue,
-                        textColor: Colors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
+    child:new Form(
+        key: _formKey,
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: ListView(
+                children: <Widget>[
+                  ListView(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.all(10.0),
+                    children: <Widget>[
+                      TextFormField(
+                        onSaved: (val) => setState(() => _user.nom = val),
+                        decoration: InputDecoration(
+                          hintText: "Entrer votre nom *",
+                          border: OutlineInputBorder(),
                         ),
-                        child: Text("S'inscrire"),
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationPage()),);
-                        },
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
+                      const SizedBox(height: 10.0),
+                      TextFormField(
+                        onSaved: (val) => setState(() => _user.prenom = val),
+                        decoration: InputDecoration(
+                          hintText: "Entrer votre prenom(s) *",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const SizedBox(height: 10.0),
+                      TextFormField(
+                        onSaved: (val) => setState(() => _user.email = val),
+                        decoration: InputDecoration(
+                          hintText: "example@gmail.com *",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const SizedBox(height: 10.0),
+                      TextFormField(
+                        onSaved: (val) => setState(() => _user.telephone = val),
+                        decoration: InputDecoration(
+                          hintText: "Entrer votre téléphone *",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const SizedBox(height: 10.0),
+                      Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            Padding(
+                                padding: const EdgeInsets.all(0.0),
+                                child: Container(
+                                    padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5.0),
+                                        border: Border.all()),
+                                    child: DropdownButtonHideUnderline(
+                                      child: DropdownButton(
+                                          value: _selectedItem,
+                                          items: _dropdownMenuItems,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _selectedItem = value;
+                                              _user.pays = value;
+                                            });
+                                          }),
+                                    ))),
+                          ]
+                      ),
+                      const SizedBox(height: 10.0),
+                      TextFormField(
+                        obscureText: true,
+                        onSaved: (val) => setState(() => _user.password = val),
+                        decoration: InputDecoration(
+                          hintText: "Mot de passe *",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const SizedBox(height: 10.0),
+                      TextFormField(
+                        obscureText: true,
+                        onSaved: (val) => setState(() => _user.cpassword = val),
+                        decoration: InputDecoration(
+                          hintText: "Confirmer Mot de passe *",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const SizedBox(height: 10.0),
+                      SizedBox(
+                        width: double.infinity,
+                        child:RaisedButton(
+                          color: Colors.blue,
+                          textColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          child: Text("S'inscrire"),
+                          onPressed: () {
+                            final form = _formKey.currentState;
+                            if (form.validate()) {
+                              form.save();
+                              _user.saveMe(
+                                  _user.nom,
+                                 _user.prenom,
+                                  _user.email,
+                                  _user.telephone,
+                                  _user.pays,
+                                  _user.password,
+                                 _user.cpassword,
+                              );
+
+                              _showDialog(context);
+                            //  {Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationPage()));};
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ));
   }
+}
+
+_showDialog(BuildContext context) {
+  Scaffold.of(context)
+      .showSnackBar(SnackBar(content: Text('Submitting form')));
 }
 class MySelectionItem extends StatelessWidget {
   final String title;

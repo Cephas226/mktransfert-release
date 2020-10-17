@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mktransfert/core/presentation/res/assets.dart';
+import 'package:mktransfert/src/page/singlechartbar.dart';
 import 'package:mktransfert/src/utils/oval-right-clipper.dart';
 
 class DashboardPage extends StatelessWidget {
   static final String path = "lib/src/pages/dashboard/dash3.dart";
   final String avatar = avatars[0];
-
   final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   final TextStyle whiteText = TextStyle(color: Colors.white);
   @override
@@ -34,7 +34,8 @@ class DashboardPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           _buildHeader(),
-          const SizedBox(height: 20.0),
+        const SizedBox(height: 20.0),
+
           Padding(
             padding: const EdgeInsets.only(left: 16.0),
             child: Text(

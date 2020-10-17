@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -113,7 +112,15 @@ class _BeneficiairePageState extends State<BeneficiairePage> {
                                         backgroundColor: Colors.blue,
                                         child: Text(
                                             '${_nom(snapshot.data[index]).substring(0, 1)}')),
-                                  //  subtitle: Text(_email(snapshot.data[index])),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => TransactionPage(),
+                                        ),
+                                      );
+                                    },
+                                    //  subtitle: Text(_email(snapshot.data[index])),
                                     // trailing: Text(_age(snapshot.data[index])),
                                   )
                                 ],
@@ -255,7 +262,6 @@ class _BeneficiairePageState extends State<BeneficiairePage> {
     this.email,
     this.telephone,
     this.pays, this.info_complementaire});
-
   factory Beneficiaire.fromMap(Map<String, dynamic> json) =>Beneficiaire(
     nom: json['nom'],
     prenom: json['prenom'],

@@ -33,9 +33,11 @@ dependencies:
   direct_select: ^1.0.2+1
   dropdown_formfield: ^0.1.2
   fancy_dialog: ^1.0.4
-  http: ^0.12.0+2
+  http: any
+  charts_flutter: ^0.9.0
   expandable: ^4.1.4
   fancy_alert_dialog: ^0.0.1
+  flutter_launcher_icons: ^0.8.0
 #data
 
 
@@ -50,6 +52,12 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/icon.png"
 
 # For information on the generic Dart part of this file, see the
 # following src.page: https://dart.dev/tools/pub/pubspec
