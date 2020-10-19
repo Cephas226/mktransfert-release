@@ -86,7 +86,7 @@ class _NavigationPageState extends State<NavigationPage> {
         children: <Widget>[
           Center(
             child: Container(
-              child: SingleChartBar(),
+              child: MainPage(),
             ),
           ),
           Center(

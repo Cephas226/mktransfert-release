@@ -17,6 +17,7 @@ class TransactionPage extends StatefulWidget {
 
 class _TransactionState extends State<TransactionPage> {
   final fromTextController = TextEditingController();
+  final fromTextControllergnf = TextEditingController();
   List<String> currencies;
   String fromCurrency = "USD";
   String toCurrency = "GBP";
@@ -91,6 +92,12 @@ class _TransactionState extends State<TransactionPage> {
     _loadCurrencies();
     _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
     _selectedItem = _dropdownMenuItems[0].value;
+   // fromTextController.addListener(_printLatestValue);
+  }
+  _printLatestValue() {
+
+    print("Hello");
+
   }
 
   Future<String> _loadCurrencies() async {
@@ -193,7 +200,7 @@ class _TransactionState extends State<TransactionPage> {
                   children: <Widget>[
                     const SizedBox(height: 10.0),
                     ListTile(
-                      title: TextField(
+                      title: TextFormField(
                         decoration: InputDecoration(
                           hintText: "Saisir le montant à envoyer",
                           border: OutlineInputBorder(),
@@ -202,14 +209,31 @@ class _TransactionState extends State<TransactionPage> {
                         style: TextStyle(fontSize: 20.0, color: Colors.black),
                         keyboardType:
                         TextInputType.numberWithOptions(decimal: true),
+                        onChanged: (text) {
+                          result=(double.parse(fromTextController.text) * (10)).toStringAsFixed(2);
+                          print("$text");
+                          fromTextControllergnf.text=result;
+                        },
                       ),
                       trailing: _buildDropDownButton(fromCurrency),
                     ),
-                    IconButton(
+/*                    IconButton(
                       icon: Icon(Icons.arrow_downward),
                       onPressed: _doConversion,
+                    ),*/
+                    ListTile(
+                      title: TextFormField(
+                        decoration: InputDecoration(
+                          hintText: "Resultat attendu",
+                          border: OutlineInputBorder(),
+                        ),
+                        controller: fromTextControllergnf,
+                        style: TextStyle(fontSize: 20.0, color: Colors.black),
+
+                      ),
+                      trailing: _buildDropDownButton(fromCurrency),
                     ),
-                        ListTile(
+                        /*ListTile(
                           title: Chip(
                             backgroundColor: Colors.transparent,
                             label: result != null ?
@@ -219,7 +243,7 @@ class _TransactionState extends State<TransactionPage> {
                             ) : Text("Resultat attendu"),
                           ),
                           trailing: _buildDropButton(),
-                        ),
+                        ),*/
                     const SizedBox(height: 20.0),
                     Column(
                         mainAxisAlignment: MainAxisAlignment.start,

@@ -204,7 +204,7 @@ class DashboardPage extends StatelessWidget {
         ),
         color: Colors.blue,
       ),
-      child: Column(
+  /*    child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           ListTile(
@@ -238,7 +238,7 @@ class DashboardPage extends StatelessWidget {
             ),
           ),
         ],
-      ),
+      ),*/
     );
   }
 

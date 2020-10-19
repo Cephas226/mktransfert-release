@@ -392,7 +392,7 @@ class _SignupFormState extends State<SignupPage>{
                                           onChanged: (value) {
                                             setState(() {
                                               _selectedItem = value;
-                                              _user.pays = value;
+                                              _user.pays=_selectedItem.name;
                                             });
                                           }),
                                     ))),
@@ -429,6 +429,7 @@ class _SignupFormState extends State<SignupPage>{
                           child: Text("S'inscrire"),
                           onPressed: () {
                             final form = _formKey.currentState;
+                            _user.pays= _selectedItem.name;
                             if (form.validate()) {
                               form.save();
                               _user.saveMe(
@@ -436,13 +437,13 @@ class _SignupFormState extends State<SignupPage>{
                                  _user.prenom,
                                   _user.email,
                                   _user.telephone,
-                                  _user.pays,
+                                   _user.pays,
                                   _user.password,
                                  _user.cpassword,
                               );
 
                               _showDialog(context);
-                            //  {Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationPage()));};
+                            //  {Navigator.push(context, MaterialPageRoute(builder: (context) => f()));};
                             }
                           },
                         ),

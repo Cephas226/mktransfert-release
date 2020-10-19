@@ -35,6 +35,7 @@ dependencies:
   fancy_dialog: ^1.0.4
   http: any
   charts_flutter: ^0.9.0
+  hexcolor: ^1.0.6
   expandable: ^4.1.4
   fancy_alert_dialog: ^0.0.1
   flutter_launcher_icons: ^0.8.0

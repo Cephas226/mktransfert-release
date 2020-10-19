@@ -113,8 +113,8 @@ class User {
       print('succès User');
       return User.fromJson(json.decode(response.body));
     }
-   /* else {
+    else {
       throw Exception('Failed to post User');
-    }*/
+    }
   }
 }
