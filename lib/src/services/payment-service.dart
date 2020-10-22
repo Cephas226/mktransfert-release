@@ -1,7 +1,9 @@
 
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:mktransfert/core/presentation/res/assets.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
 class StripeTransactionResponse {
@@ -28,7 +30,7 @@ class StripeService {
     );
   }
 
-  static Future<StripeTransactionResponse> payViaExistingCard({String amount, String currency, CreditCard card}) async{
+  static Future<StripeTransactionResponse> payViaExistingCard({String amount, String currency, CreditCard card,BuildContext context}) async{
     try {
       var paymentMethod = await StripePayment.createPaymentMethod(
           PaymentMethodRequest(card: card)
@@ -43,7 +45,8 @@ class StripeService {
               paymentMethodId: paymentMethod.id
           )
       );
-      if (response.status == 'réussie') {
+      if (response.status == 'succeeded') {
+      //  _paymentSuccessDialog(context);
         return new StripeTransactionResponse(
             message: 'Transaction réussie',
             success: true
@@ -80,11 +83,12 @@ class StripeService {
               paymentMethodId: paymentMethod.id
           )
       );
-      if (response.status == 'réussie') {
+      if (response.status == 'succeeded') {
         return new StripeTransactionResponse(
             message: 'Transaction réussie',
             success: true
         );
+
       } else {
         return new StripeTransactionResponse(
             message: 'La transaction a échoué',
@@ -102,9 +106,9 @@ class StripeService {
   }
 
   static getPlatformExceptionErrorResult(err) {
-    String message = 'Something went wrong';
-    if (err.code == 'cancelled') {
-      message = 'Transaction cancelled';
+    String message = 'Un problème est survenu';
+    if (err.code == 'annulé') {
+      message = 'Transaction annulée';
     }
 
     return new StripeTransactionResponse(
@@ -132,3 +136,4 @@ class StripeService {
     return null;
   }
 }
+

@@ -160,6 +160,7 @@ class _MainPageState extends State<MainPage> {
           child: Row(
             children: <Widget>[
               Text( listItem.name),
+              Divider(),
               Image.asset(
                   listItem.image,
                 width: 50),
@@ -211,113 +212,45 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-    //    title: Text("Estimation du transfert"),
-      ),
       body: currencies == null
           ? Center(child: CircularProgressIndicator())
-          : Container(
-        width: MediaQuery.of(context).size.width,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Card(
-              color: _colorFromHex("#F7FAFF"),
-              elevation: 3.0,
-              child: ListView(
-                children: <Widget>[
-                  Column(
-                   // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      const SizedBox(height: 20.0),
-                      Text("Estimation du transfert",  style: TextStyle(fontSize: 20.0, color: Colors.black,fontWeight:FontWeight.w500),),
-                      const SizedBox(height: 30.0),
-                      Container(
-                        child:Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Row(
-                                children: <Widget>[
-                                  Container(
-                                    width: 270,
-                                    margin: EdgeInsets.only(left: 10),
-                                    child: TextFormField(
-                                      decoration: InputDecoration(
-                                        hintText: "1000€",
-                                        labelText: 'Montant à Envoyer en USD',
-                                        border: OutlineInputBorder(),
-                                      ),
-                                      keyboardType:
-                                      TextInputType.numberWithOptions(decimal: true),
-                                      onChanged: (text) {
-                                        print("$text");
-                                        fromTextControllergnf.text=result;
-                                        fromTextControllerReceive.text=result+12.toString();
-                                        fromTextControllerTotal.text=fromTextControllergnf.text+10.toString();
-                                        fromTextControllerCommission.text=10.toString();
-                                      },
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child:  Container(
-                                      child:  _buildDropButtonFrom(),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 50.0),
-                      Row(
+          :
+      HeaderFooterwidget(
+        header: _buildDateHeader(DateTime.now()),
+        body: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: ListView(
+              children: <Widget>[
+                Column(
+                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Container(
+                      child:Row(
                         children: <Widget>[
                           Expanded(
                             child: Row(
                               children: <Widget>[
                                 Container(
+                                  width: 220,
                                   margin: EdgeInsets.only(left: 10),
-                                  width: 270,
                                   child: TextFormField(
-                                    readOnly: true,
                                     decoration: InputDecoration(
                                       hintText: "1000€",
-                                      labelText: 'Montant à Recevoir en GNF',
+                                      labelText: 'Montant à Envoyer en USD',
                                       border: OutlineInputBorder(),
                                     ),
                                     keyboardType:
                                     TextInputType.numberWithOptions(decimal: true),
+                                    onChanged: (text) {
+                                      print("$text");
+                                      fromTextControllergnf.text=result;
+                                      fromTextControllerReceive.text=result+12.toString();
+                                      fromTextControllerTotal.text=fromTextControllergnf.text+10.toString();
+                                      fromTextControllerCommission.text=10.toString();
+                                    },
                                   ),
                                 ),
-                                Expanded(
-                                  child:  Container(
-                                    child:  _buildDropButtonTo(),
-                                  ),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 50.0),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  margin: EdgeInsets.only(left: 10),
-                                  width: 270,
-                                  child: TextFormField(
-                                    decoration: InputDecoration(
-                                      labelText: 'Montant à Recevoir en USD',
-                                      hintText: "1000€",
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    keyboardType:
-                                    TextInputType.numberWithOptions(decimal: true),
-                                  ),
-                                ),
-                                Expanded(
+                               Expanded(
                                   child:  Container(
                                     child:  _buildDropButtonFrom(),
                                   ),
@@ -327,88 +260,182 @@ class _MainPageState extends State<MainPage> {
                           )
                         ],
                       ),
-                      const SizedBox(height: 50),
-                      SizedBox(
-                        width: 360,
-                        height: 50.0,
-                        child: RaisedButton(
-                          color: Colors.blue,
-                          textColor: Colors.white,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          child: ListTile(
-                            title: Text(("Effectuer un transfert"),style: TextStyle(color:Colors.white)),
-                            trailing: Icon(
-                              Icons.arrow_forward,
-                              color: Colors.white,
-                            ),
-                          ),
-                          onPressed: () {
-                            if(fromTextController.text.isEmpty){
-                              FancyAlertDialog.showFancyAlertDialog(
-                                context,
-                                'Alerte',
-                                'Veillez remplir le montant',
-                                Colors.blue,
-                                icon: Icon(
-                                  Icons.warning,
-                                  color: Colors.white,
+                    ),
+                 const SizedBox(height: 20.0,),
+                    Text("1€ = 1.0 GNF",  style: TextStyle(color: Colors.blue)),
+                    const SizedBox(height: 20.0),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Row(
+                            children: <Widget>[
+                              Container(
+                                margin: EdgeInsets.only(left: 10),
+                                width: 220,
+                                child: TextFormField(
+                                  readOnly: true,
+                                  decoration: InputDecoration(
+                                    hintText: "1000€",
+                                    labelText: 'Montant à Recevoir en GNF',
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  keyboardType:
+                                  TextInputType.numberWithOptions(decimal: true),
                                 ),
-                                labelPositiveButton: 'Ok',
-                                onTapPositiveButton: () {
-                                  Navigator.pop(context);
-                                },
-                                labelNegativeButton: '',
-                                onTapNegativeButton: () {
-                                  Navigator.pop(context);
-                                  print('tap negative button');
-                                },
-                              );
-                            }
-                            else{
-                              FancyAlertDialog.showFancyAlertDialog(
-                                context,
-                                'Confirmation',
-                                'Le montant a envoyé est de'+fromTextController.text
-                                    +'.Le montant à recevoir est de' + (double.parse(result) + 12).toStringAsFixed(2)
-                                    +'.Le montant de la commission est de' + 12.toString()
-                                    +'.Le montant total est de ' + (double.parse(fromTextController.text) + 12).toStringAsFixed(2),
-                                Colors.blue,
-                                icon: Icon(
-                                  Icons.clear,
-                                  color: Colors.white,
+                              ),
+                              Expanded(
+                                child:  Container(
+                                  child:  _buildDropButtonTo(),
                                 ),
-                                labelPositiveButton: 'OK',
-                                onTapPositiveButton: () {
-                                  Navigator.pop(context);
-                                  // Navigator.pop(context);
-                                   Navigator.push(context, MaterialPageRoute(builder: (context) =>TransactionPage()),);
-                                },
-                                labelNegativeButton: 'Annulez',
-                                onTapNegativeButton: () {
-                                  Navigator.pop(context);
-                                  print('tap negative button');
-                                },
-                              );
-                            }
-                          //  Navigator.push(context, MaterialPageRoute(builder: (context) =>BeneficiairePage()),);
-                          },
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 50.0),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Row(
+                            children: <Widget>[
+                              Container(
+                                margin: EdgeInsets.only(left: 10),
+                                width: 220,
+                                child: TextFormField(
+                                  readOnly: true,
+                                  decoration: InputDecoration(
+                                    labelText: 'Montant à Recevoir en USD',
+                                    hintText: "1000€",
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  keyboardType:
+                                  TextInputType.numberWithOptions(decimal: true),
+                                ),
+                              ),
+                              Expanded(
+                                child:  Container(
+                                  child:  _buildDropButtonFrom(),
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 50),
+                   /* SizedBox(
+                      width: 360,
+                      height: 50.0,
+                      child: RaisedButton(
+                        color: Colors.blue,
+                        textColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
                         ),
+                        child: ListTile(
+                          title: Text(("Effectuer un transfert"),style: TextStyle(color:Colors.white)),
+                          trailing: Icon(
+                            Icons.arrow_forward,
+                            color: Colors.white,
+                          ),
+                        ),
+                        onPressed: () {
+                          if(fromTextController.text.isEmpty){
+                            FancyAlertDialog.showFancyAlertDialog(
+                              context,
+                              'Alerte',
+                              'Veillez remplir le montant',
+                              Colors.blue,
+                              icon: Icon(
+                                Icons.warning,
+                                color: Colors.white,
+                              ),
+                              labelPositiveButton: 'Ok',
+                              onTapPositiveButton: () {
+                                Navigator.pop(context);
+                              },
+                              labelNegativeButton: '',
+                              onTapNegativeButton: () {
+                                Navigator.pop(context);
+                                print('tap negative button');
+                              },
+                            );
+                          }
+                          else{
+                            FancyAlertDialog.showFancyAlertDialog(
+                              context,
+                              'Confirmation',
+                              'Le montant a envoyé est de'+fromTextController.text
+                                  +'.Le montant à recevoir est de' + (double.parse(result) + 12).toStringAsFixed(2)
+                                  +'.Le montant de la commission est de' + 12.toString()
+                                  +'.Le montant total est de ' + (double.parse(fromTextController.text) + 12).toStringAsFixed(2),
+                              Colors.blue,
+                              icon: Icon(
+                                Icons.clear,
+                                color: Colors.white,
+                              ),
+                              labelPositiveButton: 'OK',
+                              onTapPositiveButton: () {
+                                Navigator.pop(context);
+                                // Navigator.pop(context);
+                                Navigator.push(context, MaterialPageRoute(builder: (context) =>TransactionPage()),);
+                              },
+                              labelNegativeButton: 'Annulez',
+                              onTapNegativeButton: () {
+                                Navigator.pop(context);
+                                print('tap negative button');
+                              },
+                            );
+                          }
+                          //  Navigator.push(context, MaterialPageRoute(builder: (context) =>BeneficiairePage()),);
+                        },
                       ),
-                      const SizedBox(height: 5),
-                      Text("En cliquant sur Continuer, j'accepte les CGU",  style: TextStyle(color: Colors.black)),
-                    ],
-                  ),
-                ],
-              )
-          ),
+                    ),*/
+
+                  ],
+                ),
+              ],
+            )
         ),
+        footer: _buildBottomBar(),
       ),
     );
   }
 
+  Container _buildBottomBar() {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        vertical: 8.0,
+        horizontal: 100.0,
+      ),
+      child: Row(
+        children: <Widget>[
+          SizedBox(width: 5.0),
+          Expanded(
+            child: TextField(
+              textCapitalization: TextCapitalization.sentences,
+              style: TextStyle(color: Colors.white70),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "Effectuer un transfert",
+                hintStyle: TextStyle(color: Colors.white),
+              ),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>BeneficiairePage()),);
+              },
+            ),
+          ),
+          IconButton(
+            color: Colors.white70,
+            icon: Icon(Icons.send),
+            onPressed: () {},
+          )
+        ],
+      ),
+    );
+  }
   Widget _buildDropDownButton(String currencyCategory) {
     return Container(
       padding:
@@ -509,9 +536,158 @@ class MySelectionItem extends StatelessWidget {
     );
   }
 }
+
+Widget _buildDateHeader(DateTime date) {
+  final TextStyle boldStyle = TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.bold,
+      fontSize: 24,
+      letterSpacing: 2.0);
+  return Row(
+    children: <Widget>[
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
+        child: MaterialButton(
+          minWidth: 0,
+          elevation: 0,
+          highlightElevation: 0,
+          textColor: Colors.pink,
+          padding: const EdgeInsets.symmetric(
+            vertical: 16.0,
+            horizontal: 8.0,
+          ),
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0)),
+          onPressed: () {},
+          /* child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(DateFormat.MMM().format(date).toUpperCase()),
+                const SizedBox(height: 5.0),
+                Text(
+                  DateFormat.d().format(date),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+                )
+              ],
+            ),*/
+        ),
+      ),
+      const SizedBox(width: 20.0),
+      const SizedBox(height: 80.0),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+/*            Text(
+              DateFormat.EEEE().format(date).toUpperCase(),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                letterSpacing: 2.0,
+              ),
+            ),*/
+          Text(
+            "Estimation du transfert",
+            style: boldStyle,
+          )
+        ],
+      ),
+    ],
+  );
+}
 class ListItem {
   String image;
   String name;
   ListItem(this.image, this.name);
 }
+class HeaderFooterwidget extends StatelessWidget {
+  final Widget header;
+  final Widget footer;
+  final Widget body;
+  final Color headerColor;
+  final Color footerColor;
+  final double headerHeight;
 
+  const HeaderFooterwidget(
+      {Key key,
+        this.header,
+        this.footer,
+        this.body,
+        this.headerColor = Colors.indigo,
+        this.footerColor = Colors.pink,
+        this.headerHeight})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildBody();
+  }
+
+  Stack _buildBody() {
+    return Stack(
+      children: <Widget>[
+        Positioned(
+          top: 20,
+          bottom: 120,
+          right: 0,
+          width: 30,
+          child: DecoratedBox(
+            decoration: BoxDecoration(color: headerColor),
+          ),
+        ),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          height: 120,
+          child: DecoratedBox(
+            decoration: BoxDecoration(color: footerColor),
+          ),
+        ),
+        Positioned(
+          bottom: 100,
+          right: 0,
+          width: 10,
+          height: 60,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+                color: headerColor,
+                borderRadius:
+                BorderRadius.only(bottomLeft: Radius.circular(20.0))),
+          ),
+        ),
+        Column(
+          children: <Widget>[
+            _buildHeader(),
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.only(right: 10.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: body,
+              ),
+            ),
+            const SizedBox(height: 10.0),
+            footer,
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      height: headerHeight,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30.0)),
+        color: headerColor,
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+      child: header,
+    );
+  }
+}

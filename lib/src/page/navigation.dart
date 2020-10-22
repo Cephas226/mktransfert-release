@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:mktransfert/src/page/profil.dart';
 import 'package:mktransfert/src/page/dashboard.dart';
 import 'package:mktransfert/src/page/operations.dart';
+import 'package:mktransfert/src/page/server.dart';
 import 'package:mktransfert/src/page/singlechartbar.dart';
 import 'package:mktransfert/src/page/transaction.dart';
+import 'package:mktransfert/src/page/user.dart';
 
 import 'beneficiaire.dart';
+import 'groupedchart.dart';
 
 class NavigationPage extends StatefulWidget {
   static final String path = "lib/src/pages/login/auth3.dart";
@@ -27,7 +30,7 @@ class _NavigationPageState extends State<NavigationPage> {
               gradient: LinearGradient(
                   colors: [Colors.blue, Colors.deepPurple])
           ),
-          height: 75,
+          height: 60,
           child: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -101,14 +104,15 @@ class _NavigationPageState extends State<NavigationPage> {
           ),
           Center(
             child: Container(
-              child: ProfilePage(),
+              child: ProfileEightPage(),
             ),
           )
         ],
         physics: NeverScrollableScrollPhysics(), // Comment this if you need to use Swipe.
       ),
+/*
       floatingActionButton: Container(
-        height: 65.0,
+        height: 40.0,
         width: 65.0,
         child: FittedBox(
           child: FloatingActionButton(
@@ -120,7 +124,7 @@ class _NavigationPageState extends State<NavigationPage> {
             // elevation: 5.0,
           ),
         ),
-      ),
+      ),*/
     );
   }
 

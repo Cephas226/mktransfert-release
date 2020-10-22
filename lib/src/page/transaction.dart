@@ -10,9 +10,6 @@ import 'package:mktransfert/src/page/payement.dart';
 import 'package:mktransfert/src/page/test.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'package:mktransfert/src/page/singlechartbar.dart';
-
-import 'checkout/checkout_page.dart';
-import 'checkout/stripe_checkout_mobile.dart';
 class TransactionPage extends StatefulWidget {
   static final String path = "lib/src/pages/login/auth3.dart";
 
@@ -250,6 +247,7 @@ class _TransactionState extends State<TransactionPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Effectuer votre transfert"),
+        automaticallyImplyLeading: false,
       ),
       body: currencies == null
           ? Center(child: CircularProgressIndicator())
