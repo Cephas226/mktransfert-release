@@ -1,74 +1,94 @@
-/// Donut chart with labels example. This is a simple pie chart with a hole in
-/// the middle.
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
+import 'package:mktransfert/src/services/payment-service.dart';
 
-class DonutAutoLabelChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
-  final bool animate;
+import 'package:progress_dialog/progress_dialog.dart';
 
-  DonutAutoLabelChart(this.seriesList, {this.animate});
+class PaymentPage extends StatefulWidget {
+  PaymentPage({Key key}) : super(key: key);
 
-  /// Creates a [PieChart] with sample data and no transition.
-  factory DonutAutoLabelChart.withSampleData() {
-    return new DonutAutoLabelChart(
-      _createSampleData(),
-      // Disable animations for image tests.
-      animate: true,
+  @override
+  HomePageState createState() => HomePageState();
+}
+
+class HomePageState extends State<PaymentPage> {
+
+  onItemPress(BuildContext context, int index) async {
+    switch(index) {
+      case 0:
+        payViaNewCard(context);
+        break;
+      case 1:
+        Navigator.pushNamed(context, '/existing-cards');
+        break;
+    }
+  }
+
+  payViaNewCard(BuildContext context) async {
+    ProgressDialog dialog = new ProgressDialog(context);
+    dialog.style(
+        message: 'Please wait...'
+    );
+    await dialog.show();
+    var response = await StripeService.payWithNewCard(
+        amount: '15000',
+        currency: 'USD'
+    );
+    await dialog.hide();
+    Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response.message),
+          duration: new Duration(milliseconds: response.success == true ? 1200 : 3000),
+        )
     );
   }
 
+  @override
+  void initState() {
+    super.initState();
+    StripeService.init();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return new charts.PieChart(seriesList,
-        animate: animate,
-        // Configure the width of the pie slices to 60px. The remaining space in
-        // the chart will be left as a hole in the center.
-        //
-        // [ArcLabelDecorator] will automatically position the label inside the
-        // arc if the label will fit. If the label will not fit, it will draw
-        // outside of the arc with a leader line. Labels can always display
-        // inside or outside using [LabelPosition].
-        //
-        // Text style for inside / outside can be controlled independently by
-        // setting [insideLabelStyleSpec] and [outsideLabelStyleSpec].
-        //
-        // Example configuring different styles for inside/outside:
-        //       new charts.ArcLabelDecorator(
-        //          insideLabelStyleSpec: new charts.TextStyleSpec(...),
-        //          outsideLabelStyleSpec: new charts.TextStyleSpec(...)),
-        defaultRenderer: new charts.ArcRendererConfig(
-            arcWidth: 60,
-            arcRendererDecorators: [new charts.ArcLabelDecorator()]));
+    ThemeData theme = Theme.of(context);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Payement'),
+      ),
+      body: Container(
+        padding: EdgeInsets.all(20),
+        child: ListView.separated(
+            itemBuilder: (context, index) {
+              Icon icon;
+              Text text;
+
+              switch(index) {
+                case 0:
+                  icon = Icon(Icons.add_circle, color: theme.primaryColor);
+                  text = Text('Payer avec une nouvelle carte');
+                  break;
+                case 1:
+                  icon = Icon(Icons.credit_card, color: theme.primaryColor);
+                  text = Text('Payer via une carte existante');
+                  break;
+              }
+
+              return InkWell(
+                onTap: () {
+                  onItemPress(context, index);
+                },
+                child: ListTile(
+                  title: text,
+                  leading: icon,
+                ),
+              );
+            },
+            separatorBuilder: (context, index) => Divider(
+              color: theme.primaryColor,
+            ),
+            itemCount: 2
+        ),
+      ),
+    );;
   }
-
-  /// Create one series with sample hard coded data.
-  static List<charts.Series<LinearSales, int>> _createSampleData() {
-    final data = [
-      new LinearSales(0, 100),
-      new LinearSales(1, 75),
-      new LinearSales(2, 25),
-      new LinearSales(3, 5),
-    ];
-
-    return [
-      new charts.Series<LinearSales, int>(
-        id: 'Sales',
-        domainFn: (LinearSales sales, _) => sales.year,
-        measureFn: (LinearSales sales, _) => sales.sales,
-        data: data,
-        // Set a label accessor to control the text of the arc label.
-        labelAccessorFn: (LinearSales row, _) => '${row.year}: ${row.sales}',
-      )
-    ];
-  }
-}
-
-/// Sample linear data type.
-class LinearSales {
-  final int year;
-  final int sales;
-
-  LinearSales(this.year, this.sales);
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mktransfert/src/page/accueil.dart';
+import 'package:mktransfert/src/page/payement.dart';
+import 'package:mktransfert/src/page/test.dart';
 
 
 void main() => runApp(MyApp());
@@ -10,6 +12,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Welcome to Flutter',
       home: AccueilPage(),
+      routes: {
+        '/home': (context) => PaymentPage(),
+        '/existing-cards': (context) => ExistingCardsPage()
+      },
     );
   }
 }

@@ -7,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mktransfert/core/presentation/res/assets.dart';
+import 'package:mktransfert/src/page/beneficiaire.dart';
+import 'package:mktransfert/src/page/transaction.dart';
 class MainPage extends StatefulWidget {
   static final String path = "lib/src/pages/login/auth3.dart";
 
@@ -17,6 +19,11 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   final fromTextController = TextEditingController();
+  final fromTextControllergnf = TextEditingController();
+  final fromTextControllerMontant = TextEditingController();
+  final fromTextControllerReceive = TextEditingController();
+  final fromTextControllerCommission = TextEditingController();
+  final fromTextControllerTotal = TextEditingController();
   List<String> currencies;
   String fromCurrency = "USD";
   String toCurrency = "GBP";
@@ -165,8 +172,8 @@ class _MainPageState extends State<MainPage> {
     return items;
   }
   List<ListItem> _dropdownItems = [
-    ListItem("assets/Image/eu.png",  "USD"),
-    ListItem("assets/Image/us.png",  "EUR"),
+    ListItem("assets/Image/eu.png",  "EUR"),
+    ListItem("assets/Image/us.png",  "USD"),
   ];
   List<DropdownMenuItem<ListItem>> _dropdownMenuItems;
   ListItem _selectedItem;
@@ -175,7 +182,7 @@ class _MainPageState extends State<MainPage> {
   //-----------
 
   List<ListItemGnf> _dropdownItemsGnf = [
-    ListItemGnf("assets/Image/gnf.png",  "USD"),
+    ListItemGnf("assets/Image/gnf.png",  "GNF"),
   ];
 
   List<DropdownMenuItem<ListItemGnf>> _dropdownMenuItemsGnf;
@@ -205,7 +212,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Estimation du transfert"),
+    //    title: Text("Estimation du transfert"),
       ),
       body: currencies == null
           ? Center(child: CircularProgressIndicator())
@@ -221,6 +228,8 @@ class _MainPageState extends State<MainPage> {
                   Column(
                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
+                      const SizedBox(height: 20.0),
+                      Text("Estimation du transfert",  style: TextStyle(fontSize: 20.0, color: Colors.black,fontWeight:FontWeight.w500),),
                       const SizedBox(height: 30.0),
                       Container(
                         child:Row(
@@ -239,6 +248,13 @@ class _MainPageState extends State<MainPage> {
                                       ),
                                       keyboardType:
                                       TextInputType.numberWithOptions(decimal: true),
+                                      onChanged: (text) {
+                                        print("$text");
+                                        fromTextControllergnf.text=result;
+                                        fromTextControllerReceive.text=result+12.toString();
+                                        fromTextControllerTotal.text=fromTextControllergnf.text+10.toString();
+                                        fromTextControllerCommission.text=10.toString();
+                                      },
                                     ),
                                   ),
                                   Expanded(
@@ -311,7 +327,7 @@ class _MainPageState extends State<MainPage> {
                           )
                         ],
                       ),
-                      const SizedBox(height: 120),
+                      const SizedBox(height: 50),
                       SizedBox(
                         width: 360,
                         height: 50.0,
@@ -368,7 +384,7 @@ class _MainPageState extends State<MainPage> {
                                 onTapPositiveButton: () {
                                   Navigator.pop(context);
                                   // Navigator.pop(context);
-                                  /* Navigator.push(context, MaterialPageRoute(builder: (context) =>PaymentPage()),);*/
+                                   Navigator.push(context, MaterialPageRoute(builder: (context) =>TransactionPage()),);
                                 },
                                 labelNegativeButton: 'Annulez',
                                 onTapNegativeButton: () {
@@ -377,10 +393,12 @@ class _MainPageState extends State<MainPage> {
                                 },
                               );
                             }
-                            // Navigator.push(context, MaterialPageRoute(builder: (context) =>PaymentPage()),);
+                          //  Navigator.push(context, MaterialPageRoute(builder: (context) =>BeneficiairePage()),);
                           },
                         ),
                       ),
+                      const SizedBox(height: 5),
+                      Text("En cliquant sur Continuer, j'accepte les CGU",  style: TextStyle(color: Colors.black)),
                     ],
                   ),
                 ],
@@ -435,6 +453,12 @@ class ListItemGnf {
   String name;
 
   ListItemGnf(this.imageGnf, this.name);
+}
+class ListItemFrom {
+  String imageFrom;
+  String name;
+
+  ListItemFrom(this.imageFrom, this.name);
 }
 Color _colorFromHex(String hexColor) {
   final hexCode = hexColor.replaceAll('#', '');
