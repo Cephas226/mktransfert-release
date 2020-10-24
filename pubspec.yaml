@@ -34,12 +34,14 @@ dependencies:
   dropdown_formfield: ^0.1.2
   fancy_dialog: ^1.0.4
   http: any
-  charts_flutter: ^0.9.0
   hexcolor: ^1.0.6
   stripe_payment: ^1.0.8
   expandable: ^4.1.4
   fancy_alert_dialog: ^0.0.1
+  shared_preferences: any
+  flutter_secure_storage: ^3.3.1+1
   flutter_launcher_icons: ^0.8.0
+
 #data
 
 

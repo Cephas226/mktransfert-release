@@ -9,7 +9,6 @@ import 'package:mktransfert/src/page/user.dart';
 
 import 'beneficiaire.dart';
 import 'groupedchart.dart';
-
 class NavigationPage extends StatefulWidget {
   static final String path = "lib/src/pages/login/auth3.dart";
 
@@ -89,7 +88,7 @@ class _NavigationPageState extends State<NavigationPage> {
         children: <Widget>[
           Center(
             child: Container(
-              child: MainPage(),
+              child: PagePrincipale(),
             ),
           ),
           Center(

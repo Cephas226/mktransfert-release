@@ -5,25 +5,33 @@ import 'package:fancy_alert_dialog/fancy_alert_dialog.dart';
 import 'package:fancy_dialog/fancy_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:mktransfert/core/presentation/res/assets.dart';
 import 'package:mktransfert/src/page/beneficiaire.dart';
+import 'package:mktransfert/src/page/loginPage.dart';
 import 'package:mktransfert/src/page/transaction.dart';
-class MainPage extends StatefulWidget {
+import 'package:shared_preferences/shared_preferences.dart';
+final storage = FlutterSecureStorage();
+class PagePrincipale extends StatefulWidget {
   static final String path = "lib/src/pages/login/auth3.dart";
-
+  final storage = FlutterSecureStorage();
   @override
   _MainPageState createState() => _MainPageState();
-
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<PagePrincipale> {
   final fromTextController = TextEditingController();
   final fromTextControllergnf = TextEditingController();
   final fromTextControllerMontant = TextEditingController();
   final fromTextControllerReceive = TextEditingController();
   final fromTextControllerCommission = TextEditingController();
   final fromTextControllerTotal = TextEditingController();
+  Future<String> get jwtOrEmpty async {
+    var jwt = await storage.read(key: "jwt");
+    if(jwt == null) return "";
+    return jwt;
+  }
   List<String> currencies;
   String fromCurrency = "USD";
   String toCurrency = "GBP";
@@ -106,9 +114,23 @@ class _MainPageState extends State<MainPage> {
       ],
     );
   }
+  SharedPreferences sharedPreferences;
+
+  checkLoginStatus() async {
+    /*sharedPreferences = await SharedPreferences.getInstance();
+    if(sharedPreferences.getString("token") == null) {
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginPage()), (Route<dynamic> route) => false);
+    }*/
+    var jwt = await storage.read(key: "jwt");
+    if(jwt == null) return   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginPage()), (Route<dynamic> route) => false);
+      else {
+       return jwt;
+    }
+  }
   @override
   void initState() {
     super.initState();
+    checkLoginStatus();
     _loadCurrencies();
     _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
     _selectedItem = _dropdownMenuItems[0].value;
@@ -211,120 +233,145 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: currencies == null
-          ? Center(child: CircularProgressIndicator())
-          :
-      HeaderFooterwidget(
-        header: _buildDateHeader(DateTime.now()),
-        body: Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: ListView(
-              children: <Widget>[
-                Column(
-                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Container(
-                      child:Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Row(
+    return MaterialApp(
+        home: FutureBuilder(
+          future: jwtOrEmpty,
+          builder: (context,snapshot ){
+            if(!snapshot.hasData) return CircularProgressIndicator();
+            if(snapshot.data != "") {
+              var str = snapshot.data;
+              var jwt = str.split(".");
+              print(jwt);
+              if(jwt.length !=3) {
+                return LoginPage();
+              }
+              else{
+                return LoginPage();
+               /* var payload = json.decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
+                if(DateTime.fromMillisecondsSinceEpoch(payload["exp"]*1000).isAfter(DateTime.now())) {
+                  return PagePrincipale();
+                } else {
+                  return LoginPage();
+                }*/
+              }
+            }
+            else {
+              return (
+                  Scaffold(
+                      body: currencies == null
+                          ? Center(child: CircularProgressIndicator())
+                          :
+                      HeaderFooterwidget(
+                        header: _buildDateHeader(DateTime.now()),
+                        body:
+                        Padding(
+                            padding: const EdgeInsets.all(32.0),
+                            child: ListView(
                               children: <Widget>[
-                                Container(
-                                  width: 220,
-                                  margin: EdgeInsets.only(left: 10),
-                                  child: TextFormField(
-                                    decoration: InputDecoration(
-                                      hintText: "1000€",
-                                      labelText: 'Montant à Envoyer en USD',
-                                      border: OutlineInputBorder(),
+                                Column(
+                                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    Container(
+                                      child:Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Row(
+                                              children: <Widget>[
+                                                Container(
+                                                  width: 220,
+                                                  margin: EdgeInsets.only(left: 10),
+                                                  child: TextFormField(
+                                                    decoration: InputDecoration(
+                                                      hintText: "1000€",
+                                                      labelText: 'Montant à Envoyer en USD',
+                                                      border: OutlineInputBorder(),
+                                                    ),
+                                                    keyboardType:
+                                                    TextInputType.numberWithOptions(decimal: true),
+                                                    onChanged: (text) {
+                                                      print("$text");
+                                                      fromTextControllergnf.text=result;
+                                                      fromTextControllerReceive.text=result+12.toString();
+                                                      fromTextControllerTotal.text=fromTextControllergnf.text+10.toString();
+                                                      fromTextControllerCommission.text=10.toString();
+                                                    },
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child:  Container(
+                                                    child:  _buildDropButtonFrom(),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                    keyboardType:
-                                    TextInputType.numberWithOptions(decimal: true),
-                                    onChanged: (text) {
-                                      print("$text");
-                                      fromTextControllergnf.text=result;
-                                      fromTextControllerReceive.text=result+12.toString();
-                                      fromTextControllerTotal.text=fromTextControllergnf.text+10.toString();
-                                      fromTextControllerCommission.text=10.toString();
-                                    },
-                                  ),
-                                ),
-                               Expanded(
-                                  child:  Container(
-                                    child:  _buildDropButtonFrom(),
-                                  ),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                 const SizedBox(height: 20.0,),
-                    Text("1€ = 1.0 GNF",  style: TextStyle(color: Colors.blue)),
-                    const SizedBox(height: 20.0),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Row(
-                            children: <Widget>[
-                              Container(
-                                margin: EdgeInsets.only(left: 10),
-                                width: 220,
-                                child: TextFormField(
-                                  readOnly: true,
-                                  decoration: InputDecoration(
-                                    hintText: "1000€",
-                                    labelText: 'Montant à Recevoir en GNF',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  keyboardType:
-                                  TextInputType.numberWithOptions(decimal: true),
-                                ),
-                              ),
-                              Expanded(
-                                child:  Container(
-                                  child:  _buildDropButtonTo(),
-                                ),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(height: 50.0),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Row(
-                            children: <Widget>[
-                              Container(
-                                margin: EdgeInsets.only(left: 10),
-                                width: 220,
-                                child: TextFormField(
-                                  readOnly: true,
-                                  decoration: InputDecoration(
-                                    labelText: 'Montant à Recevoir en USD',
-                                    hintText: "1000€",
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  keyboardType:
-                                  TextInputType.numberWithOptions(decimal: true),
-                                ),
-                              ),
-                              Expanded(
-                                child:  Container(
-                                  child:  _buildDropButtonFrom(),
-                                ),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(height: 50),
-                   /* SizedBox(
+                                    const SizedBox(height: 20.0,),
+                                    Text("1€ = 1.0 GNF",  style: TextStyle(color: Colors.blue)),
+                                    const SizedBox(height: 20.0),
+                                    Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Row(
+                                            children: <Widget>[
+                                              Container(
+                                                margin: EdgeInsets.only(left: 10),
+                                                width: 220,
+                                                child: TextFormField(
+                                                  readOnly: true,
+                                                  decoration: InputDecoration(
+                                                    hintText: "1000€",
+                                                    labelText: 'Montant à Recevoir en GNF',
+                                                    border: OutlineInputBorder(),
+                                                  ),
+                                                  keyboardType:
+                                                  TextInputType.numberWithOptions(decimal: true),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child:  Container(
+                                                  child:  _buildDropButtonTo(),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    const SizedBox(height: 50.0),
+                                    Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Row(
+                                            children: <Widget>[
+                                              Container(
+                                                margin: EdgeInsets.only(left: 10),
+                                                width: 220,
+                                                child: TextFormField(
+                                                  readOnly: true,
+                                                  decoration: InputDecoration(
+                                                    labelText: 'Montant à Recevoir en USD',
+                                                    hintText: "1000€",
+                                                    border: OutlineInputBorder(),
+                                                  ),
+                                                  keyboardType:
+                                                  TextInputType.numberWithOptions(decimal: true),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child:  Container(
+                                                  child:  _buildDropButtonFrom(),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    const SizedBox(height: 50),
+                                    /* SizedBox(
                       width: 360,
                       height: 50.0,
                       child: RaisedButton(
@@ -394,13 +441,17 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ),*/
 
-                  ],
-                ),
-              ],
-            )
+                                  ],
+                                ),
+                              ],
+                            )
+                        ),
+                        footer: _buildBottomBar(),
+                      ))
+              );
+            }
+          },
         ),
-        footer: _buildBottomBar(),
-      ),
     );
   }
 

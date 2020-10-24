@@ -58,7 +58,7 @@ class UserInfo extends StatelessWidget {
             padding: const EdgeInsets.only(left: 8.0, bottom: 4.0),
             alignment: Alignment.topLeft,
             child: Text(
-              "User Information",
+              "Information de l'utilisateur",
               style: TextStyle(
                 color: Colors.black87,
                 fontWeight: FontWeight.w500,

@@ -37,9 +37,12 @@ class Beneficiaire {
 
 import 'dart:convert';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:mktransfert/src/page/operations/beneficiaireOperations.dart';
-final String apiUrlUser =  "http://10.0.2.2:8000/api/auth/signup";
+final String apiUrlUser =  "http://10.0.2.2:8000/api/auth/";
+final storage = FlutterSecureStorage();
 class User {
   int id;
   String nom;
@@ -49,7 +52,8 @@ class User {
   String pays;
   String password;
   String cpassword;
-  User( {
+
+  User({
     this.id,
     this.nom,
     this.prenom,
@@ -60,15 +64,17 @@ class User {
     this.cpassword,
   });
 
-  factory User.fromMap(Map<String, dynamic> json) =>User(
-    nom: json['nom'],
-    prenom: json['prenom'],
-    email: json['email'],
-    telephone: json['telephone'],
-    pays: json['pays'],
-    password: json['password'],
-    cpassword: json['cpassword'],
-  );
+  factory User.fromMap(Map<String, dynamic> json) =>
+      User(
+        nom: json['nom'],
+        prenom: json['prenom'],
+        email: json['email'],
+        telephone: json['telephone'],
+        pays: json['pays'],
+        password: json['password'],
+        cpassword: json['cpassword'],
+      );
+
   factory User.fromJson(Map<String, dynamic> data) {
     return User(
       nom: data['nom'],
@@ -81,19 +87,17 @@ class User {
     );
   }
 
-  Future<User> saveMe(
-      String nom,
+  Future<int> saveMe(String nom,
       String prenom,
       String email,
       String telephone,
       String pays,
       String password,
-      String cpassword,
-      ) async {
+      String cpassword,) async {
     Map data = {
       'nom': nom,
       'prenom': prenom,
-     'email': email,
+      'email': email,
       'telephone': telephone,
       'pays': pays,
       'password': password,
@@ -109,9 +113,10 @@ class User {
     );
     print(response.statusCode);
     print(jsonEncode(data));
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       print('succès User');
-      return User.fromJson(json.decode(response.body));
+      // User.fromJson(json.decode(response.body));
+      return response.statusCode;
     }
     else {
       throw Exception('Failed to post User');
