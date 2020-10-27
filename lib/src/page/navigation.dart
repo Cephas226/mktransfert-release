@@ -3,7 +3,7 @@ import 'package:mktransfert/src/page/profil.dart';
 import 'package:mktransfert/src/page/dashboard.dart';
 import 'package:mktransfert/src/page/operations.dart';
 import 'package:mktransfert/src/page/server.dart';
-import 'package:mktransfert/src/page/singlechartbar.dart';
+import 'package:mktransfert/src/page/pagePrincipale.dart';
 import 'package:mktransfert/src/page/transaction.dart';
 import 'package:mktransfert/src/page/user.dart';
 

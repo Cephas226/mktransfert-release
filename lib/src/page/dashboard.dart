@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mktransfert/core/presentation/res/assets.dart';
-import 'package:mktransfert/src/page/singlechartbar.dart';
+import 'package:mktransfert/src/page/pagePrincipale.dart';
 import 'package:mktransfert/src/utils/oval-right-clipper.dart';
 
 class DashboardPage extends StatelessWidget {

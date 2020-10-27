@@ -119,7 +119,8 @@ class RegisterBeneficiairePageState  extends State <RegisterBeneficiairePage> {
                               ],
                             ),
                           ],
-                        )),
+                        ),
+                    ),
                     Padding(
                         padding: EdgeInsets.only(
                             left: 25.0, right: 25.0, top: 2.0),

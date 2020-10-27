@@ -6,20 +6,14 @@ import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:mktransfert/src/page/mesclasses/beneficiaireClasses.dart';
 
+import '../loginPage.dart';
 
-final String apiUrl = "http://10.0.2.2:8000/api/beneficiaires";
 
-Future<List<dynamic>> fetchBeneficiaire() async {
+final String apiUrl = "https://gracetechnologie.pythonanywhere.com/api/receiver/";
+Future<List<Beneficiaire>> fetchBeneficiaire() async {
+
   var result = await http.get(apiUrl);
   return json.decode(result.body);
-}
-Future<List<dynamic>>getBeneficiaire() async {
-  try {
-    Response response = await Dio().get(apiUrl);
-    print(response);
-  } catch (e) {
-    print(e);
-  }
 }
 
 /*List<Beneficiaire> decodeBeneficiaire(String responseBody) {

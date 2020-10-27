@@ -41,71 +41,69 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:mktransfert/src/page/operations/beneficiaireOperations.dart';
-final String apiUrlUser =  "http://10.0.2.2:8000/api/auth/";
+final String apiUrlRegister =  "https://gracetechnologie.pythonanywhere.com/api/register";
+final String apiUrlLogin =  "https://gracetechnologie.pythonanywhere.com/api/login";
 final storage = FlutterSecureStorage();
 class User {
   int id;
-  String nom;
-  String prenom;
+  String last_name;
+  String first_name;
   String email;
-  String telephone;
-  String pays;
+
+  String phone;
+  String country;
   String password;
-  String cpassword;
 
   User({
     this.id,
-    this.nom,
-    this.prenom,
+    this.last_name,
+    this.first_name,
     this.email,
-    this.telephone,
-    this.pays,
+    this.phone,
+    this.country,
     this.password,
-    this.cpassword,
   });
 
   factory User.fromMap(Map<String, dynamic> json) =>
       User(
-        nom: json['nom'],
-        prenom: json['prenom'],
+        last_name: json['last_name'],
+        first_name: json['first_name'],
         email: json['email'],
-        telephone: json['telephone'],
-        pays: json['pays'],
+        phone: json['phone'],
+        country: json['country'],
         password: json['password'],
-        cpassword: json['cpassword'],
       );
 
   factory User.fromJson(Map<String, dynamic> data) {
     return User(
-      nom: data['nom'],
-      prenom: data['prenom'],
-      password: data['password'],
+      last_name: data['last_name'],
+      first_name: data['first_name'],
       email: data['email'],
-      telephone: data['telephone'],
-      pays: data['pays'],
-      cpassword: data['cpassword'],
+      phone: data['phone'],
+      country: data['country'],
+      password: data['password'],
     );
   }
 
-  Future<int> saveMe(String nom,
-      String prenom,
+  Future<int> saveMe(
+      String last_name,
+      String first_name,
       String email,
-      String telephone,
-      String pays,
-      String password,
-      String cpassword,) async {
+      String phone,
+      String country,
+      String password
+      ) async {
     Map data = {
-      'nom': nom,
-      'prenom': prenom,
+      'last_name': last_name,
+      'first_name': first_name,
       'email': email,
-      'telephone': telephone,
-      'pays': pays,
+      'phone': phone,
+      'country': country,
       'password': password,
-      'cpassword': cpassword,
     };
 
     final Response response = await post(
-      'http://10.0.2.2:8000/api/auth/signup',
+      '$apiUrlRegister',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -113,7 +111,7 @@ class User {
     );
     print(response.statusCode);
     print(jsonEncode(data));
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       print('succès User');
       // User.fromJson(json.decode(response.body));
       return response.statusCode;

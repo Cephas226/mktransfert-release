@@ -7,10 +7,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mktransfert/core/presentation/res/assets.dart';
 import 'package:mktransfert/src/page/navigation.dart';
 import 'package:http/http.dart';
-import 'package:mktransfert/src/page/singlechartbar.dart';
+import 'package:mktransfert/src/page/pagePrincipale.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'mesclasses/user.model.dart';
+import 'operations/beneficiaireOperations.dart';
 
 final storage = FlutterSecureStorage();
 
@@ -293,7 +294,6 @@ class _LoginState extends State<LoginForm> {
                           form.save();
                           var jwt = await logMe(_user.email, _user.password);
                           storage.write(key: "jwt", value: jwt);
-                          print(jwt);
                           if (jwt != null) {
                             Navigator.push(
                                 context,
@@ -312,6 +312,7 @@ class _LoginState extends State<LoginForm> {
         ));
   }
 
+/*
   Future<String> attemptLogIn(String email, String password) async {
     var res = await http.post("$apiUrlUser/login",
         body: {"email": email, "password": password});
@@ -321,6 +322,7 @@ class _LoginState extends State<LoginForm> {
       return null;
     }
   }
+*/
 
   Future<String> logMe(
     String email,
@@ -332,14 +334,12 @@ class _LoginState extends State<LoginForm> {
     };
 
      var response  = await post(
-      'http://10.0.2.2:8000/api/auth/login',
+      '$apiUrlLogin',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(data),
     );
-    print(response.statusCode);
-    print(jsonEncode(data));
     if (response.statusCode == 200) {
       print('Login User');
       return response.body;
@@ -442,7 +442,7 @@ class _SignupFormState extends State<SignupPage> {
                       padding: const EdgeInsets.all(10.0),
                       children: <Widget>[
                         TextFormField(
-                          onSaved: (val) => setState(() => _user.nom = val),
+                          onSaved: (val) => setState(() => _user.last_name = val),
                           decoration: InputDecoration(
                             hintText: "Entrer votre nom *",
                             border: OutlineInputBorder(),
@@ -450,7 +450,7 @@ class _SignupFormState extends State<SignupPage> {
                         ),
                         const SizedBox(height: 10.0),
                         TextFormField(
-                          onSaved: (val) => setState(() => _user.prenom = val),
+                          onSaved: (val) => setState(() => _user.first_name = val),
                           decoration: InputDecoration(
                             hintText: "Entrer votre prenom(s) *",
                             border: OutlineInputBorder(),
@@ -467,7 +467,7 @@ class _SignupFormState extends State<SignupPage> {
                         const SizedBox(height: 10.0),
                         TextFormField(
                           onSaved: (val) =>
-                              setState(() => _user.telephone = val),
+                              setState(() => _user.phone = val),
                           decoration: InputDecoration(
                             hintText: "Entrer votre téléphone *",
                             border: OutlineInputBorder(),
@@ -494,7 +494,7 @@ class _SignupFormState extends State<SignupPage> {
                                             onChanged: (value) {
                                               setState(() {
                                                 _selectedItem = value;
-                                                _user.pays = _selectedItem.name;
+                                                _user.country = _selectedItem.name;
                                               });
                                             }),
                                       ))),
@@ -509,7 +509,7 @@ class _SignupFormState extends State<SignupPage> {
                             border: OutlineInputBorder(),
                           ),
                         ),
-                        const SizedBox(height: 10.0),
+/*                        const SizedBox(height: 10.0),
                         TextFormField(
                           obscureText: true,
                           onSaved: (val) =>
@@ -518,7 +518,7 @@ class _SignupFormState extends State<SignupPage> {
                             hintText: "Confirmer Mot de passe *",
                             border: OutlineInputBorder(),
                           ),
-                        ),
+                        ),*/
                         const SizedBox(height: 10.0),
                         SizedBox(
                           width: double.infinity,
@@ -532,7 +532,7 @@ class _SignupFormState extends State<SignupPage> {
                             child: Text("S'inscrire"),
                             onPressed: () async {
                               final form = _formKey.currentState;
-                              _user.pays = _selectedItem.name;
+                              _user.country = _selectedItem.name;
                               if (form.validate()) {
                                 form.save();
                                 if (_user.email.length < 4)
@@ -542,27 +542,23 @@ class _SignupFormState extends State<SignupPage> {
                                   displayDialog(context, "Invalid Password",
                                       "The password should be at least 4 characters long");
                                 else {
-                                  _user.saveMe(
-                                    _user.nom,
-                                    _user.prenom,
-                                    _user.email,
-                                    _user.telephone,
-                                    _user.pays,
-                                    _user.password,
-                                    _user.cpassword,
-                                  );
                                   var res = await _user.saveMe(
-                                    _user.nom,
-                                    _user.prenom,
+                                    _user.last_name,
+                                    _user.first_name,
                                     _user.email,
-                                    _user.telephone,
-                                    _user.pays,
+                                    _user.phone,
+                                    _user.country,
                                     _user.password,
-                                    _user.cpassword,
                                   );
-                                  if (res == 201)
-                                    displayDialog(context, "Success",
-                                        "The user was created. Log in now.");
+                                  if (res == 200){
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => PagePrincipale()));
+                                    _showDialog(context);
+                                   /* displayDialog(context, "Success",
+                                        "The user was created. Log in now.");*/
+                                  }
                                   else if (res == 409)
                                     displayDialog(
                                         context,
@@ -572,7 +568,6 @@ class _SignupFormState extends State<SignupPage> {
                                     displayDialog(context, "Error",
                                         "An unknown error occurred.");
                                   }
-                                  _showDialog(context);
                                 }
                                 //  {Navigator.push(context, MaterialPageRoute(builder: (context) => f()));};
 

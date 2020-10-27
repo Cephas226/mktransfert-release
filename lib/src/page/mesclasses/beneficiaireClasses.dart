@@ -78,39 +78,6 @@ class Beneficiaire {
   save() {
     print('saving user using a web service');
   }
-  /*
- Future<Beneficiaire> saveMe(
-
-      String nom,
-      String prenom,
-      String email,
-      String telephone,
-      String pays,
-      String info_complementaire,
-      ) async {
-    final http.Response response = await http.post(
-      'http://10.0.2.2:8000/api/beneficiaires',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'nom': nom,
-        'prenom': prenom,
-        'email': email,
-        'telephone': telephone,
-        "pays": null,
-        "info_complementaire": null
-      }),
-    );
-    print(Beneficiaire.fromJson(json.decode(response.body)));
-    if (response.statusCode == 201) {
-      return Beneficiaire.fromJson(json.decode(response.body));
-    }
-    else {
-      throw Exception('Failed to load Beneficiaire');
-    }
-  }*/
-
   Future<Beneficiaire> saveMe(
       String nom,
       String prenom,
