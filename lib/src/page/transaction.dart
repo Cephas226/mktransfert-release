@@ -363,6 +363,7 @@ class _TransactionState extends State<TransactionPage> {
                                             )
                                         ),
                                       ],
+
                                     ),
                                   );
                             }
@@ -374,7 +375,26 @@ class _TransactionState extends State<TransactionPage> {
                    }
                   )
                )
-          ));
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            Row(
+              children: <Widget>[
+                new FlatButton(
+                  child: new Text("Cancel"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                new FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: new Text("OK"))
+              ],
+            ),
+          ],
+        );
       },
     );
   }
