@@ -29,7 +29,11 @@ class _TransactionState extends State<TransactionPage> {
   final fromTextControllerCommission = TextEditingController();
   final fromTextControllerTotal = TextEditingController();
 
-  var editBeneficiaireName = TextEditingController();
+  var editReceiver_last_name = TextEditingController();
+  var editReceiver_first_name = TextEditingController();
+  var editReceiver_email = TextEditingController();
+  var editReceiver_phone = TextEditingController();
+  var editReceiver_country = TextEditingController();
   String _mySelection;
   String _nom(dynamic beneficiaire) {
     return beneficiaire['nom'];
@@ -55,9 +59,10 @@ class _TransactionState extends State<TransactionPage> {
         });
     var beneficiaireList;
     var resBody = json.decode(res.body);
-    resBody['data_beneficiaire'].forEach((k, v) {
-      beneficiaireList=v;
-    });
+      resBody['data_beneficiaire']?.forEach((k, v) {
+        beneficiaireList=v;
+      });
+
     data=beneficiaireList;
     setState(() {
       data=beneficiaireList;
@@ -260,14 +265,22 @@ class _TransactionState extends State<TransactionPage> {
           ),
           content:SingleChildScrollView(
               child: Container(
-                  height: 300.0, // Change as per your requirement
-                  width: 300.0,
+                  height: 400.0, // Change as per your requirement
+                  width: 400.0,
                   child: FutureBuilder<List<dynamic>>(
                     future: getSWData(),
                    builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if(snapshot.hasData){
-                     //   data.where((f) => f.id==_mySelection).toList();
-                         data.map((e) => (print(e)));
+                     //   data.where((f) =>  item["id"]==_mySelection).toList();
+                      var selectedBeneficiaire = data.map((item) => item).toList();
+                      selectedBeneficiaire.where((f) =>  f["id"]==_mySelection);
+                      selectedBeneficiaire.forEach((b) {
+                        editReceiver_first_name.text=b["receiver_first_name"];
+                        editReceiver_last_name.text=b["receiver_last_name"];
+                        editReceiver_country.text=b["receiver_country"];
+                        editReceiver_phone.text=b["receiver_phone"];
+                        editReceiver_email.text=b["receiver_email"];
+                      });
                         return ListView.builder(
                             shrinkWrap: true,
                             padding: EdgeInsets.all(8),
@@ -280,18 +293,12 @@ class _TransactionState extends State<TransactionPage> {
                                         Padding(
                                             padding: EdgeInsets.only(
                                                 left: 25.0, right: 25.0, top: 2.0),
-                                            child: new Row(
+                                            child: Row(
                                               mainAxisSize: MainAxisSize.max,
                                               children: <Widget>[
-                                                new Flexible(
+                                                Flexible(
                                                   child: new TextFormField(
-                                                    controller: TextEditingController()..text ='cooly',
-                                                    onChanged: (String str) {
-                                                      setState(() {
-                                                        result = str;
-                                                        editBeneficiaireName.text='cooly';
-                                                      });
-                                                    },
+                                                    controller: TextEditingController()..text =editReceiver_last_name.text,
                                                     decoration: const InputDecoration(
                                                       hintText: "Entrez un nom",
                                                       border: OutlineInputBorder(),
@@ -299,7 +306,62 @@ class _TransactionState extends State<TransactionPage> {
                                                   ),
                                                 ),
                                               ],
-                                            ))
+                                            )),
+                                        const SizedBox(height: 20.0),
+                                        Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 25.0, right: 25.0, top: 2.0),
+                                            child: new Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: <Widget>[
+                                                new Flexible(
+                                                  child: new TextFormField(
+                                                    controller: TextEditingController()..text =editReceiver_first_name.text,
+                                                    decoration: const InputDecoration(
+                                                      hintText: "Entrez un prenom",
+                                                      border: OutlineInputBorder(),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                        ),
+                                        const SizedBox(height: 20.0),
+                                        Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 25.0, right: 25.0, top: 2.0),
+                                            child: new Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: <Widget>[
+                                                new Flexible(
+                                                  child: new TextFormField(
+                                                    controller: TextEditingController()..text =editReceiver_email.text,
+                                                    decoration: const InputDecoration(
+                                                      hintText: "exemple@gmail.com",
+                                                      border: OutlineInputBorder(),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            )),
+                                        const SizedBox(height: 20.0),
+                                        Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 25.0, right: 25.0, top: 2.0),
+                                            child: new Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: <Widget>[
+                                                new Flexible(
+                                                  child: new TextFormField(
+                                                    controller: TextEditingController()..text =editReceiver_phone.text,
+                                                    decoration: const InputDecoration(
+                                                        hintText: "Entre un téléphone",
+                                                        border: OutlineInputBorder()),
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                        ),
                                       ],
                                     ),
                                   );
