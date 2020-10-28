@@ -570,7 +570,6 @@ class _SignupFormState extends State<SignupPage> {
                                   }
                                 }
                                 //  {Navigator.push(context, MaterialPageRoute(builder: (context) => f()));};
-
                               }
                             },
                           ),
