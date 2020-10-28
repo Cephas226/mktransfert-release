@@ -35,17 +35,19 @@ class _TransactionState extends State<TransactionPage> {
   var editReceiver_phone = TextEditingController();
   var editReceiver_country = TextEditingController();
   String _mySelection;
-
+  String _mySelectionCountry;
   String _nom(dynamic beneficiaire) {
     return beneficiaire['nom'];
   }
   final _beneficiaire=Beneficiaire();
   List AllBeneficiaire;
   List data = List();
+  var testCountry = List();
+  List countrydata = List();
   getToken() async {
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
-     return responseJson;
+    return responseJson;
 
   }
   Future<List<dynamic>> getSWData() async {
@@ -55,18 +57,23 @@ class _TransactionState extends State<TransactionPage> {
     int user_id =responseJson["user_id"];
     var res = await http
         .get(Uri.encodeFull(apiUrl+'$user_id'), headers: {
-          "Accept": "application/json",
-          'Authorization': 'Bearer $token',
-        });
+      "Accept": "application/json",
+      'Authorization': 'Bearer $token',
+    });
     var beneficiaireList;
+    var countryList=List ();
     var resBody = json.decode(res.body);
-      resBody['data_beneficiaire']?.forEach((k, v) {
-        beneficiaireList=v;
-      });
-
+    resBody['data_beneficiaire']?.forEach((k, v) {
+      beneficiaireList=v;
+    });
+    resBody['data_country']?.forEach((k, v) {
+      countryList.add(v[0]);
+    });
     data=beneficiaireList;
+    countrydata=countryList;
     setState(() {
       data=beneficiaireList;
+      countrydata=countryList;
     });
     return beneficiaireList;
   }
@@ -112,8 +119,8 @@ class _TransactionState extends State<TransactionPage> {
   List<Widget> _buildItems1() {
     return point_retrait
         .map((val) => MySelectionItem(
-              title: val,
-            ))
+      title: val,
+    ))
         .toList();
   }
   void _showBeneficiaireInfo() {
@@ -134,6 +141,10 @@ class _TransactionState extends State<TransactionPage> {
                       future: getSWData(),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if(snapshot.hasData){
+                          testCountry=List();
+                          countrydata.forEach((element) {
+                            testCountry.add(element);
+                          });
                           //   data.where((f) =>  item["id"]==_mySelection).toList();
                           var selectedBeneficiaire = data.map((item) => item).toList();
                           selectedBeneficiaire.where((f) =>  f["id"]==_mySelection);
@@ -149,12 +160,43 @@ class _TransactionState extends State<TransactionPage> {
                               padding: EdgeInsets.all(8),
                               itemCount: 1,
                               itemBuilder: (BuildContext context, int index){
+
                                 return
                                   Container(
                                     child: Form(
-                                      key: _formKey,
                                       child: Column(
                                         children: <Widget>[
+                                          Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 25.0, right: 25.0, top: 2.0),
+                                              child: new Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: <Widget>[
+                                                  new Flexible(
+                                                      child:DropdownButtonHideUnderline(
+                                                        child: DropdownButton(
+                                                          hint: Text("Choisir un pays"),
+                                                          items: testCountry?.map((item) {
+                                                            return DropdownMenuItem(
+                                                              child:  Text(item['country_name']),
+                                                              value: item['id'].toString(),
+                                                            );
+                                                          })?.toList() ??
+                                                              [],
+                                                          onChanged: (newVal) {
+                                                            setState(() {
+                                                              _mySelectionCountry = newVal;
+                                                              _showBeneficiaireInfo();
+                                                            });
+                                                          },
+                                                          value: _mySelectionCountry,
+                                                        ),
+                                                      )
+                                                  )
+                                                ],
+                                              )
+                                          ),
+                                          const SizedBox(height: 20.0),
                                           Padding(
                                               padding: EdgeInsets.only(
                                                   left: 25.0, right: 25.0, top: 2.0),
@@ -231,6 +273,8 @@ class _TransactionState extends State<TransactionPage> {
                                                 ],
                                               )
                                           ),
+                                          const SizedBox(height: 20.0),
+
                                         ],
 
                                       ),
@@ -316,9 +360,9 @@ class _TransactionState extends State<TransactionPage> {
     _loadCurrencies();
     _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
     _selectedItem = _dropdownMenuItems[0].value;
+
     _dropdownMenuItemsGnf = buildDropDownMenuItemsGnf(_dropdownItemsGnf);
     _selectedItemGnf = _dropdownMenuItemsGnf[0].value;
-
   }
   Future<String> _loadCurrencies() async {
     String uri = "https://api.exchangeratesapi.io/latest";
@@ -329,7 +373,7 @@ class _TransactionState extends State<TransactionPage> {
     currencies = curMap.keys.toList();
     currencies.where((f) => f == 'EUR' || f == 'USD').toList();
     setState(() {});
-   // print(currencies.where((f) => f == 'EUR' || f == 'USD').toList());
+    // print(currencies.where((f) => f == 'EUR' || f == 'USD').toList());
     return "Success";
   }
 
@@ -341,7 +385,7 @@ class _TransactionState extends State<TransactionPage> {
     var responseBody = json.decode(response.body);
     setState(() {
       result = (double.parse(fromTextController.text) *
-              (responseBody["rates"][toCurrency]))
+          (responseBody["rates"][toCurrency]))
           .toStringAsFixed(2);
     });
     return "Success";
@@ -366,6 +410,21 @@ class _TransactionState extends State<TransactionPage> {
         DropdownMenuItem(
           child: Text(listItem.name),
           value: listItem,
+        ),
+      );
+    }
+    return items;
+  }
+
+
+
+  List<DropdownMenuItem<dynamic>> buildDropDownMenuCountry(List listCountries) {
+    List<DropdownMenuItem<ListItem>> items = List();
+    for (dynamic country in listCountries) {
+      items.add(
+        DropdownMenuItem(
+          child: Text(country.country_name),
+          value: country,
         ),
       );
     }
@@ -401,7 +460,11 @@ class _TransactionState extends State<TransactionPage> {
     ListItem(26, "Touba"),
   ];
   List<DropdownMenuItem<ListItem>> _dropdownMenuItems;
+
+  List<DropdownMenuItem<dynamic>> _dropdownMenuPays;
   ListItem _selectedItem;
+  dynamic _selectedCountry;
+
   Language _selectedLanguage;
   List<ListItemGnf> _dropdownItemsGnf = [
     ListItemGnf("assets/Image/gnf.png", "GNF"),
@@ -449,6 +512,23 @@ class _TransactionState extends State<TransactionPage> {
       ],
     );
   }
+  Widget _buildDropButtonCountry() {
+    print(_dropdownMenuPays);
+    /*return Row(
+      children: <Widget>[
+        DropdownButtonHideUnderline(
+          child: DropdownButton(
+              value: _selectedCountry,
+              items: _dropdownMenuPays,
+              onChanged: (value) {
+                setState(() {
+                  _selectedCountry = value;
+                });
+              }),
+        )
+      ],
+    );*/
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -460,243 +540,244 @@ class _TransactionState extends State<TransactionPage> {
       body: currencies == null
           ? Center(child: CircularProgressIndicator())
           : Container(
-              width: MediaQuery.of(context).size.width,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Card(
-                    color: _colorFromHex("#F7FAFF"),
-                    elevation: 3.0,
-                    child: ListView(
-                      children: <Widget>[
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        width: MediaQuery.of(context).size.width,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Card(
+              color: _colorFromHex("#F7FAFF"),
+              elevation: 3.0,
+              child: ListView(
+                children: <Widget>[
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      ListTile(
+                        title: Text(
+                          "Choisir un beneficiaire",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      ListTile(
+                        title: Container(
+                            width: 50,
+                            padding: const EdgeInsets.only(
+                                left: 10.0, right: 10.0),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5.0),
+                                border: Border.all()),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                                hint: Text("Choisir un bénéficiaire"),
+                                items: data?.map((item) {
+                                  return DropdownMenuItem(
+                                    child:  Text(item['receiver_last_name']),
+                                    value: item['id'].toString(),
+                                  );
+                                })?.toList() ??
+                                    [],
+                                onChanged: (newVal) {
+                                  setState(() {
+                                    _mySelection = newVal;
+                                    _showBeneficiaireInfo();
+                                  });
+                                },
+                                value: _mySelection,
+                              ),
+                            ),
+                        ),
+                        trailing: IconButton(
+                          color: Colors.blue,
+                          icon: Icon(Icons.person_add),
+                          onPressed: () {},
+                        ),
+                      ),
+                      const SizedBox(height: 10.0),
+                      ListTile(
+                        title: TextFormField(
+                          decoration: InputDecoration(
+                            hintText: "Saisir le montant à envoyer",
+                            border: OutlineInputBorder(),
+                          ),
+                          controller: fromTextController,
+                          style: TextStyle(
+                              fontSize: 20.0, color: Colors.black),
+                          keyboardType: TextInputType.numberWithOptions(
+                              decimal: true),
+                          onChanged: (text) {
+                            // result=(double.parse(fromTextController.text) * (10)).toStringAsFixed(2);
+                            _doConversion();
+                            fromTextControllergnf.text = result;
+                            fromTextControllerReceive.text =
+                                fromTextControllergnf.text +
+                                    12.toString();
+                            fromTextControllerTotal.text =
+                                fromTextControllergnf.text +
+                                    10.toString();
+                            fromTextControllerCommission.text =
+                                10.toString();
+                          },
+                        ),
+                        trailing: _buildDropDownButton(fromCurrency),
+                      ),
+                      const SizedBox(height: 20.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            "1€ = 1.0 GNF | Montant Reçu en dévise locale",
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.w500),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 20.0),
+                      ListTile(
+                        title: TextFormField(
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            hintText: "Resultat attendu",
+                            border: OutlineInputBorder(),
+                          ),
+                          controller: fromTextControllergnf,
+                          style: TextStyle(
+                              fontSize: 20.0, color: Colors.black),
+                        ),
+                        trailing: _buildDropDownButton(fromCurrency),
+                      ),
+                      const SizedBox(height: 20.0),
+                      Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[
-                            ListTile(
-                              title: Text(
-                                "Choisir un beneficiaire",
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20.0),
+                              child: Text(
+                                "Choisir un point de retrait",
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w500),
                               ),
                             ),
-                            ListTile(
-                              title: Container(
-                                  width: 50,
-                                  padding: const EdgeInsets.only(
-                                      left: 10.0, right: 10.0),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5.0),
-                                      border: Border.all()),
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton(
-                                      hint: Text("Choisir un bénéficiaire"),
-                                      items: data?.map((item) {
-                                            return DropdownMenuItem(
-                                              child:  Text(item['receiver_last_name']),
-                                              value: item['id'].toString(),
-                                            );
-                                          })?.toList() ??
-                                          [],
-                                      onChanged: (newVal) {
-                                        setState(() {
-                                          _mySelection = newVal;
-                                          _showBeneficiaireInfo();
-                                        });
-                                      },
-                                      value: _mySelection,
-                                    ),
-                                  )),
-                              trailing: IconButton(
-                                color: Colors.blue,
-                                icon: Icon(Icons.person_add),
-                                onPressed: () {},
-                              ),
-                            ),
                             const SizedBox(height: 10.0),
-                            ListTile(
-                              title: TextFormField(
-                                decoration: InputDecoration(
-                                  hintText: "Saisir le montant à envoyer",
-                                  border: OutlineInputBorder(),
-                                ),
-                                controller: fromTextController,
-                                style: TextStyle(
-                                    fontSize: 20.0, color: Colors.black),
-                                keyboardType: TextInputType.numberWithOptions(
-                                    decimal: true),
-                                onChanged: (text) {
-                                  // result=(double.parse(fromTextController.text) * (10)).toStringAsFixed(2);
-                                  _doConversion();
-                                  fromTextControllergnf.text = result;
-                                  fromTextControllerReceive.text =
-                                      fromTextControllergnf.text +
-                                          12.toString();
-                                  fromTextControllerTotal.text =
-                                      fromTextControllergnf.text +
-                                          10.toString();
-                                  fromTextControllerCommission.text =
-                                      10.toString();
-                                },
-                              ),
-                              trailing: _buildDropDownButton(fromCurrency),
-                            ),
-                            const SizedBox(height: 20.0),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  "1€ = 1.0 GNF | Montant Reçu en dévise locale",
-                                  style: TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.w500),
-                                )
-                              ],
-                            ),
-                            const SizedBox(height: 20.0),
-                            ListTile(
-                              title: TextFormField(
-                                readOnly: true,
-                                decoration: InputDecoration(
-                                  hintText: "Resultat attendu",
-                                  border: OutlineInputBorder(),
-                                ),
-                                controller: fromTextControllergnf,
-                                style: TextStyle(
-                                    fontSize: 20.0, color: Colors.black),
-                              ),
-                              trailing: _buildDropDownButton(fromCurrency),
-                            ),
-                            const SizedBox(height: 20.0),
                             Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                mainAxisAlignment:
+                                MainAxisAlignment.start,
+                                crossAxisAlignment:
+                                CrossAxisAlignment.stretch,
                                 children: <Widget>[
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 20.0),
-                                    child: Text(
-                                      "Choisir un point de retrait",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10.0),
-                                  Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: <Widget>[
-                                        Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: Container(
-                                                padding: const EdgeInsets.only(
-                                                    left: 10.0, right: 10.0),
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5.0),
-                                                    border: Border.all()),
-                                                child:
-                                                    DropdownButtonHideUnderline(
-                                                  child: DropdownButton(
-                                                      value: _selectedItem,
-                                                      items: _dropdownMenuItems,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _selectedItem = value;
-                                                        });
-                                                      }),
-                                                ))),
-                                      ]),
-                                  const SizedBox(height: 20.0),
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Container(
+                                          padding: const EdgeInsets.only(
+                                              left: 10.0, right: 10.0),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                              BorderRadius.circular(
+                                                  5.0),
+                                              border: Border.all()),
+                                          child:
+                                          DropdownButtonHideUnderline(
+                                            child: DropdownButton(
+                                                value: _selectedItem,
+                                                items: _dropdownMenuItems,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    _selectedItem = value;
+                                                  });
+                                                }),
+                                          ))),
                                 ]),
-                            Container(
-                              decoration: const BoxDecoration(
-                                border: Border(
-                                  left: BorderSide(
-                                      width: 10.0, color: Colors.indigoAccent),
-                                ),
-                              ),
-                              height: 80,
-                              child: Card(
-                                color: _colorFromHex("#F7FAFF"),
-                                elevation: 3.0,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 10.0),
-                                      child: Text(
-                                        "Montant à recevoir :" +
-                                            fromTextControllerReceive.text,
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
                             const SizedBox(height: 20.0),
-                            Container(
-                              decoration: const BoxDecoration(
-                                border: Border(
-                                  left: BorderSide(
-                                      width: 10.0, color: Colors.black54),
+                          ]),
+                      Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            left: BorderSide(
+                                width: 10.0, color: Colors.indigoAccent),
+                          ),
+                        ),
+                        height: 80,
+                        child: Card(
+                          color: _colorFromHex("#F7FAFF"),
+                          elevation: 3.0,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                const EdgeInsets.only(left: 10.0),
+                                child: Text(
+                                  "Montant à recevoir :" +
+                                      fromTextControllerReceive.text,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500),
                                 ),
                               ),
-                              height: 80,
-                              child: Card(
-                                color: _colorFromHex("#F7FAFF"),
-                                elevation: 3.0,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 10.0),
-                                      child: Text(
-                                        "Montant commission :" +
-                                            fromTextControllerCommission.text,
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                  ],
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20.0),
+                      Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            left: BorderSide(
+                                width: 10.0, color: Colors.black54),
+                          ),
+                        ),
+                        height: 80,
+                        child: Card(
+                          color: _colorFromHex("#F7FAFF"),
+                          elevation: 3.0,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                const EdgeInsets.only(left: 10.0),
+                                child: Text(
+                                  "Montant commission :" +
+                                      fromTextControllerCommission.text,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500),
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 20.0),
-                            Container(
-                              decoration: const BoxDecoration(
-                                border: Border(
-                                  left: BorderSide(
-                                      width: 10.0, color: Colors.redAccent),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20.0),
+                      Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            left: BorderSide(
+                                width: 10.0, color: Colors.redAccent),
+                          ),
+                        ),
+                        height: 80,
+                        child: Card(
+                          color: _colorFromHex("#F7FAFF"),
+                          elevation: 3.0,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                const EdgeInsets.only(left: 10.0),
+                                child: Text(
+                                  "Montant total à payer :" +
+                                      fromTextControllerTotal.text,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500),
                                 ),
                               ),
-                              height: 80,
-                              child: Card(
-                                color: _colorFromHex("#F7FAFF"),
-                                elevation: 3.0,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 10.0),
-                                      child: Text(
-                                        "Montant total à payer :" +
-                                            fromTextControllerTotal.text,
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                    /* Chip(
+                              /* Chip(
                                 backgroundColor: Colors.transparent,
                                 label: result != null ?
                                 Text(
@@ -705,89 +786,89 @@ class _TransactionState extends State<TransactionPage> {
                                 )
                                     : Text(""),
                               )*/
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: double.infinity,
-                              height: 50.0,
-                              child: RaisedButton(
-                                color: Colors.blue,
-                                textColor: Colors.white,
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: Text("Effectuer un transfert"),
-                                onPressed: () {
-                                  if (fromTextController.text.isEmpty) {
-                                    FancyAlertDialog.showFancyAlertDialog(
-                                      context,
-                                      'Alerte',
-                                      'Veillez remplir le montant',
-                                      Colors.red,
-                                      icon: Icon(
-                                        Icons.warning,
-                                        color: Colors.white,
-                                      ),
-                                      labelPositiveButton: 'Ok',
-                                      onTapPositiveButton: () {
-                                        Navigator.pop(context);
-                                      },
-                                      labelNegativeButton: '',
-                                      onTapNegativeButton: () {
-                                        Navigator.pop(context);
-                                        print('tap negative button');
-                                      },
-                                    );
-                                  } else {
-                                    FancyAlertDialog.showFancyAlertDialog(
-                                      context,
-                                      'Confirmation',
-                                      'Le montant a envoyé est de' +
-                                          fromTextController.text +
-                                          '.Le montant à recevoir est de' +
-                                          (double.parse(result) + 12)
-                                              .toStringAsFixed(2) +
-                                          '.Le montant de la commission est de' +
-                                          12.toString() +
-                                          '.Le montant total est de ' +
-                                          (double.parse(
-                                                      fromTextController.text) +
-                                                  12)
-                                              .toStringAsFixed(2),
-                                      Colors.blue,
-                                      icon: Icon(
-                                        Icons.clear,
-                                        color: Colors.white,
-                                      ),
-                                      labelPositiveButton: 'OK',
-                                      onTapPositiveButton: () {
-                                        Navigator.pop(context);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  PaymentPage()),
-                                        );
-                                      },
-                                      labelNegativeButton: 'Annulez',
-                                      onTapNegativeButton: () {
-                                        Navigator.pop(context);
-                                        print('tap negative button');
-                                      },
-                                    );
-                                  }
-                                },
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ],
-                    )),
-              ),
-            ),
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50.0,
+                        child: RaisedButton(
+                          color: Colors.blue,
+                          textColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Text("Effectuer un transfert"),
+                          onPressed: () {
+                            if (fromTextController.text.isEmpty) {
+                              FancyAlertDialog.showFancyAlertDialog(
+                                context,
+                                'Alerte',
+                                'Veillez remplir le montant',
+                                Colors.red,
+                                icon: Icon(
+                                  Icons.warning,
+                                  color: Colors.white,
+                                ),
+                                labelPositiveButton: 'Ok',
+                                onTapPositiveButton: () {
+                                  Navigator.pop(context);
+                                },
+                                labelNegativeButton: '',
+                                onTapNegativeButton: () {
+                                  Navigator.pop(context);
+                                  print('tap negative button');
+                                },
+                              );
+                            } else {
+                              FancyAlertDialog.showFancyAlertDialog(
+                                context,
+                                'Confirmation',
+                                'Le montant a envoyé est de' +
+                                    fromTextController.text +
+                                    '.Le montant à recevoir est de' +
+                                    (double.parse(result) + 12)
+                                        .toStringAsFixed(2) +
+                                    '.Le montant de la commission est de' +
+                                    12.toString() +
+                                    '.Le montant total est de ' +
+                                    (double.parse(
+                                        fromTextController.text) +
+                                        12)
+                                        .toStringAsFixed(2),
+                                Colors.blue,
+                                icon: Icon(
+                                  Icons.clear,
+                                  color: Colors.white,
+                                ),
+                                labelPositiveButton: 'OK',
+                                onTapPositiveButton: () {
+                                  Navigator.pop(context);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            PaymentPage()),
+                                  );
+                                },
+                                labelNegativeButton: 'Annulez',
+                                onTapNegativeButton: () {
+                                  Navigator.pop(context);
+                                  print('tap negative button');
+                                },
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )),
+        ),
+      ),
     );
   }
 
@@ -805,18 +886,18 @@ class _TransactionState extends State<TransactionPage> {
             .where((f) => f == 'USD')
             .toList()
             .map((String value) => DropdownMenuItem(
-                  value: value,
-                  child: Container(
-                    child: Row(
-                      children: <Widget>[
-                        Text(value,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500)),
-                      ],
-                    ),
-                  ),
-                ))
+          value: value,
+          child: Container(
+            child: Row(
+              children: <Widget>[
+                Text(value,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500)),
+              ],
+            ),
+          ),
+        ))
             .toList(),
         onChanged: (String value) {
           if (currencyCategory == fromCurrency) {
@@ -848,21 +929,21 @@ class MySelectionItem extends StatelessWidget {
       height: 60.0,
       child: isForList
           ? Padding(
-              child: _buildItem(context),
-              padding: EdgeInsets.all(10.0),
-            )
+        child: _buildItem(context),
+        padding: EdgeInsets.all(10.0),
+      )
           : Card(
-              margin: EdgeInsets.symmetric(horizontal: 10.0),
-              child: Stack(
-                children: <Widget>[
-                  _buildItem(context),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Icon(Icons.arrow_drop_down),
-                  )
-                ],
-              ),
-            ),
+        margin: EdgeInsets.symmetric(horizontal: 10.0),
+        child: Stack(
+          children: <Widget>[
+            _buildItem(context),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Icon(Icons.arrow_drop_down),
+            )
+          ],
+        ),
+      ),
     );
   }
 
@@ -872,8 +953,8 @@ class MySelectionItem extends StatelessWidget {
       alignment: Alignment.center,
       child: FittedBox(
           child: Text(
-        title,
-      )),
+            title,
+          )),
     );
   }
 }
