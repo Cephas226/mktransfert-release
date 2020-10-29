@@ -40,6 +40,8 @@ class _TransactionState extends State<TransactionPage> {
 
   double _convertResult;
 
+  double _stripeAmount;
+
   double _taux;
   double _conversion_eur;
   double _conversion_usd;
@@ -435,15 +437,40 @@ class _TransactionState extends State<TransactionPage> {
   }
 
   Future<double> _doConversion(String valeurSaisie) async {
+    _convertResult=0;
+    fromTextControllerReceiver.text="";
+    fromTextControllerToReceiveMontant.text="";
+    fromTextControllerCommission.text="";
     var a =this._taux;
     var b =this._conversion_eur;
     _convertResult=(double.parse(valeurSaisie)*b)+a;
     fromTextControllerReceiver.text=_convertResult.toString();
     fromTextControllerToReceiveMontant.text=fromTextControllerReceiver.text;
     fromTextControllerCommission.text=a.toString();
+    fromTextControllerTotal.text=(double.parse(fromTextControllerToReceiveMontant.text)+double.parse(fromTextControllerCommission.text)).toString();
 
+    _stripeAmount=double.parse(valeurSaisie)+double.parse(fromTextControllerCommission.text);
+
+    print(fromTextControllerToReceiveMontant.text);
   }
+  Future<double> _doConversionDollard() async {
+    var b =this._conversion_usd;
+    var a =this._taux;
+    _convertResult=0;
+    fromTextControllerReceiver.text="";
+    fromTextControllerToReceiveMontant.text="";
+    fromTextControllerCommission.text="";
 
+    _convertResult=(double.parse(fromTextControllerSender.text)*b)+a;
+    fromTextControllerReceiver.text=fromTextControllerSender.text;
+    fromTextControllerToReceiveMontant.text=fromTextControllerReceiver.text;
+    fromTextControllerCommission.text=a.toString();
+    fromTextControllerTotal.text=(double.parse(fromTextControllerToReceiveMontant.text)+double.parse(fromTextControllerCommission.text)).toString();
+
+    _stripeAmount=double.parse(fromTextControllerSender.text)+double.parse(fromTextControllerCommission.text);
+
+    print(fromTextControllerToReceiveMontant.text);
+  }
   _onFromChanged(String value) {
     setState(() {
       fromCurrency = value;
@@ -541,7 +568,6 @@ class _TransactionState extends State<TransactionPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Effectuer votre transfert"),
-        automaticallyImplyLeading: true,
       ),
       body: currencies == null
           ? Center(child: CircularProgressIndicator())
@@ -615,7 +641,7 @@ class _TransactionState extends State<TransactionPage> {
                                 onChanged: (text) {
                                   // result=(double.parse(fromTextController.text) * (10)).toStringAsFixed(2);
                                   _doConversion(fromTextControllerSender.text);
-                                  fromTextControllerTotal.text=(double.parse(fromTextControllerSender.text)+_taux).toString();
+                                 // fromTextControllerTotal.text=(double.parse(fromTextControllerSender.text)+_taux).toString();
                                  /* fromTextControllergnf.text = result;
                                   fromTextControllerReceive.text =
                                       fromTextControllergnf.text +
@@ -812,14 +838,16 @@ class _TransactionState extends State<TransactionPage> {
                                       onTapPositiveButton: () {
                                        // data.where((element) => false)
                                         storage.write(key: "transaction", value: json.encode([
-                                         { "id":_beneficiaireID,
-                                          "montant_envoie":fromTextControllerSender.text,
-                                          "montant_reçu":fromTextControllerReceiver.text,
-                                          "montant_envoie":fromTextControllerSender.text,
-                                          "point_retrait":_mySelectionPointRetrait,
-                                          "receiver_name":editReceiver_first_name.text,
-                                          "currency_sender":_senderCurrency,
-                                          "montant_total":fromTextControllerTotal.text}
+                                         {
+                                            "id":_beneficiaireID,
+                                            "montant_envoie":fromTextControllerSender.text,
+                                            "montant_reçu":fromTextControllerReceiver.text,
+                                            "montant_envoie":fromTextControllerSender.text,
+                                            "point_retrait":_mySelectionPointRetrait,
+                                            "receiver_name":editReceiver_first_name.text,
+                                            "currency_sender":_senderCurrency,
+                                            "montant_total":_stripeAmount
+                                         }
                                         ]));
                                         Navigator.pop(context);
                                         Navigator.push(
@@ -893,7 +921,15 @@ class _TransactionState extends State<TransactionPage> {
           ),
         ].toList(),
         onChanged: (value) {
-          print(value);
+          if(value==2){
+            print('im 2');
+            _doConversionDollard();
+          }
+            if(value==1){
+              print('im 1');
+              _doConversion(fromTextControllerSender.text);
+          }
+            ;
           setState(() {
             _valueReceiver = value;
           });

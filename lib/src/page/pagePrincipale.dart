@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:mktransfert/core/presentation/res/assets.dart';
 import 'package:mktransfert/src/page/beneficiaire.dart';
 import 'package:mktransfert/src/page/loginPage.dart';
+import 'package:mktransfert/src/page/navigation.dart';
 import 'package:mktransfert/src/page/transaction.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 final storage = FlutterSecureStorage();
@@ -460,7 +461,7 @@ class _MainPageState extends State<PagePrincipale> {
           Expanded(
             child: InkWell(
               onTap: () => {
-              Navigator.push(context, MaterialPageRoute(builder: (context) =>TransactionPage()),),}, //
+              Navigator.push(context, MaterialPageRoute(builder: (context) =>NavigationPage()),),}, //
               child:  Text(
                   "Effectuer un transfert",
                 style: TextStyle(

@@ -88,7 +88,7 @@ class _NavigationPageState extends State<NavigationPage> {
         children: <Widget>[
           Center(
             child: Container(
-              child: PagePrincipale(),
+              child: TransactionPage(),
             ),
           ),
           Center(
@@ -109,7 +109,7 @@ class _NavigationPageState extends State<NavigationPage> {
         ],
         physics: NeverScrollableScrollPhysics(), // Comment this if you need to use Swipe.
       ),
-/*
+
       floatingActionButton: Container(
         height: 40.0,
         width: 65.0,
@@ -123,7 +123,7 @@ class _NavigationPageState extends State<NavigationPage> {
             // elevation: 5.0,
           ),
         ),
-      ),*/
+      ),
     );
   }
 

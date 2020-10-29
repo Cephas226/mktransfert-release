@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/credit_card_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:mktransfert/core/presentation/res/assets.dart';
+import 'package:mktransfert/src/page/navigation.dart';
 import 'package:mktransfert/src/page/transaction.dart';
 import 'package:mktransfert/src/services/payment-service.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 import 'loginPage.dart';
-String _amount;
+double _amount;
 String _currency;
 String _transactionDate;
 String _transactionTime;
@@ -70,19 +71,23 @@ class ExistingCardsPageState extends State<ExistingCardsPage> {
       expYear: int.parse(expiryArr[1]),
     );
     var response = await StripeService.payViaExistingCard(
-        amount: "$_amount",
+        amount: (_amount.toInt()).toString(),
         currency: "$_currency",
         card: stripeCard
     );
     await dialog.hide();
     Scaffold.of(context).showSnackBar(
         SnackBar(
-          content: Text('Succès'),
+          content: Text(response.message),
           duration: new Duration(milliseconds: 1200),
         )
     ).closed.then((_) {
-      _paymentSuccessDialog(context);
-      //Navigator.pop(context);
+      if(response.success){
+        _paymentSuccessDialog(context);
+      }
+      else{
+        Navigator.pop(context);
+      }
     });
 
   }
@@ -262,7 +267,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                                  Navigator.pushAndRemoveUntil(
                                      context,
                                      MaterialPageRoute(
-                                         builder: (context) => TransactionPage()
+                                         builder: (context) => NavigationPage()
                                      ),
                                      ModalRoute.withName("/transaction")
                                  );

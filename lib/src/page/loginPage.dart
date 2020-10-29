@@ -118,18 +118,6 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(width: 10.0),
                   ],
                 ),
-                const SizedBox(height: 40.0),
-                OutlineButton.icon(
-                  borderSide: BorderSide(color: Colors.blue),
-                  color: Colors.blue,
-                  textColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  icon: Icon(FontAwesomeIcons.google),
-                  label: Text("Continuer avec Google"),
-                  onPressed: () {},
-                ),
                 const SizedBox(height: 20.0),
               ],
             ),
