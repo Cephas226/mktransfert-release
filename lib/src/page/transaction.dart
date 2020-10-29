@@ -35,12 +35,15 @@ class _TransactionState extends State<TransactionPage> {
   var editReceiver_phone = TextEditingController();
   var editReceiver_country = TextEditingController();
   String _mySelection;
+  String _mySelectionPointRetrait;
   String _senderCurrency;
   String _mySelectionCountry;
+  var receiver_point_retait = List();
   String _nom(dynamic beneficiaire) {
     return beneficiaire['nom'];
   }
-  final _beneficiaire=Beneficiaire();
+
+  final _beneficiaire = Beneficiaire();
   List AllBeneficiaire;
   List data = List();
   var testCountry = List();
@@ -49,52 +52,60 @@ class _TransactionState extends State<TransactionPage> {
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
     return responseJson;
-
   }
+
   Future<List<dynamic>> getSWData() async {
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
-    String token =responseJson["access_token"];
-    int user_id =responseJson["user_id"];
-    var res = await http
-        .get(Uri.encodeFull(apiUrl+'$user_id'), headers: {
+    String token = responseJson["access_token"];
+    int user_id = responseJson["user_id"];
+    var res = await http.get(Uri.encodeFull(apiUrl + '$user_id'), headers: {
       "Accept": "application/json",
       'Authorization': 'Bearer $token',
     });
-    var beneficiaireList;
-    var countryList=List ();
+    var beneficiaireList = List();
+    var countryList = List();
+    var point_retait = List();
     var resBody = json.decode(res.body);
     resBody['data_beneficiaire']?.forEach((k, v) {
-      beneficiaireList=v;
+      beneficiaireList.add(v[0]);
     });
     resBody['data_country']?.forEach((k, v) {
       countryList.add(v[0]);
     });
-    data=beneficiaireList;
-    countrydata=countryList;
+    data = beneficiaireList;
+    countrydata = countryList;
     setState(() {
-      data=beneficiaireList;
-      countrydata=countryList;
+      data = beneficiaireList;
+      countrydata = countryList;
     });
     return beneficiaireList;
   }
+
   displayPaymentInfo() async {
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
-    String token =responseJson["access_token"];
-    int user_id =responseJson["user_id"];
-    var res = await http
-        .get(Uri.encodeFull('https://gracetechnologie.pythonanywhere.com/api/payment/'+'$user_id'), headers: {
-      "Accept": "application/json",
-      'Authorization': 'Bearer $token',
-    });
-    if (res.statusCode==200){
+    String token = responseJson["access_token"];
+    int user_id = responseJson["user_id"];
+    var res = await http.get(
+        Uri.encodeFull(
+            'https://gracetechnologie.pythonanywhere.com/api/payment/' +
+                '$user_id'),
+        headers: {
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        });
+    if (res.statusCode == 200) {
       var resBody = json.decode(res.body);
-      print('cooly');
-      print(_senderCurrency);
-      return _senderCurrency=resBody['API_transac_data']['devise_sender'];
+      _senderCurrency = resBody['API_transac_data']['devise_sender'];
+
+      resBody['point_retait']?.forEach((k, v) {
+        receiver_point_retait.add(v[0]);
+      });
+      print(receiver_point_retait);
     }
   }
+
   PaymentMethod _paymentMethod;
   String _error;
   List<String> currencies;
@@ -103,7 +114,7 @@ class _TransactionState extends State<TransactionPage> {
   String result;
   Color color2 = _colorFromHex("#b74093");
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final point_retrait = [
+  final point_retraits = [
     "Boffa",
     "Boke",
     "Conakry – Kaloum",
@@ -132,14 +143,16 @@ class _TransactionState extends State<TransactionPage> {
     "Touba",
   ];
   int selectedIndex1 = 0;
-  int _value = 1;
+  int _valueSender = 1;
+  int _valueReceiver = 1;
   List<Widget> _buildItems1() {
-    return point_retrait
+    return point_retraits
         .map((val) => MySelectionItem(
-      title: val,
-    ))
+              title: val,
+            ))
         .toList();
   }
+
   void _showBeneficiaireInfo() {
     String dialogText;
     showDialog(
@@ -147,241 +160,273 @@ class _TransactionState extends State<TransactionPage> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState){
-              return AlertDialog(
-                title: Container(
-                  child: Text("Informations du bénéficiaire"),
-                ),
-                content:SingleChildScrollView(
-                    child: Container(
-                        height: 400.0, // Change as per your requirement
-                        width: 400.0,
-                        child: FutureBuilder<List<dynamic>>(
-                            future: getSWData(),
-                            builder: (BuildContext context, AsyncSnapshot snapshot) {
-                              if(snapshot.hasData){
-                                testCountry=List();
-                                countrydata.forEach((element) {
-                                  testCountry.add(element);
-                                });
-                                //   data.where((f) =>  item["id"]==_mySelection).toList();
-                                var selectedBeneficiaire = data.map((item) => item).toList();
-                                selectedBeneficiaire.where((f) =>  f["id"]==_mySelection);
-                                selectedBeneficiaire.forEach((b) {
-                                  editReceiver_first_name.text=b["receiver_first_name"];
-                                  editReceiver_last_name.text=b["receiver_last_name"];
-                                  editReceiver_country.text=b["receiver_country"];
-                                  editReceiver_phone.text=b["receiver_phone"];
-                                  editReceiver_email.text=b["receiver_email"];
-                                });
-                                return ListView.builder(
-                                    shrinkWrap: true,
-                                    padding: EdgeInsets.all(8),
-                                    itemCount: 1,
-                                    itemBuilder: (BuildContext context, int index){
-
-                                      return
-                                        Container(
-                                          child: Form(
-                                            child: Column(
-                                              children: <Widget>[
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 25.0, right: 25.0, top: 2.0),
-                                                    child: new Row(
-                                                      mainAxisSize: MainAxisSize.max,
-                                                      children: <Widget>[
-                                                        new Flexible(
-                                                            child: Container(
-                                                              padding: const EdgeInsets.only(
-                                                                  left: 10.0, right: 10.0),
-                                                              decoration: BoxDecoration(
-                                                                  borderRadius: BorderRadius.circular(5.0),
-                                                                  border: Border.all()),
-                                                              child:  DropdownButtonHideUnderline(
-                                                                child: DropdownButton(
-                                                                  hint: Text("Choisir un pays"),
-                                                                  items: testCountry?.map((item) {
-                                                                    return DropdownMenuItem(
-                                                                      child:  Text(item['country_name']),
-                                                                      value: item['id'].toString(),
-                                                                    );
-                                                                  })?.toList() ??
-                                                                      [],
-                                                                  onChanged: (country) {
-                                                                    setState(() {
-                                                                      // showLoaderDialog(context);
-                                                                      _mySelectionCountry=country;
-                                                                    });
-                                                                  },
-                                                                  value: _mySelectionCountry,
-                                                                ),
-                                                              ),
-                                                            )
-                                                        )
-                                                      ],
-                                                    )
-                                                ),
-                                                const SizedBox(height: 20.0),
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 25.0, right: 25.0, top: 2.0),
-                                                    child: Row(
-                                                      mainAxisSize: MainAxisSize.max,
-                                                      children: <Widget>[
-                                                        Flexible(
-                                                          child: new TextFormField(
-                                                            onSaved: (val) => setState(() => editReceiver_last_name.text = val),
-                                                            controller: TextEditingController()..text =editReceiver_last_name.text,
-                                                            decoration: const InputDecoration(
-                                                              hintText: "Entrez un nom",
-                                                              border: OutlineInputBorder(),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    )),
-                                                const SizedBox(height: 20.0),
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 25.0, right: 25.0, top: 2.0),
-                                                  child: new Row(
-                                                    mainAxisSize: MainAxisSize.max,
-                                                    children: <Widget>[
-                                                      new Flexible(
-                                                        child: new TextFormField(
-                                                          onSaved: (val) => setState(() => editReceiver_first_name.text = val),
-                                                          controller: TextEditingController()..text =editReceiver_first_name.text,
-                                                          decoration: const InputDecoration(
-                                                            hintText: "Entrez un prenom",
-                                                            border: OutlineInputBorder(),
-                                                          ),
-                                                        ),
+            builder: (BuildContext context, StateSetter setState) {
+          return AlertDialog(
+            title: Container(
+              child: Text("Informations du bénéficiaire"),
+            ),
+            content: SingleChildScrollView(
+                child: Container(
+                    height: 400.0, // Change as per your requirement
+                    width: 400.0,
+                    child: FutureBuilder<List<dynamic>>(
+                        future: getSWData(),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.hasData) {
+                            testCountry = List();
+                            countrydata.forEach((element) {
+                              testCountry.add(element);
+                            });
+                            //   data.where((f) =>  item["id"]==_mySelection).toList();
+                            var selectedBeneficiaire =
+                                data.map((item) => item).toList();
+                            selectedBeneficiaire
+                                .where((f) => f["id"] == _mySelection);
+                            selectedBeneficiaire.forEach((b) {
+                              editReceiver_first_name.text =
+                                  b["receiver_first_name"];
+                              editReceiver_last_name.text =
+                                  b["receiver_last_name"];
+                              editReceiver_country.text = b["receiver_country"];
+                              editReceiver_phone.text = b["receiver_phone"];
+                              editReceiver_email.text = b["receiver_email"];
+                            });
+                            return ListView.builder(
+                                shrinkWrap: true,
+                                padding: EdgeInsets.all(8),
+                                itemCount: 1,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Container(
+                                    child: Form(
+                                      child: Column(
+                                        children: <Widget>[
+                                          Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 25.0,
+                                                  right: 25.0,
+                                                  top: 2.0),
+                                              child: new Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: <Widget>[
+                                                  new Flexible(
+                                                      child: Container(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 10.0,
+                                                            right: 10.0),
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5.0),
+                                                        border: Border.all()),
+                                                    child:
+                                                        DropdownButtonHideUnderline(
+                                                      child: DropdownButton(
+                                                        hint: Text(
+                                                            "Choisir un pays"),
+                                                        items: testCountry
+                                                                ?.map((item) {
+                                                              return DropdownMenuItem(
+                                                                child: Text(item[
+                                                                    'country_name']),
+                                                                value: item[
+                                                                        'id']
+                                                                    .toString(),
+                                                              );
+                                                            })?.toList() ??
+                                                            [],
+                                                        onChanged: (country) {
+                                                          setState(() {
+                                                            // showLoaderDialog(context);
+                                                            _mySelectionCountry =
+                                                                country;
+                                                          });
+                                                        },
+                                                        value:
+                                                            _mySelectionCountry,
                                                       ),
-                                                    ],
+                                                    ),
+                                                  ))
+                                                ],
+                                              )),
+                                          const SizedBox(height: 20.0),
+                                          Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 25.0,
+                                                  right: 25.0,
+                                                  top: 2.0),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: <Widget>[
+                                                  Flexible(
+                                                    child: new TextFormField(
+                                                      onSaved: (val) =>
+                                                          setState(() =>
+                                                              editReceiver_last_name
+                                                                  .text = val),
+                                                      controller:
+                                                          TextEditingController()
+                                                            ..text =
+                                                                editReceiver_last_name
+                                                                    .text,
+                                                      decoration:
+                                                          const InputDecoration(
+                                                        hintText:
+                                                            "Entrez un nom",
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )),
+                                          const SizedBox(height: 20.0),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 25.0,
+                                                right: 25.0,
+                                                top: 2.0),
+                                            child: new Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: <Widget>[
+                                                new Flexible(
+                                                  child: new TextFormField(
+                                                    onSaved: (val) => setState(
+                                                        () =>
+                                                            editReceiver_first_name
+                                                                .text = val),
+                                                    controller:
+                                                        TextEditingController()
+                                                          ..text =
+                                                              editReceiver_first_name
+                                                                  .text,
+                                                    decoration:
+                                                        const InputDecoration(
+                                                      hintText:
+                                                          "Entrez un prenom",
+                                                      border:
+                                                          OutlineInputBorder(),
+                                                    ),
                                                   ),
                                                 ),
-                                                const SizedBox(height: 20.0),
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 25.0, right: 25.0, top: 2.0),
-                                                    child: new Row(
-                                                      mainAxisSize: MainAxisSize.max,
-                                                      children: <Widget>[
-                                                        new Flexible(
-                                                          child: new TextFormField(
-                                                            onSaved: (val) => setState(() => editReceiver_email.text = val),
-                                                            controller: TextEditingController()..text =editReceiver_email.text,
-                                                            decoration: const InputDecoration(
-                                                              hintText: "exemple@gmail.com",
-                                                              border: OutlineInputBorder(),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    )),
-                                                const SizedBox(height: 20.0),
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 25.0, right: 25.0, top: 2.0),
-                                                    child: new Row(
-                                                      mainAxisSize: MainAxisSize.max,
-                                                      children: <Widget>[
-                                                        new Flexible(
-                                                          child: new TextFormField(
-                                                            onSaved: (val) => setState(() => editReceiver_phone.text = val),
-                                                            controller: TextEditingController()..text =editReceiver_phone.text,
-                                                            decoration: const InputDecoration(
-                                                                hintText: "Entre un téléphone",
-                                                                border: OutlineInputBorder()),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    )
-                                                ),
-                                                const SizedBox(height: 20.0),
-
                                               ],
-
                                             ),
                                           ),
-
-                                        );
-                                    }
-                                );
-                              }
-                              else {
-                                return Center(child: CircularProgressIndicator());
-                              }
-                            }
-                        )
-                    )
-                ),
-                actions: <Widget>[
-                  // usually buttons at the bottom of the dialog
-                  Row(
-                    children: <Widget>[
-                      new FlatButton(
-                        child: new Text("Annulez"),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      new FlatButton(
-                          onPressed: () async {
-                            Navigator.pop(context, true);
-                          },
-                          child: new Text("OK"))
-                    ],
+                                          const SizedBox(height: 20.0),
+                                          Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 25.0,
+                                                  right: 25.0,
+                                                  top: 2.0),
+                                              child: new Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: <Widget>[
+                                                  new Flexible(
+                                                    child: new TextFormField(
+                                                      onSaved: (val) =>
+                                                          setState(() =>
+                                                              editReceiver_email
+                                                                  .text = val),
+                                                      controller:
+                                                          TextEditingController()
+                                                            ..text =
+                                                                editReceiver_email
+                                                                    .text,
+                                                      decoration:
+                                                          const InputDecoration(
+                                                        hintText:
+                                                            "exemple@gmail.com",
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )),
+                                          const SizedBox(height: 20.0),
+                                          Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 25.0,
+                                                  right: 25.0,
+                                                  top: 2.0),
+                                              child: new Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: <Widget>[
+                                                  new Flexible(
+                                                    child: new TextFormField(
+                                                      onSaved: (val) =>
+                                                          setState(() =>
+                                                              editReceiver_phone
+                                                                  .text = val),
+                                                      controller:
+                                                          TextEditingController()
+                                                            ..text =
+                                                                editReceiver_phone
+                                                                    .text,
+                                                      decoration: const InputDecoration(
+                                                          hintText:
+                                                              "Entre un téléphone",
+                                                          border:
+                                                              OutlineInputBorder()),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )),
+                                          const SizedBox(height: 20.0),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                });
+                          } else {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                        }))),
+            actions: <Widget>[
+              // usually buttons at the bottom of the dialog
+              Row(
+                children: <Widget>[
+                  new FlatButton(
+                    child: new Text("Annulez"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
+                  new FlatButton(
+                      onPressed: () async {
+                        Navigator.pop(context, true);
+                      },
+                      child: new Text("OK"))
                 ],
-              );
-            }
-        );
-
+              ),
+            ],
+          );
+        });
       },
     );
   }
-  showLoaderDialog(BuildContext context){
-    AlertDialog alert=AlertDialog(
+
+  showLoaderDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
       content: new Row(
         children: [
           CircularProgressIndicator(),
-          Container(margin: EdgeInsets.only(left: 7),child:Text("Loading..." )),
-        ],),
+          Container(
+              margin: EdgeInsets.only(left: 7), child: Text("Loading...")),
+        ],
+      ),
     );
-    showDialog(barrierDismissible: false,
-      context:context,
-      builder:(BuildContext context){
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
         return alert;
       },
     );
     new Future.delayed(new Duration(seconds: 2), () {
       Navigator.of(context).pop(); //pop dialog
     });
-  }
-  Widget _buildDropButton() {
-    return Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        decoration: BoxDecoration(
-            color: Colors.blue, borderRadius: BorderRadius.circular(10)),
-        child: DropdownButton(
-          value: _value,
-          icon: Icon(Icons.arrow_drop_down),
-          iconSize: 42,
-          underline: SizedBox(),
-          items: [
-            DropdownMenuItem(
-              child: Text("GNF"),
-              value: 1,
-            ),
-          ],
-          onChanged: (value) {
-            setState(() {
-              _value = value;
-            });
-          },
-        ));
   }
 
   GlobalKey<ScaffoldState> _globalKey = GlobalKey();
@@ -402,10 +447,11 @@ class _TransactionState extends State<TransactionPage> {
     _loadCurrencies();
     _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
     _selectedItem = _dropdownMenuItems[0].value;
-    _mySelectionCountry="1";
+    _mySelectionCountry = "1";
     _dropdownMenuItemsGnf = buildDropDownMenuItemsGnf(_dropdownItemsGnf);
     _selectedItemGnf = _dropdownMenuItemsGnf[0].value;
   }
+
   Future<String> _loadCurrencies() async {
     String uri = "https://api.exchangeratesapi.io/latest";
     var response = await http
@@ -427,7 +473,7 @@ class _TransactionState extends State<TransactionPage> {
     var responseBody = json.decode(response.body);
     setState(() {
       result = (double.parse(fromTextController.text) *
-          (responseBody["rates"][toCurrency]))
+              (responseBody["rates"][toCurrency]))
           .toStringAsFixed(2);
     });
     return "Success";
@@ -457,8 +503,6 @@ class _TransactionState extends State<TransactionPage> {
     }
     return items;
   }
-
-
 
   List<DropdownMenuItem<dynamic>> buildDropDownMenuCountry(List listCountries) {
     List<DropdownMenuItem<ListItem>> items = List();
@@ -517,7 +561,6 @@ class _TransactionState extends State<TransactionPage> {
 
   //------
 
-
   List<DropdownMenuItem<ListItemGnf>> buildDropDownMenuItemsGnf(
       List listItems) {
     List<DropdownMenuItem<ListItemGnf>> items = List();
@@ -554,6 +597,7 @@ class _TransactionState extends State<TransactionPage> {
       ],
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -564,244 +608,205 @@ class _TransactionState extends State<TransactionPage> {
       body: currencies == null
           ? Center(child: CircularProgressIndicator())
           : Container(
-        width: MediaQuery.of(context).size.width,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Card(
-              color: _colorFromHex("#F7FAFF"),
-              elevation: 3.0,
-              child: ListView(
-                children: <Widget>[
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      ListTile(
-                        title: Text(
-                          "Choisir un beneficiaire",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                      ListTile(
-                        title: Container(
-                          width: 50,
-                          padding: const EdgeInsets.only(
-                              left: 10.0, right: 10.0),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5.0),
-                              border: Border.all()),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                              hint: Text("Choisir un bénéficiaire"),
-                              items: data?.map((item) {
-                                return DropdownMenuItem(
-                                  child:  Text(item['receiver_last_name']),
-                                  value: item['id'].toString(),
-                                );
-                              })?.toList() ??
-                                  [],
-                              onChanged: (newVal) {
-                                setState(() {
-                                  _mySelection = newVal;
-                                  _showBeneficiaireInfo();
-                                });
-                              },
-                              value: _mySelection,
-                            ),
-                          ),
-                        ),
-                        trailing: IconButton(
-                          color: Colors.blue,
-                          icon: Icon(Icons.person_add),
-                          onPressed: () {},
-                        ),
-                      ),
-                      const SizedBox(height: 10.0),
-                      ListTile(
-                        title: TextFormField(
-                          decoration: InputDecoration(
-                            hintText: "Saisir le montant à envoyer",
-                            border: OutlineInputBorder(),
-                          ),
-                          controller: fromTextController,
-                          style: TextStyle(
-                              fontSize: 20.0, color: Colors.black),
-                          keyboardType: TextInputType.numberWithOptions(
-                              decimal: true),
-                          onChanged: (text) {
-                            // result=(double.parse(fromTextController.text) * (10)).toStringAsFixed(2);
-                            _doConversion();
-                            fromTextControllergnf.text = result;
-                            fromTextControllerReceive.text =
-                                fromTextControllergnf.text +
-                                    12.toString();
-                            fromTextControllerTotal.text =
-                                fromTextControllergnf.text +
-                                    10.toString();
-                            fromTextControllerCommission.text =
-                                10.toString();
-                          },
-                        ),
-                        trailing: _buildDropDownSender(),
-                      ),
-                      const SizedBox(height: 20.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            "1€ = 1.0 GNF | Montant Reçu en dévise locale",
-                            style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w500),
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 20.0),
-                      ListTile(
-                        title: TextFormField(
-                          readOnly: true,
-                          decoration: InputDecoration(
-                            hintText: "Resultat attendu",
-                            border: OutlineInputBorder(),
-                          ),
-                          controller: fromTextControllergnf,
-                          style: TextStyle(
-                              fontSize: 20.0, color: Colors.black),
-                        ),
-                        trailing: _buildDropDownReceiver(),
-                      ),
-                      const SizedBox(height: 20.0),
-                      Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+              width: MediaQuery.of(context).size.width,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Card(
+                    color: _colorFromHex("#F7FAFF"),
+                    elevation: 3.0,
+                    child: ListView(
+                      children: <Widget>[
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(left: 20.0),
-                              child: Text(
-                                "Choisir un point de retrait",
+                            ListTile(
+                              title: Text(
+                                "Choisir un beneficiaire",
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w500),
                               ),
                             ),
+                            ListTile(
+                              title: Container(
+                                width: 50,
+                                padding: const EdgeInsets.only(
+                                    left: 10.0, right: 10.0),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    border: Border.all()),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton(
+                                    hint: Text("Choisir un bénéficiaire"),
+                                    items: data?.map((item) {
+                                          return DropdownMenuItem(
+                                            child: Text(
+                                                item['receiver_last_name']),
+                                            value: item['id'].toString(),
+                                          );
+                                        })?.toList() ??
+                                        [],
+                                    onChanged: (newVal) {
+                                      setState(() {
+                                        _mySelection = newVal;
+                                        _showBeneficiaireInfo();
+                                      });
+                                    },
+                                    value: _mySelection,
+                                  ),
+                                ),
+                              ),
+                              trailing: IconButton(
+                                color: Colors.blue,
+                                icon: Icon(Icons.person_add),
+                                onPressed: () {},
+                              ),
+                            ),
                             const SizedBox(height: 10.0),
-                            Column(
-                                mainAxisAlignment:
-                                MainAxisAlignment.start,
-                                crossAxisAlignment:
-                                CrossAxisAlignment.stretch,
-                                children: <Widget>[
-                                  Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Container(
-                                          padding: const EdgeInsets.only(
-                                              left: 10.0, right: 10.0),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                              BorderRadius.circular(
-                                                  5.0),
-                                              border: Border.all()),
-                                          child:
-                                          DropdownButtonHideUnderline(
-                                            child: DropdownButton(
-                                                value: _selectedItem,
-                                                items: _dropdownMenuItems,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _selectedItem = value;
-                                                  });
-                                                }),
-                                          ))),
-                                ]),
+                            ListTile(
+                              title: TextFormField(
+                                decoration: InputDecoration(
+                                  hintText: "Saisir le montant à envoyer",
+                                  border: OutlineInputBorder(),
+                                ),
+                                controller: fromTextController,
+                                style: TextStyle(
+                                    fontSize: 20.0, color: Colors.black),
+                                keyboardType: TextInputType.numberWithOptions(
+                                    decimal: true),
+                                onChanged: (text) {
+                                  // result=(double.parse(fromTextController.text) * (10)).toStringAsFixed(2);
+                                  _doConversion();
+                                  fromTextControllergnf.text = result;
+                                  fromTextControllerReceive.text =
+                                      fromTextControllergnf.text +
+                                          12.toString();
+                                  fromTextControllerTotal.text =
+                                      fromTextControllergnf.text +
+                                          10.toString();
+                                  fromTextControllerCommission.text =
+                                      10.toString();
+                                },
+                              ),
+                              trailing: _buildDropDownSender(),
+                            ),
                             const SizedBox(height: 20.0),
-                          ]),
-                      Container(
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            left: BorderSide(
-                                width: 10.0, color: Colors.indigoAccent),
-                          ),
-                        ),
-                        height: 80,
-                        child: Card(
-                          color: _colorFromHex("#F7FAFF"),
-                          elevation: 3.0,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                padding:
-                                const EdgeInsets.only(left: 10.0),
-                                child: Text(
-                                  "Montant à recevoir :" +
-                                      fromTextControllerReceive.text,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  "1€ = 1.0 GNF | Montant Reçu en dévise locale",
                                   style: TextStyle(
-                                      color: Colors.black,
+                                      color: Colors.blue,
                                       fontWeight: FontWeight.w500),
+                                )
+                              ],
+                            ),
+                            const SizedBox(height: 20.0),
+                            ListTile(
+                              title: TextFormField(
+                                readOnly: true,
+                                decoration: InputDecoration(
+                                  hintText: "Resultat attendu",
+                                  border: OutlineInputBorder(),
+                                ),
+                                controller: fromTextControllergnf,
+                                style: TextStyle(
+                                    fontSize: 20.0, color: Colors.black),
+                              ),
+                              trailing: _buildDropDownReceiver(),
+                            ),
+                            const SizedBox(height: 20.0),
+                            ListTile(
+                              title:  _buildDropDownPointRetrait(),
+                            ),
+
+                            Container(
+                              decoration: const BoxDecoration(
+                                border: Border(
+                                  left: BorderSide(
+                                      width: 10.0, color: Colors.indigoAccent),
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20.0),
-                      Container(
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            left: BorderSide(
-                                width: 10.0, color: Colors.black54),
-                          ),
-                        ),
-                        height: 80,
-                        child: Card(
-                          color: _colorFromHex("#F7FAFF"),
-                          elevation: 3.0,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                padding:
-                                const EdgeInsets.only(left: 10.0),
-                                child: Text(
-                                  "Montant commission :" +
-                                      fromTextControllerCommission.text,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w500),
+                              height: 80,
+                              child: Card(
+                                color: _colorFromHex("#F7FAFF"),
+                                elevation: 3.0,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 10.0),
+                                      child: Text(
+                                        "Montant à recevoir :" +
+                                            fromTextControllerReceive.text,
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20.0),
-                      Container(
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            left: BorderSide(
-                                width: 10.0, color: Colors.redAccent),
-                          ),
-                        ),
-                        height: 80,
-                        child: Card(
-                          color: _colorFromHex("#F7FAFF"),
-                          elevation: 3.0,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                padding:
-                                const EdgeInsets.only(left: 10.0),
-                                child: Text(
-                                  "Montant total à payer :" +
-                                      fromTextControllerTotal.text,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w500),
+                            ),
+                            const SizedBox(height: 20.0),
+                            Container(
+                              decoration: const BoxDecoration(
+                                border: Border(
+                                  left: BorderSide(
+                                      width: 10.0, color: Colors.black54),
                                 ),
                               ),
-                              /* Chip(
+                              height: 80,
+                              child: Card(
+                                color: _colorFromHex("#F7FAFF"),
+                                elevation: 3.0,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 10.0),
+                                      child: Text(
+                                        "Montant commission :" +
+                                            fromTextControllerCommission.text,
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 20.0),
+                            Container(
+                              decoration: const BoxDecoration(
+                                border: Border(
+                                  left: BorderSide(
+                                      width: 10.0, color: Colors.redAccent),
+                                ),
+                              ),
+                              height: 80,
+                              child: Card(
+                                color: _colorFromHex("#F7FAFF"),
+                                elevation: 3.0,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 10.0),
+                                      child: Text(
+                                        "Montant total à payer :" +
+                                            fromTextControllerTotal.text,
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                    /* Chip(
                                 backgroundColor: Colors.transparent,
                                 label: result != null ?
                                 Text(
@@ -810,89 +815,89 @@ class _TransactionState extends State<TransactionPage> {
                                 )
                                     : Text(""),
                               )*/
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 50.0,
-                        child: RaisedButton(
-                          color: Colors.blue,
-                          textColor: Colors.white,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Text("Effectuer un transfert"),
-                          onPressed: () {
-                            if (fromTextController.text.isEmpty) {
-                              FancyAlertDialog.showFancyAlertDialog(
-                                context,
-                                'Alerte',
-                                'Veillez remplir le montant',
-                                Colors.red,
-                                icon: Icon(
-                                  Icons.warning,
-                                  color: Colors.white,
+                                  ],
                                 ),
-                                labelPositiveButton: 'Ok',
-                                onTapPositiveButton: () {
-                                  Navigator.pop(context);
-                                },
-                                labelNegativeButton: '',
-                                onTapNegativeButton: () {
-                                  Navigator.pop(context);
-                                  print('tap negative button');
-                                },
-                              );
-                            } else {
-                              FancyAlertDialog.showFancyAlertDialog(
-                                context,
-                                'Confirmation',
-                                'Le montant a envoyé est de' +
-                                    fromTextController.text +
-                                    '.Le montant à recevoir est de' +
-                                    (double.parse(result) + 12)
-                                        .toStringAsFixed(2) +
-                                    '.Le montant de la commission est de' +
-                                    12.toString() +
-                                    '.Le montant total est de ' +
-                                    (double.parse(
-                                        fromTextController.text) +
-                                        12)
-                                        .toStringAsFixed(2),
-                                Colors.blue,
-                                icon: Icon(
-                                  Icons.clear,
-                                  color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(
+                              width: double.infinity,
+                              height: 50.0,
+                              child: RaisedButton(
+                                color: Colors.blue,
+                                textColor: Colors.white,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                labelPositiveButton: 'OK',
-                                onTapPositiveButton: () {
-                                  Navigator.pop(context);
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            PaymentPage()),
-                                  );
+                                child: Text("Effectuer un transfert"),
+                                onPressed: () {
+                                  if (fromTextController.text.isEmpty) {
+                                    FancyAlertDialog.showFancyAlertDialog(
+                                      context,
+                                      'Alerte',
+                                      'Veillez remplir le montant',
+                                      Colors.red,
+                                      icon: Icon(
+                                        Icons.warning,
+                                        color: Colors.white,
+                                      ),
+                                      labelPositiveButton: 'Ok',
+                                      onTapPositiveButton: () {
+                                        Navigator.pop(context);
+                                      },
+                                      labelNegativeButton: '',
+                                      onTapNegativeButton: () {
+                                        Navigator.pop(context);
+                                        print('tap negative button');
+                                      },
+                                    );
+                                  } else {
+                                    FancyAlertDialog.showFancyAlertDialog(
+                                      context,
+                                      'Confirmation',
+                                      'Le montant a envoyé est de' +
+                                          fromTextController.text +
+                                          '.Le montant à recevoir est de' +
+                                          (double.parse(result) + 12)
+                                              .toStringAsFixed(2) +
+                                          '.Le montant de la commission est de' +
+                                          12.toString() +
+                                          '.Le montant total est de ' +
+                                          (double.parse(
+                                                      fromTextController.text) +
+                                                  12)
+                                              .toStringAsFixed(2),
+                                      Colors.blue,
+                                      icon: Icon(
+                                        Icons.clear,
+                                        color: Colors.white,
+                                      ),
+                                      labelPositiveButton: 'OK',
+                                      onTapPositiveButton: () {
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PaymentPage()),
+                                        );
+                                      },
+                                      labelNegativeButton: 'Annulez',
+                                      onTapNegativeButton: () {
+                                        Navigator.pop(context);
+                                        print('tap negative button');
+                                      },
+                                    );
+                                  }
                                 },
-                                labelNegativeButton: 'Annulez',
-                                onTapNegativeButton: () {
-                                  Navigator.pop(context);
-                                  print('tap negative button');
-                                },
-                              );
-                            }
-                          },
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              )),
-        ),
-      ),
+                      ],
+                    )),
+              ),
+            ),
     );
   }
 
@@ -902,52 +907,81 @@ class _TransactionState extends State<TransactionPage> {
       decoration: BoxDecoration(
           color: Colors.blue, borderRadius: BorderRadius.circular(10)),
       child: DropdownButton(
-          icon: Icon(Icons.arrow_drop_down),
-          iconSize: 42,
-          underline: SizedBox(),
-          items:  [
-            DropdownMenuItem(
-              child: Text(_senderCurrency??'default value'),
-              value: 1,
-            ),
-          ],
-          onChanged: (value) {
-            setState(() {
-              _value = value;
-            });
-          },
-        value: 1,
+        icon: Icon(Icons.arrow_drop_down),
+        iconSize: 42,
+        underline: SizedBox(),
+        items: [
+          DropdownMenuItem(
+            child: Text(_senderCurrency ?? 'default value'),
+            value: 1,
           ),
+        ],
+        onChanged: (value) {
+          setState(() {
+            _valueSender = value;
+          });
+        },
+        value: _valueSender,
+      ),
     );
   }
+
   Widget _buildDropDownReceiver() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
           color: Colors.blue, borderRadius: BorderRadius.circular(10)),
       child: DropdownButton(
-          icon: Icon(Icons.arrow_drop_down),
-          iconSize: 42,
-          underline: SizedBox(),
-          items:  [
-            DropdownMenuItem(
-              child: Text('GNF'),
-              value: 1,
-            ),
-            DropdownMenuItem(
-              child: Text(_senderCurrency??'default value'),
-              value: 2,
-            ),
-          ].toList(),
-          onChanged: (value) {
-            print(value);
+        icon: Icon(Icons.arrow_drop_down),
+        iconSize: 42,
+        underline: SizedBox(),
+        items: [
+          DropdownMenuItem(
+            child: Text('GNF'),
+            value: 1,
+          ),
+          DropdownMenuItem(
+            child: Text(_senderCurrency ?? 'default value'),
+            value: 2,
+          ),
+        ].toList(),
+        onChanged: (value) {
+          print(value);
+          setState(() {
+            _valueReceiver = value;
+          });
+        },
+        value: _valueReceiver,
+      ),
+    );
+  }
+
+  Widget _buildDropDownPointRetrait() {
+    return  Container(
+      width: 50,
+      padding: const EdgeInsets.only(
+          left: 10.0, right: 10.0),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5.0),
+          border: Border.all()),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton(
+          hint: Text("Choisir un point de retrait"),
+          items: receiver_point_retait?.map((item) {
+            return DropdownMenuItem(
+              child: Text(item['agence_name']),
+              value: item['id'].toString(),
+            );
+          })?.toList() ??
+              [],
+          onChanged: (newVal) {
             setState(() {
-              _value = value;
+              _mySelectionPointRetrait = newVal;
             });
           },
-        value: 1,
-          ),
-
+          value: _mySelectionPointRetrait,
+        ),
+      ),
     );
   }
 }
@@ -970,21 +1004,21 @@ class MySelectionItem extends StatelessWidget {
       height: 60.0,
       child: isForList
           ? Padding(
-        child: _buildItem(context),
-        padding: EdgeInsets.all(10.0),
-      )
-          : Card(
-        margin: EdgeInsets.symmetric(horizontal: 10.0),
-        child: Stack(
-          children: <Widget>[
-            _buildItem(context),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Icon(Icons.arrow_drop_down),
+              child: _buildItem(context),
+              padding: EdgeInsets.all(10.0),
             )
-          ],
-        ),
-      ),
+          : Card(
+              margin: EdgeInsets.symmetric(horizontal: 10.0),
+              child: Stack(
+                children: <Widget>[
+                  _buildItem(context),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Icon(Icons.arrow_drop_down),
+                  )
+                ],
+              ),
+            ),
     );
   }
 
@@ -994,8 +1028,8 @@ class MySelectionItem extends StatelessWidget {
       alignment: Alignment.center,
       child: FittedBox(
           child: Text(
-            title,
-          )),
+        title,
+      )),
     );
   }
 }
