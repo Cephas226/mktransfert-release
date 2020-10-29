@@ -1,11 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/credit_card_widget.dart';
+import 'package:intl/intl.dart';
 import 'package:mktransfert/core/presentation/res/assets.dart';
 import 'package:mktransfert/src/page/transaction.dart';
 import 'package:mktransfert/src/services/payment-service.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
+import 'loginPage.dart';
+String _amount;
+String _currency;
+String _transactionDate;
+String _transactionTime;
+String _receiver_Name;
+List transactionInfo = List();
 class ExistingCardsPage extends StatefulWidget {
   ExistingCardsPage({Key key}) : super(key: key);
 
@@ -27,8 +37,27 @@ class ExistingCardsPageState extends State<ExistingCardsPage> {
     'cvvCode': '123',
     'showBackView': false,
   }];
-
+  displayTransactionInfo() async {
+    var jwt = await storage.read(key: "transaction");
+    transactionInfo=json.decode(jwt);
+    transactionInfo.forEach((transaction) {
+      _amount=transaction['montant_total'];
+      _currency=transaction['currency_sender'];
+      _receiver_Name=transaction['receiver_name'];
+    });
+    print(_amount);
+    var now = new DateTime.now();
+    var formatter = new DateFormat('yyyy-MM-dd');
+     _transactionDate = formatter.format(now);
+     _transactionTime= DateFormat.Hm().format(now);
+    print(_transactionDate);
+    if(jwt == null) return   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => TransactionPage()), (Route<dynamic> route) => false);
+    else {
+      return jwt;
+    }
+  }
   payViaExistingCard(BuildContext context, card) async {
+    this.displayTransactionInfo();
     ProgressDialog dialog = new ProgressDialog(context);
     dialog.style(
         message: "S'il vous plaît, attendez..."
@@ -41,14 +70,14 @@ class ExistingCardsPageState extends State<ExistingCardsPage> {
       expYear: int.parse(expiryArr[1]),
     );
     var response = await StripeService.payViaExistingCard(
-        amount: '2500',
-        currency: 'USD',
+        amount: "$_amount",
+        currency: "$_currency",
         card: stripeCard
     );
     await dialog.hide();
     Scaffold.of(context).showSnackBar(
         SnackBar(
-          content: Text(response.message),
+          content: Text('Succès'),
           duration: new Duration(milliseconds: 1200),
         )
     ).closed.then((_) {
@@ -138,7 +167,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[Text("2, Avril 2019"), Text("21:10")],
+                  children: <Widget>[Text(_transactionDate), Text(_transactionTime.toString())],
                 ),
                 SizedBox(height: 20.0),
                 Row(
@@ -151,7 +180,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                           "A",
                           style: label,
                         ),
-                        Text("Cephas ZOUBGA"),
+                        Text(_receiver_Name),
                         Text(
                           "cephaszoubga@gmail.com",
                           style: subtitle,
@@ -175,7 +204,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                           "MONTANT",
                           style: label,
                         ),
-                        Text("\$ 15000"),
+                        Text("$_currency $_amount"),
                       ],
                     ),
                     Text(
@@ -229,8 +258,14 @@ class PaymentSuccessDialog extends StatelessWidget {
                                ),
                                child: Text("Effectué un autre"),
                                onPressed: () {
-                                 Navigator.pop(context, MaterialPageRoute(builder: (context) => TransactionPage()),);
-
+                                // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => TransactionPage()),);
+                                 Navigator.pushAndRemoveUntil(
+                                     context,
+                                     MaterialPageRoute(
+                                         builder: (context) => TransactionPage()
+                                     ),
+                                     ModalRoute.withName("/transaction")
+                                 );
                                  },
                              )
                            ],

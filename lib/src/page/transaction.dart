@@ -11,7 +11,7 @@ import 'package:mktransfert/src/page/mesclasses/beneficiaireClasses.dart';
 import 'package:mktransfert/src/page/operations/beneficiaireOperations.dart';
 import 'package:mktransfert/src/page/pagePrincipale.dart';
 import 'package:mktransfert/src/page/payement.dart';
-import 'package:mktransfert/src/page/test.dart';
+import 'package:mktransfert/src/page/paymentPage.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
 class TransactionPage extends StatefulWidget {
@@ -22,10 +22,9 @@ class TransactionPage extends StatefulWidget {
 }
 
 class _TransactionState extends State<TransactionPage> {
-  final fromTextController = TextEditingController();
-  final fromTextControllergnf = TextEditingController();
-  final fromTextControllerMontant = TextEditingController();
-  final fromTextControllerReceive = TextEditingController();
+  final fromTextControllerSender = TextEditingController();
+  final fromTextControllerReceiver = TextEditingController();
+  final fromTextControllerToReceiveMontant = TextEditingController();
   final fromTextControllerCommission = TextEditingController();
   final fromTextControllerTotal = TextEditingController();
 
@@ -34,9 +33,17 @@ class _TransactionState extends State<TransactionPage> {
   var editReceiver_email = TextEditingController();
   var editReceiver_phone = TextEditingController();
   var editReceiver_country = TextEditingController();
-  String _mySelection;
+
+  String _beneficiaireID;
   String _mySelectionPointRetrait;
   String _senderCurrency;
+
+  double _convertResult;
+
+  double _taux;
+  double _conversion_eur;
+  double _conversion_usd;
+
   String _mySelectionCountry;
   var receiver_point_retait = List();
   String _nom(dynamic beneficiaire) {
@@ -48,12 +55,6 @@ class _TransactionState extends State<TransactionPage> {
   List data = List();
   var testCountry = List();
   List countrydata = List();
-  getToken() async {
-    var jwt = await storage.read(key: "jwt");
-    Map<String, dynamic> responseJson = json.decode(jwt);
-    return responseJson;
-  }
-
   Future<List<dynamic>> getSWData() async {
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
@@ -96,8 +97,13 @@ class _TransactionState extends State<TransactionPage> {
           'Authorization': 'Bearer $token',
         });
     if (res.statusCode == 200) {
+
       var resBody = json.decode(res.body);
+
       _senderCurrency = resBody['API_transac_data']['devise_sender'];
+      _taux=resBody['API_transac_data']['taux'];
+      _conversion_eur=resBody['API_transac_data']['conversion_eur'];
+      _conversion_usd=resBody['API_transac_data']['conversion_usd'];
 
       resBody['point_retait']?.forEach((k, v) {
         receiver_point_retait.add(v[0]);
@@ -114,44 +120,9 @@ class _TransactionState extends State<TransactionPage> {
   String result;
   Color color2 = _colorFromHex("#b74093");
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final point_retraits = [
-    "Boffa",
-    "Boke",
-    "Conakry – Kaloum",
-    "Conakry – Madina",
-    "Conakry - Bambeto",
-    "Conakry – Enco",
-    "Conakry - Matoto",
-    "Conakry – Lambanyi",
-    "Cosa - Rond-Point",
-    "Conakry - cimenterie carrefour",
-    "Conakry – Dabompa",
-    "Coyah",
-    "Dubreka Km",
-    "Fria",
-    "Kamsar",
-    "Kankan",
-    "Kindia",
-    "Koundara",
-    "Labe",
-    "Lelouma",
-    "Mamou",
-    "N’Zerekore",
-    "Pita",
-    "Sangaredji",
-    " Timbi Madina",
-    "Touba",
-  ];
   int selectedIndex1 = 0;
   int _valueSender = 1;
   int _valueReceiver = 1;
-  List<Widget> _buildItems1() {
-    return point_retraits
-        .map((val) => MySelectionItem(
-              title: val,
-            ))
-        .toList();
-  }
 
   void _showBeneficiaireInfo() {
     String dialogText;
@@ -182,7 +153,7 @@ class _TransactionState extends State<TransactionPage> {
                             var selectedBeneficiaire =
                                 data.map((item) => item).toList();
                             selectedBeneficiaire
-                                .where((f) => f["id"] == _mySelection);
+                                .where((f) => f["id"] == _beneficiaireID);
                             selectedBeneficiaire.forEach((b) {
                               editReceiver_first_name.text =
                                   b["receiver_first_name"];
@@ -445,8 +416,6 @@ class _TransactionState extends State<TransactionPage> {
     this.getSWData();
     displayPaymentInfo();
     _loadCurrencies();
-    _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
-    _selectedItem = _dropdownMenuItems[0].value;
     _mySelectionCountry = "1";
     _dropdownMenuItemsGnf = buildDropDownMenuItemsGnf(_dropdownItemsGnf);
     _selectedItemGnf = _dropdownMenuItemsGnf[0].value;
@@ -465,18 +434,14 @@ class _TransactionState extends State<TransactionPage> {
     return "Success";
   }
 
-  Future<String> _doConversion() async {
-    String uri =
-        "https://api.exchangeratesapi.io/latest?base=$fromCurrency&symbols=$toCurrency";
-    var response = await http
-        .get(Uri.encodeFull(uri), headers: {"Accept": "application/json"});
-    var responseBody = json.decode(response.body);
-    setState(() {
-      result = (double.parse(fromTextController.text) *
-              (responseBody["rates"][toCurrency]))
-          .toStringAsFixed(2);
-    });
-    return "Success";
+  Future<double> _doConversion(String valeurSaisie) async {
+    var a =this._taux;
+    var b =this._conversion_eur;
+    _convertResult=(double.parse(valeurSaisie)*b)+a;
+    fromTextControllerReceiver.text=_convertResult.toString();
+    fromTextControllerToReceiveMontant.text=fromTextControllerReceiver.text;
+    fromTextControllerCommission.text=a.toString();
+
   }
 
   _onFromChanged(String value) {
@@ -517,34 +482,7 @@ class _TransactionState extends State<TransactionPage> {
     return items;
   }
 
-  List<ListItem> _dropdownItems = [
-    ListItem(1, "Boffa"),
-    ListItem(2, "Boke"),
-    ListItem(3, "Conakry – Kaloum"),
-    ListItem(4, "Conakry – Madina"),
-    ListItem(5, "Conakry - Bambeto"),
-    ListItem(6, "Conakry – Enco"),
-    ListItem(7, "Conakry - Matoto"),
-    ListItem(8, "Conakry – Lambanyi"),
-    ListItem(9, "Cosa - Rond-Point"),
-    ListItem(10, "Conakry - cimenterie carrefour"),
-    ListItem(11, "Conakry – Dabompa"),
-    ListItem(12, "Coyah"),
-    ListItem(13, "Dubreka Km"),
-    ListItem(14, "Fria"),
-    ListItem(15, "Kamsar"),
-    ListItem(16, "Kankan"),
-    ListItem(17, "Kindia"),
-    ListItem(18, "Koundara"),
-    ListItem(19, "Labe"),
-    ListItem(20, "Lelouma"),
-    ListItem(21, "Mamou"),
-    ListItem(22, "N’Zerekore"),
-    ListItem(23, "Pita"),
-    ListItem(24, "Sangaredji"),
-    ListItem(25, " Timbi Madina"),
-    ListItem(26, "Touba"),
-  ];
+
   List<DropdownMenuItem<ListItem>> _dropdownMenuItems;
 
   List<DropdownMenuItem<dynamic>> _dropdownMenuPays;
@@ -648,11 +586,11 @@ class _TransactionState extends State<TransactionPage> {
                                         [],
                                     onChanged: (newVal) {
                                       setState(() {
-                                        _mySelection = newVal;
+                                        _beneficiaireID = newVal;
                                         _showBeneficiaireInfo();
                                       });
                                     },
-                                    value: _mySelection,
+                                    value: _beneficiaireID,
                                   ),
                                 ),
                               ),
@@ -669,15 +607,16 @@ class _TransactionState extends State<TransactionPage> {
                                   hintText: "Saisir le montant à envoyer",
                                   border: OutlineInputBorder(),
                                 ),
-                                controller: fromTextController,
+                                controller: fromTextControllerSender,
                                 style: TextStyle(
                                     fontSize: 20.0, color: Colors.black),
                                 keyboardType: TextInputType.numberWithOptions(
                                     decimal: true),
                                 onChanged: (text) {
                                   // result=(double.parse(fromTextController.text) * (10)).toStringAsFixed(2);
-                                  _doConversion();
-                                  fromTextControllergnf.text = result;
+                                  _doConversion(fromTextControllerSender.text);
+                                  fromTextControllerTotal.text=(double.parse(fromTextControllerSender.text)+_taux).toString();
+                                 /* fromTextControllergnf.text = result;
                                   fromTextControllerReceive.text =
                                       fromTextControllergnf.text +
                                           12.toString();
@@ -685,7 +624,7 @@ class _TransactionState extends State<TransactionPage> {
                                       fromTextControllergnf.text +
                                           10.toString();
                                   fromTextControllerCommission.text =
-                                      10.toString();
+                                      10.toString();*/
                                 },
                               ),
                               trailing: _buildDropDownSender(),
@@ -710,7 +649,7 @@ class _TransactionState extends State<TransactionPage> {
                                   hintText: "Resultat attendu",
                                   border: OutlineInputBorder(),
                                 ),
-                                controller: fromTextControllergnf,
+                                controller: fromTextControllerReceiver,
                                 style: TextStyle(
                                     fontSize: 20.0, color: Colors.black),
                               ),
@@ -720,7 +659,7 @@ class _TransactionState extends State<TransactionPage> {
                             ListTile(
                               title:  _buildDropDownPointRetrait(),
                             ),
-
+                            const SizedBox(height: 20.0),
                             Container(
                               decoration: const BoxDecoration(
                                 border: Border(
@@ -740,7 +679,7 @@ class _TransactionState extends State<TransactionPage> {
                                           const EdgeInsets.only(left: 10.0),
                                       child: Text(
                                         "Montant à recevoir :" +
-                                            fromTextControllerReceive.text,
+                                            fromTextControllerToReceiveMontant.text,
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.w500),
@@ -831,7 +770,7 @@ class _TransactionState extends State<TransactionPage> {
                                 ),
                                 child: Text("Effectuer un transfert"),
                                 onPressed: () {
-                                  if (fromTextController.text.isEmpty) {
+                                  if (fromTextControllerSender.text.isEmpty) {
                                     FancyAlertDialog.showFancyAlertDialog(
                                       context,
                                       'Alerte',
@@ -856,17 +795,14 @@ class _TransactionState extends State<TransactionPage> {
                                       context,
                                       'Confirmation',
                                       'Le montant a envoyé est de' +
-                                          fromTextController.text +
+                                          fromTextControllerSender.text +
                                           '.Le montant à recevoir est de' +
-                                          (double.parse(result) + 12)
-                                              .toStringAsFixed(2) +
+                                           fromTextControllerReceiver.text
+                                              +
                                           '.Le montant de la commission est de' +
-                                          12.toString() +
+                                          fromTextControllerCommission.text+
                                           '.Le montant total est de ' +
-                                          (double.parse(
-                                                      fromTextController.text) +
-                                                  12)
-                                              .toStringAsFixed(2),
+                                            fromTextControllerTotal.text,
                                       Colors.blue,
                                       icon: Icon(
                                         Icons.clear,
@@ -874,6 +810,17 @@ class _TransactionState extends State<TransactionPage> {
                                       ),
                                       labelPositiveButton: 'OK',
                                       onTapPositiveButton: () {
+                                       // data.where((element) => false)
+                                        storage.write(key: "transaction", value: json.encode([
+                                         { "id":_beneficiaireID,
+                                          "montant_envoie":fromTextControllerSender.text,
+                                          "montant_reçu":fromTextControllerReceiver.text,
+                                          "montant_envoie":fromTextControllerSender.text,
+                                          "point_retrait":_mySelectionPointRetrait,
+                                          "receiver_name":editReceiver_first_name.text,
+                                          "currency_sender":_senderCurrency,
+                                          "montant_total":fromTextControllerTotal.text}
+                                        ]));
                                         Navigator.pop(context);
                                         Navigator.push(
                                           context,

@@ -117,10 +117,6 @@ class _MainPageState extends State<PagePrincipale> {
   SharedPreferences sharedPreferences;
 
   checkLoginStatus() async {
-    /*sharedPreferences = await SharedPreferences.getInstance();
-    if(sharedPreferences.getString("token") == null) {
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginPage()), (Route<dynamic> route) => false);
-    }*/
     var jwt = await storage.read(key: "jwt");
     if(jwt == null) return   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginPage()), (Route<dynamic> route) => false);
       else {

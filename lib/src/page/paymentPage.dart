@@ -1,8 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:mktransfert/src/page/transaction.dart';
 import 'package:mktransfert/src/services/payment-service.dart';
 
 import 'package:progress_dialog/progress_dialog.dart';
 
+import 'loginPage.dart';
+String _amount;
+String _currency;
+List transactionInfo = List();
 class PaymentPage extends StatefulWidget {
   PaymentPage({Key key}) : super(key: key);
 
@@ -30,8 +37,8 @@ class HomePageState extends State<PaymentPage> {
     );
     await dialog.show();
     var response = await StripeService.payWithNewCard(
-        amount: '15000',
-        currency: 'USD'
+        amount: _amount.toString(),
+        currency: _currency,
     );
     await dialog.hide();
     Scaffold.of(context).showSnackBar(
@@ -41,11 +48,23 @@ class HomePageState extends State<PaymentPage> {
         )
     );
   }
-
+  displayTransactionInfo() async {
+    var jwt = await storage.read(key: "transaction");
+    transactionInfo=json.decode(jwt);
+    transactionInfo.forEach((element) {
+      _amount=element['montant_total'];
+      _currency=element['currency_sender'];
+    });
+    if(jwt == null) return   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => TransactionPage()), (Route<dynamic> route) => false);
+    else {
+      return jwt;
+    }
+  }
   @override
   void initState() {
     super.initState();
     StripeService.init();
+    displayTransactionInfo();
   }
 
   @override
