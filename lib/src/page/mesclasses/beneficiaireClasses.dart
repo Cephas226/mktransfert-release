@@ -36,7 +36,6 @@ class Beneficiaire {
 */
 
 import 'dart:convert';
-
 import 'package:http/http.dart';
 import 'package:mktransfert/src/page/operations/beneficiaireOperations.dart';
 

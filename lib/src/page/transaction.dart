@@ -35,6 +35,7 @@ class _TransactionState extends State<TransactionPage> {
   var editReceiver_phone = TextEditingController();
   var editReceiver_country = TextEditingController();
   String _mySelection;
+  String _senderCurrency;
   String _mySelectionCountry;
   String _nom(dynamic beneficiaire) {
     return beneficiaire['nom'];
@@ -77,7 +78,23 @@ class _TransactionState extends State<TransactionPage> {
     });
     return beneficiaireList;
   }
-
+  displayPaymentInfo() async {
+    var jwt = await storage.read(key: "jwt");
+    Map<String, dynamic> responseJson = json.decode(jwt);
+    String token =responseJson["access_token"];
+    int user_id =responseJson["user_id"];
+    var res = await http
+        .get(Uri.encodeFull('https://gracetechnologie.pythonanywhere.com/api/payment/'+'$user_id'), headers: {
+      "Accept": "application/json",
+      'Authorization': 'Bearer $token',
+    });
+    if (res.statusCode==200){
+      var resBody = json.decode(res.body);
+      print('cooly');
+      print(_senderCurrency);
+      return _senderCurrency=resBody['API_transac_data']['devise_sender'];
+    }
+  }
   PaymentMethod _paymentMethod;
   String _error;
   List<String> currencies;
@@ -340,7 +357,7 @@ class _TransactionState extends State<TransactionPage> {
       },
     );
     new Future.delayed(new Duration(seconds: 2), () {
-       Navigator.of(context).pop(); //pop dialog
+      Navigator.of(context).pop(); //pop dialog
     });
   }
   Widget _buildDropButton() {
@@ -381,7 +398,7 @@ class _TransactionState extends State<TransactionPage> {
   void initState() {
     super.initState();
     this.getSWData();
-
+    displayPaymentInfo();
     _loadCurrencies();
     _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
     _selectedItem = _dropdownMenuItems[0].value;
@@ -568,31 +585,31 @@ class _TransactionState extends State<TransactionPage> {
                       ),
                       ListTile(
                         title: Container(
-                            width: 50,
-                            padding: const EdgeInsets.only(
-                                left: 10.0, right: 10.0),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5.0),
-                                border: Border.all()),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton(
-                                hint: Text("Choisir un bénéficiaire"),
-                                items: data?.map((item) {
-                                  return DropdownMenuItem(
-                                    child:  Text(item['receiver_last_name']),
-                                    value: item['id'].toString(),
-                                  );
-                                })?.toList() ??
-                                    [],
-                                onChanged: (newVal) {
-                                  setState(() {
-                                    _mySelection = newVal;
-                                    _showBeneficiaireInfo();
-                                  });
-                                },
-                                value: _mySelection,
-                              ),
+                          width: 50,
+                          padding: const EdgeInsets.only(
+                              left: 10.0, right: 10.0),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5.0),
+                              border: Border.all()),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton(
+                              hint: Text("Choisir un bénéficiaire"),
+                              items: data?.map((item) {
+                                return DropdownMenuItem(
+                                  child:  Text(item['receiver_last_name']),
+                                  value: item['id'].toString(),
+                                );
+                              })?.toList() ??
+                                  [],
+                              onChanged: (newVal) {
+                                setState(() {
+                                  _mySelection = newVal;
+                                  _showBeneficiaireInfo();
+                                });
+                              },
+                              value: _mySelection,
                             ),
+                          ),
                         ),
                         trailing: IconButton(
                           color: Colors.blue,
@@ -626,7 +643,7 @@ class _TransactionState extends State<TransactionPage> {
                                 10.toString();
                           },
                         ),
-                        trailing: _buildDropDownButton(fromCurrency),
+                        trailing: _buildDropDownSender(),
                       ),
                       const SizedBox(height: 20.0),
                       Row(
@@ -652,7 +669,7 @@ class _TransactionState extends State<TransactionPage> {
                           style: TextStyle(
                               fontSize: 20.0, color: Colors.black),
                         ),
-                        trailing: _buildDropDownButton(fromCurrency),
+                        trailing: _buildDropDownReceiver(),
                       ),
                       const SizedBox(height: 20.0),
                       Column(
@@ -879,41 +896,58 @@ class _TransactionState extends State<TransactionPage> {
     );
   }
 
-  Widget _buildDropDownButton(String currencyCategory) {
+  Widget _buildDropDownSender() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
           color: Colors.blue, borderRadius: BorderRadius.circular(10)),
       child: DropdownButton(
-        value: currencyCategory,
-        icon: Icon(Icons.arrow_drop_down),
-        iconSize: 42,
-        underline: SizedBox(),
-        items: currencies
-            .where((f) => f == 'USD')
-            .toList()
-            .map((String value) => DropdownMenuItem(
-          value: value,
-          child: Container(
-            child: Row(
-              children: <Widget>[
-                Text(value,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500)),
-              ],
+          icon: Icon(Icons.arrow_drop_down),
+          iconSize: 42,
+          underline: SizedBox(),
+          items:  [
+            DropdownMenuItem(
+              child: Text(_senderCurrency??'default value'),
+              value: 1,
             ),
+          ],
+          onChanged: (value) {
+            setState(() {
+              _value = value;
+            });
+          },
+        value: 1,
           ),
-        ))
-            .toList(),
-        onChanged: (String value) {
-          if (currencyCategory == fromCurrency) {
-            _onFromChanged(value);
-          } else {
-            _onToChanged(value);
-          }
-        },
-      ),
+    );
+  }
+  Widget _buildDropDownReceiver() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+          color: Colors.blue, borderRadius: BorderRadius.circular(10)),
+      child: DropdownButton(
+          icon: Icon(Icons.arrow_drop_down),
+          iconSize: 42,
+          underline: SizedBox(),
+          items:  [
+            DropdownMenuItem(
+              child: Text('GNF'),
+              value: 1,
+            ),
+            DropdownMenuItem(
+              child: Text(_senderCurrency??'default value'),
+              value: 2,
+            ),
+          ].toList(),
+          onChanged: (value) {
+            print(value);
+            setState(() {
+              _value = value;
+            });
+          },
+        value: 1,
+          ),
+
     );
   }
 }
