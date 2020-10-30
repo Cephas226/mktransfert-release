@@ -36,7 +36,7 @@ class _TransactionState extends State<TransactionPage> {
   var editReceiver_country = TextEditingController();
 
   int _beneficiaireID;
-  String _mySelectionPointRetrait;
+  int _mySelectionPointRetrait;
   String _senderCurrency;
 
   double _convertResult;
@@ -964,16 +964,44 @@ class _TransactionState extends State<TransactionPage> {
           country_isdisponible=item['country_isdisponible'];
             return DropdownMenuItem(
               child: Text(item['agence_name']),
-              value: item['id'].toString(),
+              value: item['id'],
             );
           })?.toList() ??
               [],
           onChanged: (newVal) {
+          /*  where((f) => f["id"] == _beneficiaireID);*/
             setState(() {
+              var selectedPoint= receiver_point_retait.map((item) => item).toList();
+              selectedPoint.forEach((f) => {
+                if (f['id']==newVal){
+                  if (!f['agence_isdisponible']){
+                    print(f),
+                    Container(
+                      child:  FancyAlertDialog.showFancyAlertDialog(
+                        context,
+                        'Alerte',
+                        'Veillez remplir le montant',
+                        Colors.red,
+                        icon: Icon(
+                          Icons.warning,
+                          color: Colors.white,
+                        ),
+                        labelPositiveButton: 'Ok',
+                        onTapPositiveButton: () {
+                          Navigator.pop(context);
+                        },
+                        labelNegativeButton: '',
+                        onTapNegativeButton: () {
+                          Navigator.pop(context);
+                          print('tap negative button');
+                        },
+                      ),
+                    )
+                  }
+                }
+              });
               _mySelectionPointRetrait = newVal;
-
             });
-            print(newVal);
           },
           value: _mySelectionPointRetrait,
         ),
