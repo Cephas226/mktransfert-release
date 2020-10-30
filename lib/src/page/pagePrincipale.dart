@@ -13,7 +13,9 @@ import 'package:mktransfert/src/page/loginPage.dart';
 import 'package:mktransfert/src/page/navigation.dart';
 import 'package:mktransfert/src/page/transaction.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 final storage = FlutterSecureStorage();
+
 class PagePrincipale extends StatefulWidget {
   static final String path = "lib/src/pages/login/auth3.dart";
   final storage = FlutterSecureStorage();
@@ -31,9 +33,10 @@ class _MainPageState extends State<PagePrincipale> {
   final fromTextControllerTotal = TextEditingController();
   Future<String> get jwtOrEmpty async {
     var jwt = await storage.read(key: "jwt");
-    if(jwt == null) return "";
+    if (jwt == null) return "";
     return jwt;
   }
+
   double _conversion_eur;
   double _conversion_usd;
 
@@ -43,50 +46,17 @@ class _MainPageState extends State<PagePrincipale> {
   String result;
   Color color2 = _colorFromHex("#b74093");
   final formKey = new GlobalKey<FormState>();
-  final point_retrait = [
-    "Boffa",
-    "Boke",
-    "Conakry – Kaloum",
-    "Conakry – Madina",
-    "Conakry - Bambeto",
-    "Conakry – Enco",
-    "Conakry - Matoto",
-    "Conakry – Lambanyi",
-    "Cosa - Rond-Point",
-    "Conakry - cimenterie carrefour",
-    "Conakry – Dabompa",
-    "Coyah",
-    "Dubreka Km",
-    "Fria",
-    "Kamsar",
-    "Kankan",
-    "Kindia",
-    "Koundara",
-    "Labe",
-    "Lelouma",
-    "Mamou",
-    "N’Zerekore",
-    "Pita",
-    "Sangaredji",
-    " Timbi Madina",
-    "Touba",
-  ];
   int selectedIndex1 = 0;
+  int _selectedCurrency;
   int _value = 1;
-  List<Widget> _buildItems1() {
-    return point_retrait
-        .map((val) => MySelectionItem(
-      title: val,
-    ))
-        .toList();
-  }
+
   String _value1;
   final List<String> currencyList = <String>[
     "USD",
     "EUR",
   ];
   Widget _buildDropButtonTo() {
-    return  Row(
+    return Row(
       children: <Widget>[
         DropdownButtonHideUnderline(
           child: DropdownButton(
@@ -102,8 +72,9 @@ class _MainPageState extends State<PagePrincipale> {
       ],
     );
   }
+
   Widget _buildDropButtonFrom() {
-    return  Row(
+    return Row(
       children: <Widget>[
         DropdownButtonHideUnderline(
           child: DropdownButton(
@@ -119,15 +90,55 @@ class _MainPageState extends State<PagePrincipale> {
       ],
     );
   }
+
+  Widget _buildDropButtonFromCurrency() {
+    return Row(
+      children: <Widget>[
+        DropdownButtonHideUnderline(
+          child: DropdownButton(
+            underline: SizedBox(),
+            items: Currency.getLanguages().map((Currency lang) {
+              return DropdownMenuItem(
+                value: lang.id,
+                child: Row(
+                  children: <Widget>[
+                    Text(lang.languageCode),
+                    Image.asset(lang.name, width: 50)
+                  ],
+                ),
+              );
+            }).toList(),
+            onChanged: (val) {
+              setState(() {
+                _selectedCurrency = val;
+                if (_selectedCurrency==2){
+                  _doConversionDollard();
+                }
+                if (_selectedCurrency==1){
+                  _doConversionEur();
+                }
+              });
+            },
+            value: _selectedCurrency,
+          ),
+        )
+      ],
+    );
+  }
+
   SharedPreferences sharedPreferences;
 
   checkLoginStatus() async {
     var jwt = await storage.read(key: "jwt");
-    if(jwt == null) return   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginPage()), (Route<dynamic> route) => false);
-      else {
-       return jwt;
+    if (jwt == null)
+      return Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
+          (Route<dynamic> route) => false);
+    else {
+      return jwt;
     }
   }
+
   displayPaymentInfo() async {
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
@@ -142,20 +153,35 @@ class _MainPageState extends State<PagePrincipale> {
           'Authorization': 'Bearer $token',
         });
     if (res.statusCode == 200) {
-
       var resBody = json.decode(res.body);
 
-      _conversion_eur=resBody['API_transac_data']['conversion_eur'];
-      _conversion_usd=resBody['API_transac_data']['conversion_usd'];
-
+      _conversion_eur = resBody['API_transac_data']['conversion_eur'];
+      _conversion_usd = resBody['API_transac_data']['conversion_usd'];
     }
   }
-  Future<double> _doConversionEur(String valeurSaisie) async {
-    fromTextControllerSender.text='';
-    fromTextControllerSender.text=double.parse(valeurSaisie).toString();
-    fromTextControllergnf.text=(double.parse(valeurSaisie)*_conversion_eur).toString();
-    fromTextControllerReceive.text=double.parse(valeurSaisie).toString();
+
+  Future<double> _doConversionEur() async {
+    // fromTextControllerSender.text=double.parse(valeurSaisie).toString();
+    fromTextControllergnf.text =
+        (double.parse(fromTextControllerSender.text) * _conversion_eur)
+            .toString();
+    fromTextControllerReceive.text =
+        double.parse(fromTextControllerSender.text).toString();
   }
+
+  Future<double> _doConversionDollard() async {
+    // fromTextControllerSender.text=double.parse(valeurSaisie).toString();
+    print(_conversion_usd);
+    fromTextControllergnf.text = '';
+    fromTextControllerReceive.text = '';
+    fromTextControllergnf.text =
+        (double.parse(fromTextControllerSender.text) * _conversion_usd)
+            .toString();
+    fromTextControllerReceive.text =
+        double.parse(fromTextControllerSender.text).toString();
+    print(fromTextControllergnf.text);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -164,7 +190,7 @@ class _MainPageState extends State<PagePrincipale> {
     _loadCurrencies();
     _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
     _selectedItem = _dropdownMenuItems[0].value;
-
+    _selectedCurrency= 1;
     _dropdownMenuItemsGnf = buildDropDownMenuItemsGnf(_dropdownItemsGnf);
     _selectedItemGnf = _dropdownMenuItemsGnf[0].value;
   }
@@ -182,12 +208,15 @@ class _MainPageState extends State<PagePrincipale> {
   }
 
   Future<String> _doConversion() async {
-    String uri = "https://api.exchangeratesapi.io/latest?base=$fromCurrency&symbols=$toCurrency";
+    String uri =
+        "https://api.exchangeratesapi.io/latest?base=$fromCurrency&symbols=$toCurrency";
     var response = await http
         .get(Uri.encodeFull(uri), headers: {"Accept": "application/json"});
     var responseBody = json.decode(response.body);
     setState(() {
-      result = (double.parse(fromTextController.text) * (responseBody["rates"][toCurrency])).toStringAsFixed(2);
+      result = (double.parse(fromTextController.text) *
+              (responseBody["rates"][toCurrency]))
+          .toStringAsFixed(2);
     });
     //print(result);
     return "Success";
@@ -204,6 +233,7 @@ class _MainPageState extends State<PagePrincipale> {
       toCurrency = value;
     });
   }
+
   List<DropdownMenuItem<ListItem>> buildDropDownMenuItems(List listItems) {
     List<DropdownMenuItem<ListItem>> items = List();
     for (ListItem listItem in listItems) {
@@ -211,11 +241,9 @@ class _MainPageState extends State<PagePrincipale> {
         DropdownMenuItem(
           child: Row(
             children: <Widget>[
-              Text( listItem.name),
+              Text(listItem.name),
               Divider(),
-              Image.asset(
-                  listItem.image,
-                width: 50),
+              Image.asset(listItem.image, width: 50),
             ],
           ),
           value: listItem,
@@ -224,34 +252,33 @@ class _MainPageState extends State<PagePrincipale> {
     }
     return items;
   }
+
   List<ListItem> _dropdownItems = [
-    ListItem("assets/Image/eu.png",  "EUR"),
-    ListItem("assets/Image/us.png",  "USD"),
+    ListItem("assets/Image/eu.png", "EUR"),
+    ListItem("assets/Image/us.png", "USD"),
   ];
   List<DropdownMenuItem<ListItem>> _dropdownMenuItems;
   ListItem _selectedItem;
 
-
   //-----------
 
   List<ListItemGnf> _dropdownItemsGnf = [
-    ListItemGnf("assets/Image/gnf.png",  "GNF"),
+    ListItemGnf("assets/Image/gnf.png", "GNF"),
   ];
 
   List<DropdownMenuItem<ListItemGnf>> _dropdownMenuItemsGnf;
   ListItemGnf _selectedItemGnf;
 
-  List<DropdownMenuItem<ListItemGnf>> buildDropDownMenuItemsGnf(List listItems) {
+  List<DropdownMenuItem<ListItemGnf>> buildDropDownMenuItemsGnf(
+      List listItems) {
     List<DropdownMenuItem<ListItemGnf>> items = List();
     for (ListItemGnf listItem in listItems) {
       items.add(
         DropdownMenuItem(
           child: Row(
             children: <Widget>[
-              Text( listItem.name),
-              Image.asset(
-                  listItem.imageGnf,
-                  width: 50),
+              Text(listItem.name),
+              Image.asset(listItem.imageGnf, width: 50),
             ],
           ),
           value: listItem,
@@ -264,10 +291,10 @@ class _MainPageState extends State<PagePrincipale> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: FutureBuilder(
-          future: jwtOrEmpty,
-          builder: (context,snapshot ){
-            /*if(!snapshot.hasData) return CircularProgressIndicator();
+      home: FutureBuilder(
+        future: jwtOrEmpty,
+        builder: (context, snapshot) {
+          /*if(!snapshot.hasData) return CircularProgressIndicator();
             if(snapshot.data != "") {
               var str = snapshot.data;
               var jwt = str.split(".");
@@ -284,15 +311,12 @@ class _MainPageState extends State<PagePrincipale> {
                 }
               }
             }*/
-            return (
-                Scaffold(
-                    body: currencies == null
-                        ? Center(child: CircularProgressIndicator())
-                        :
-                    HeaderFooterwidget(
+          return (Scaffold(
+              body: currencies == null
+                  ? Center(child: CircularProgressIndicator())
+                  : HeaderFooterwidget(
                       header: _buildDateHeader(DateTime.now()),
-                      body:
-                      Padding(
+                      body: Padding(
                           padding: const EdgeInsets.all(32.0),
                           child: ListView(
                             children: <Widget>[
@@ -300,32 +324,32 @@ class _MainPageState extends State<PagePrincipale> {
                                 // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   Container(
-                                    child:Row(
+                                    child: Row(
                                       children: <Widget>[
                                         Expanded(
                                           child: Row(
                                             children: <Widget>[
                                               Container(
                                                 width: 220,
-                                                margin: EdgeInsets.only(left: 10),
                                                 child: TextFormField(
-                                                  controller: fromTextControllerSender,
-                                                    decoration: InputDecoration(
-                                                      hintText: "Saisir le montant à envoyer",
-                                                      border: OutlineInputBorder(),
-                                                    ),
-                                                  keyboardType:
-                                                  TextInputType.numberWithOptions(decimal: true),
-                                                  onChanged: (val) =>  {
-                                                    _doConversionEur(val)
-                                                  },
-
+                                                  controller:
+                                                      fromTextControllerSender,
+                                                  decoration: InputDecoration(
+                                                    hintText:
+                                                        "Saisir le montant à envoyer",
+                                                    border:
+                                                        OutlineInputBorder(),
+                                                  ),
+                                                  keyboardType: TextInputType
+                                                      .numberWithOptions(
+                                                          decimal: true),
+                                                  onChanged: (val) =>
+                                                      {_doConversionEur()},
                                                 ),
                                               ),
                                               Expanded(
-                                                child:  Container(
-                                                  child:  _buildDropButtonFrom(),
-                                                ),
+                                                child:
+                                                    _buildDropButtonFromCurrency(),
                                               )
                                             ],
                                           ),
@@ -333,8 +357,11 @@ class _MainPageState extends State<PagePrincipale> {
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: 20.0,),
-                                  Text("1€ = 1.0 GNF",  style: TextStyle(color: Colors.blue)),
+                                  const SizedBox(
+                                    height: 20.0,
+                                  ),
+                                  Text("1€ = 1.0 GNF",
+                                      style: TextStyle(color: Colors.blue)),
                                   const SizedBox(height: 20.0),
                                   Row(
                                     children: <Widget>[
@@ -345,20 +372,23 @@ class _MainPageState extends State<PagePrincipale> {
                                               margin: EdgeInsets.only(left: 10),
                                               width: 220,
                                               child: TextFormField(
-                                                controller: fromTextControllergnf,
+                                                controller:
+                                                    fromTextControllergnf,
                                                 readOnly: true,
                                                 decoration: InputDecoration(
                                                   hintText: "1000€",
-                                                  labelText: 'Montant à Recevoir en GNF',
+                                                  labelText:
+                                                      'Montant à Recevoir en GNF',
                                                   border: OutlineInputBorder(),
                                                 ),
-                                                keyboardType:
-                                                TextInputType.numberWithOptions(decimal: true),
+                                                keyboardType: TextInputType
+                                                    .numberWithOptions(
+                                                        decimal: true),
                                               ),
                                             ),
                                             Expanded(
-                                              child:  Container(
-                                                child:  _buildDropButtonTo(),
+                                              child: Container(
+                                                child: _buildDropButtonTo(),
                                               ),
                                             )
                                           ],
@@ -377,19 +407,22 @@ class _MainPageState extends State<PagePrincipale> {
                                               width: 220,
                                               child: TextFormField(
                                                 readOnly: true,
-                                                controller: fromTextControllerReceive,
+                                                controller:
+                                                    fromTextControllerReceive,
                                                 decoration: InputDecoration(
-                                                  labelText: 'Montant à Recevoir en USD',
+                                                  labelText:
+                                                      'Montant à Recevoir en USD',
                                                   hintText: "1000€",
                                                   border: OutlineInputBorder(),
                                                 ),
-                                                keyboardType:
-                                                TextInputType.numberWithOptions(decimal: true),
+                                                keyboardType: TextInputType
+                                                    .numberWithOptions(
+                                                        decimal: true),
                                               ),
                                             ),
-                                            Expanded(
-                                              child:  Container(
-                                                child:  _buildDropButtonFrom(),
+                                              Expanded(
+                                              child: Container(
+                                                child: _buildDropButtonFromCurrency(),
                                               ),
                                             )
                                           ],
@@ -467,17 +500,14 @@ class _MainPageState extends State<PagePrincipale> {
                         },
                       ),
                     ),*/
-
                                 ],
                               ),
                             ],
-                          )
-                      ),
+                          )),
                       footer: _buildBottomBar(),
-                    ))
-            );
-          },
-        ),
+                    )));
+        },
+      ),
     );
   }
 
@@ -491,58 +521,60 @@ class _MainPageState extends State<PagePrincipale> {
         children: <Widget>[
           SizedBox(width: 5.0),
           Expanded(
-            child: InkWell(
-              onTap: () => {
-              Navigator.push(context, MaterialPageRoute(builder: (context) =>NavigationPage()),),}, //
-              child:  Text(
-                  "Effectuer un transfert",
-                style: TextStyle(
-                  color: Colors.white,
-                ),
+              child: InkWell(
+            onTap: () => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NavigationPage()),
               ),
-            )
-          ),
+            }, //
+            child: Text(
+              "Effectuer un transfert",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          )),
           IconButton(
             color: Colors.white70,
             icon: Icon(Icons.send),
             onPressed: () {},
           )
         ],
-
       ),
     );
   }
+
   Widget _buildDropDownButton(String currencyCategory) {
     return Container(
-      padding:
-      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-          color: Colors.blue,
-          borderRadius: BorderRadius.circular(10)),
+          color: Colors.blue, borderRadius: BorderRadius.circular(10)),
       child: DropdownButton(
         value: currencyCategory,
         icon: Icon(Icons.arrow_drop_down),
         iconSize: 42,
         underline: SizedBox(),
-        items: currencies.toList().map((String value) => DropdownMenuItem(
-          value: value,
-          child: Container(
-            child: Row(
-              children: <Widget>[
-                Text(value, style:TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500
-                )),
-              ],
-            ),
-          ),
-        )
-        )
+        items: currencies
+            .toList()
+            .map((String value) => DropdownMenuItem(
+                  value: value,
+                  child: Container(
+                    child: Row(
+                      children: <Widget>[
+                        Text(value,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500)),
+                      ],
+                    ),
+                  ),
+                ))
             .toList(),
         onChanged: (String value) {
-          if(currencyCategory == fromCurrency){
+          if (currencyCategory == fromCurrency) {
             _onFromChanged(value);
-          }else {
+          } else {
             _onToChanged(value);
           }
         },
@@ -557,16 +589,19 @@ class ListItemGnf {
 
   ListItemGnf(this.imageGnf, this.name);
 }
+
 class ListItemFrom {
   String imageFrom;
   String name;
 
   ListItemFrom(this.imageFrom, this.name);
 }
+
 Color _colorFromHex(String hexColor) {
   final hexCode = hexColor.replaceAll('#', '');
   return Color(int.parse('FF$hexCode', radix: 16));
 }
+
 class MySelectionItem extends StatelessWidget {
   final String title;
   final bool isForList;
@@ -580,35 +615,32 @@ class MySelectionItem extends StatelessWidget {
       height: 60.0,
       child: isForList
           ? Padding(
-        child: _buildItem(context),
-        padding: EdgeInsets.all(10.0),
-      )
-          : Card(
-        margin: EdgeInsets.symmetric(horizontal: 10.0),
-        child: Stack(
-          children: <Widget>[
-            _buildItem(context),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Icon(Icons.arrow_drop_down),
+              child: _buildItem(context),
+              padding: EdgeInsets.all(10.0),
             )
-          ],
-        ),
-      ),
+          : Card(
+              margin: EdgeInsets.symmetric(horizontal: 10.0),
+              child: Stack(
+                children: <Widget>[
+                  _buildItem(context),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Icon(Icons.arrow_drop_down),
+                  )
+                ],
+              ),
+            ),
     );
   }
 
   Widget _buildItem(BuildContext context) {
     return Container(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
+      width: MediaQuery.of(context).size.width,
       alignment: Alignment.center,
       child: FittedBox(
           child: Text(
-            title,
-          )),
+        title,
+      )),
     );
   }
 }
@@ -633,8 +665,8 @@ Widget _buildDateHeader(DateTime date) {
             horizontal: 8.0,
           ),
           color: Colors.white,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
           onPressed: () {},
           /* child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -672,11 +704,13 @@ Widget _buildDateHeader(DateTime date) {
     ],
   );
 }
+
 class ListItem {
   String image;
   String name;
   ListItem(this.image, this.name);
 }
+
 class HeaderFooterwidget extends StatelessWidget {
   final Widget header;
   final Widget footer;
@@ -687,12 +721,12 @@ class HeaderFooterwidget extends StatelessWidget {
 
   const HeaderFooterwidget(
       {Key key,
-        this.header,
-        this.footer,
-        this.body,
-        this.headerColor = Colors.indigo,
-        this.footerColor = Colors.pink,
-        this.headerHeight})
+      this.header,
+      this.footer,
+      this.body,
+      this.headerColor = Colors.indigo,
+      this.footerColor = Colors.pink,
+      this.headerHeight})
       : super(key: key);
 
   @override
@@ -730,7 +764,7 @@ class HeaderFooterwidget extends StatelessWidget {
             decoration: BoxDecoration(
                 color: headerColor,
                 borderRadius:
-                BorderRadius.only(bottomLeft: Radius.circular(20.0))),
+                    BorderRadius.only(bottomLeft: Radius.circular(20.0))),
           ),
         ),
         Column(
@@ -765,5 +799,21 @@ class HeaderFooterwidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
       child: header,
     );
+  }
+}
+
+class Currency {
+  final int id;
+  final String name;
+  final String languageCode;
+
+  Currency(this.id, this.name, this.languageCode);
+/*  ListItem("assets/Image/eu.png",  "EUR"),
+  ListItem("assets/Image/us.png",  "USD"),*/
+  static List<Currency> getLanguages() {
+    return <Currency>[
+      Currency(1, 'assets/Image/eu.png', 'EUR'),
+      Currency(2, 'assets/Image/us.png', 'USD'),
+    ];
   }
 }

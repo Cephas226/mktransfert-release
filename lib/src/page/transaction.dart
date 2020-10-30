@@ -232,7 +232,8 @@ class _TransactionState extends State<TransactionPage> {
                                                             _mySelectionCountry,
                                                       ),
                                                     ),
-                                                  ))
+                                                  )
+                                                  )
                                                 ],
                                               )
                                           ),
