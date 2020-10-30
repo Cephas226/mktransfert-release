@@ -360,7 +360,8 @@ class _MainPageState extends State<PagePrincipale> {
                                   const SizedBox(
                                     height: 20.0,
                                   ),
-                                  Text("1€ = 1.0 GNF",
+                                  Text(_selectedCurrency==1?"1 € = $_conversion_eur GNF":
+                                          "1 \$ = $_conversion_usd GNF",
                                       style: TextStyle(color: Colors.blue)),
                                   const SizedBox(height: 20.0),
                                   Row(
