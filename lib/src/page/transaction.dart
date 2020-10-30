@@ -976,27 +976,7 @@ class _TransactionState extends State<TransactionPage> {
                 if (f['id']==newVal){
                   if (!f['agence_isdisponible']){
                     print(f),
-                    Container(
-                      child:  FancyAlertDialog.showFancyAlertDialog(
-                        context,
-                        'Alerte',
-                        'Veillez remplir le montant',
-                        Colors.red,
-                        icon: Icon(
-                          Icons.warning,
-                          color: Colors.white,
-                        ),
-                        labelPositiveButton: 'Ok',
-                        onTapPositiveButton: () {
-                          Navigator.pop(context);
-                        },
-                        labelNegativeButton: '',
-                        onTapNegativeButton: () {
-                          Navigator.pop(context);
-                          print('tap negative button');
-                        },
-                      ),
-                    )
+                    showAlertDialog(context)
                   }
                 }
               });
@@ -1009,7 +989,27 @@ class _TransactionState extends State<TransactionPage> {
     );
   }
 }
-
+showAlertDialog(BuildContext context) {  // set up the button
+  FancyAlertDialog.showFancyAlertDialog(
+    context,
+    'Alerte',
+    'Reception uniquement en Franc guinéen pour ce point de retrait',
+    Colors.red,
+    icon: Icon(
+      Icons.warning,
+      color: Colors.white,
+    ),
+    labelPositiveButton: 'Ok',
+    onTapPositiveButton: () {
+      Navigator.pop(context);
+    },
+    labelNegativeButton: '',
+    onTapNegativeButton: () {
+      Navigator.pop(context);
+      print('tap negative button');
+    },
+  );
+}
 Color _colorFromHex(String hexColor) {
   final hexCode = hexColor.replaceAll('#', '');
   return Color(int.parse('FF$hexCode', radix: 16));

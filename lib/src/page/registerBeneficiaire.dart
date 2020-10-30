@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:fancy_alert_dialog/fancy_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mktransfert/src/page/beneficiaire.dart';
@@ -20,7 +21,7 @@ class RegisterBeneficiairePage extends StatefulWidget {
 class RegisterBeneficiairePageState  extends State <RegisterBeneficiairePage> {
   static final String path = "lib/src/pages/login/signup2.dart";
   Future<Beneficiaire> _futureBeneficiaire;
-  String _mySelectionCountry;
+  int _mySelectionCountry;
   var saveReceiver_last_name = TextEditingController();
   var saveReceiver_first_name = TextEditingController();
   var saveReceiver_email = TextEditingController();
@@ -164,20 +165,29 @@ class RegisterBeneficiairePageState  extends State <RegisterBeneficiairePage> {
                                           child: Text(item[
                                           'country_name']),
                                           value: item[
-                                          'id']
-                                              .toString(),
+                                          'id'],
                                         );
                                       })?.toList() ??
                                           [],
                                       onChanged: (country) {
                                         setState(() {
                                           // showLoaderDialog(context);
-                                          _mySelectionCountry =
-                                              country;
+                                          _mySelectionCountry = country;
+                                          setState(() {
+                                            var selectedReceiverCountry= countrydata.map((item) => item).toList();
+                                            selectedReceiverCountry.forEach((f) => {
+                                              if (f['id']==country){
+                                                if (!f['country_isdisponible']){
+                                                  print(f),
+                                                  showAlertDialog(context)
+                                                }
+                                              }
+                                            });
+                                            _mySelectionCountry = country;
+                                          });
                                         });
                                       },
-                                      value:
-                                      _mySelectionCountry,
+                                      value: _mySelectionCountry,
                                     ),
                                   ),
                                 ))
@@ -360,6 +370,27 @@ class RegisterBeneficiairePageState  extends State <RegisterBeneficiairePage> {
 _showDialog(BuildContext context) {
   Scaffold.of(context)
       .showSnackBar(SnackBar(content: Text('Submitting form')));
+}
+showAlertDialog(BuildContext context) {  // set up the button
+  FancyAlertDialog.showFancyAlertDialog(
+    context,
+    'Alerte',
+    'Reception uniquement en Franc guinéen pour ce point de retrait',
+    Colors.red,
+    icon: Icon(
+      Icons.warning,
+      color: Colors.white,
+    ),
+    labelPositiveButton: 'Ok',
+    onTapPositiveButton: () {
+      Navigator.pop(context);
+    },
+    labelNegativeButton: '',
+    onTapNegativeButton: () {
+      Navigator.pop(context);
+      print('tap negative button');
+    },
+  );
 }
 class ListItem {
   int value;
