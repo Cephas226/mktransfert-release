@@ -42,6 +42,27 @@ class RegisterBeneficiairePageState  extends State <RegisterBeneficiairePage> {
     }
     return items;
   }
+  showAlertDialog(BuildContext context) {
+    FancyAlertDialog.showFancyAlertDialog(
+      context,
+      'Alerte',
+      'Reception uniquement en Franc guinéen pour ce point de retrait',
+      Colors.red,
+      icon: Icon(
+        Icons.warning,
+        color: Colors.white,
+      ),
+      labelPositiveButton: 'Ok',
+      onTapPositiveButton: () {
+        Navigator.pop(context);
+      },
+      labelNegativeButton: '',
+      onTapNegativeButton: () {
+        Navigator.pop(context);
+        print('tap negative button');
+      },
+    );
+  }
   List<ListItem> _dropdownItems = [
     ListItem(1,  "Boffa"),
     ListItem(2,  "Boke"),
@@ -179,7 +200,8 @@ class RegisterBeneficiairePageState  extends State <RegisterBeneficiairePage> {
                                               if (f['id']==country){
                                                 if (!f['country_isdisponible']){
                                                   print(f),
-                                                  showAlertDialog(context)
+                                                  _mySelectionCountry=1,
+                                                  showAlertDialog(context),
                                                 }
                                               }
                                             });
@@ -371,27 +393,7 @@ _showDialog(BuildContext context) {
   Scaffold.of(context)
       .showSnackBar(SnackBar(content: Text('Submitting form')));
 }
-showAlertDialog(BuildContext context) {  // set up the button
-  FancyAlertDialog.showFancyAlertDialog(
-    context,
-    'Alerte',
-    'Reception uniquement en Franc guinéen pour ce point de retrait',
-    Colors.red,
-    icon: Icon(
-      Icons.warning,
-      color: Colors.white,
-    ),
-    labelPositiveButton: 'Ok',
-    onTapPositiveButton: () {
-      Navigator.pop(context);
-    },
-    labelNegativeButton: '',
-    onTapNegativeButton: () {
-      Navigator.pop(context);
-      print('tap negative button');
-    },
-  );
-}
+
 class ListItem {
   int value;
   String name;
