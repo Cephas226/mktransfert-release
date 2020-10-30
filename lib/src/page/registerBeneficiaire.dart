@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -309,17 +310,26 @@ class RegisterBeneficiairePageState  extends State <RegisterBeneficiairePage> {
                             final form = _formKey.currentState;
                             if (form.validate()) {
                               form.save();
+                              Random random = new Random();
+                              int randomId = random.nextInt(100);
                               storage.write(key: "beneficiaire", value: json.encode([
                                 {
+                                  "id":randomId,
                                   "country_id":_mySelectionCountry,
                                   "receiver_first_name":saveReceiver_first_name.text,
                                   "receiver_last_name":saveReceiver_last_name.text,
                                   "receiver_phone":saveReceiver_phone.text,
-                                  "receiver_email":saveReceiver_phone.text,
+                                  "receiver_email":saveReceiver_email.text,
                                 }
                               ]));
                               _showDialog(context);
-                              {Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationPage()));};
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => NavigationPage()
+                                  ),
+                                  ModalRoute.withName("/navigation")
+                              );
                             }
                           },
                           /* onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationPage()),);},*/

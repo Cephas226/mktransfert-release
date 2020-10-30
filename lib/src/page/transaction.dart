@@ -35,7 +35,7 @@ class _TransactionState extends State<TransactionPage> {
   var editReceiver_phone = TextEditingController();
   var editReceiver_country = TextEditingController();
 
-  String _beneficiaireID;
+  int _beneficiaireID;
   String _mySelectionPointRetrait;
   String _senderCurrency;
 
@@ -47,6 +47,8 @@ class _TransactionState extends State<TransactionPage> {
   double _conversion_eur;
   double _conversion_usd;
 
+  var country_isdisponible;
+
   String _mySelectionCountry;
   var receiver_point_retait = List();
   String _nom(dynamic beneficiaire) {
@@ -57,10 +59,8 @@ class _TransactionState extends State<TransactionPage> {
   List AllBeneficiaire;
   List data = List();
   var testCountry = List();
-  var beneficiaireList = List();
   List countrydata = List();
   Future<List<dynamic>> getSWData() async {
-    displayBeneficaireInfo();
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
     String token = responseJson["access_token"];
@@ -71,7 +71,16 @@ class _TransactionState extends State<TransactionPage> {
     });
     var countryList = List();
     var point_retait = List();
+    var beneficiaireList = List();
     var resBody = json.decode(res.body);
+    var beneficiaireInfo = await storage.read(key: "beneficiaire");
+
+    if(beneficiaireInfo != null){
+      List responseJsonBeneficiaire = json.decode(beneficiaireInfo);
+      responseJsonBeneficiaire.forEach((element) {
+        beneficiaireList.add(element);
+      });
+    }
     resBody['data_beneficiaire']?.forEach((k, v) {
       beneficiaireList.add(v[0]);
     });
@@ -86,15 +95,7 @@ class _TransactionState extends State<TransactionPage> {
     });
     return beneficiaireList;
   }
-  displayBeneficaireInfo() async {
-    var beneficiaireInfo = await storage.read(key: "beneficiaire");
-    List responseJsonBeneficiaire = json.decode(beneficiaireInfo);
-    if(beneficiaireInfo != null){
-      responseJsonBeneficiaire.forEach((element) {
-        beneficiaireList.add(element);
-      });
-    }
-  }
+
   displayPaymentInfo() async {
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
@@ -160,19 +161,21 @@ class _TransactionState extends State<TransactionPage> {
                             countrydata.forEach((element) {
                               testCountry.add(element);
                             });
-                            //   data.where((f) =>  item["id"]==_mySelection).toList();
-                            var selectedBeneficiaire =
-                                data.map((item) => item).toList();
-                            selectedBeneficiaire
-                                .where((f) => f["id"] == _beneficiaireID);
+                           var selectedBeneficiaire= data.map((item) => item).toList();
+                              selectedBeneficiaire.where((f) => f["id"] == _beneficiaireID);
+                           print(selectedBeneficiaire);
+
                             selectedBeneficiaire.forEach((b) {
-                              editReceiver_first_name.text =
-                                  b["receiver_first_name"];
-                              editReceiver_last_name.text =
-                                  b["receiver_last_name"];
-                              editReceiver_country.text = b["receiver_country"];
-                              editReceiver_phone.text = b["receiver_phone"];
-                              editReceiver_email.text = b["receiver_email"];
+                              if(b['id']==_beneficiaireID){
+                                print(b);
+                                editReceiver_first_name.text =
+                                b["receiver_first_name"];
+                                editReceiver_last_name.text =
+                                b["receiver_last_name"];
+                                editReceiver_country.text = b["receiver_country"];
+                                editReceiver_phone.text = b["receiver_phone"];
+                                editReceiver_email.text = b["receiver_email"];
+                              }
                             });
                             return ListView.builder(
                                 shrinkWrap: true,
@@ -426,7 +429,6 @@ class _TransactionState extends State<TransactionPage> {
   void initState() {
     super.initState();
     this.getSWData();
-    this.displayBeneficaireInfo();
     this.displayPaymentInfo();
     _loadCurrencies();
     _mySelectionCountry = "1";
@@ -607,7 +609,7 @@ class _TransactionState extends State<TransactionPage> {
                                           return DropdownMenuItem(
                                             child: Text(
                                                 item['receiver_last_name']),
-                                            value: item['id'].toString(),
+                                            value: item['id'],
                                           );
                                         })?.toList() ??
                                         [],
@@ -845,7 +847,7 @@ class _TransactionState extends State<TransactionPage> {
                                       ),
                                       labelPositiveButton: 'OK',
                                       onTapPositiveButton: () {
-                                       // data.where((element) => false)
+
                                         storage.write(key: "transaction", value: json.encode([
                                          {
                                             "id":_beneficiaireID,
@@ -958,6 +960,7 @@ class _TransactionState extends State<TransactionPage> {
         child: DropdownButton(
           hint: Text("Choisir un point de retrait"),
           items: receiver_point_retait?.map((item) {
+          country_isdisponible=item['country_isdisponible'];
             return DropdownMenuItem(
               child: Text(item['agence_name']),
               value: item['id'].toString(),
@@ -967,7 +970,9 @@ class _TransactionState extends State<TransactionPage> {
           onChanged: (newVal) {
             setState(() {
               _mySelectionPointRetrait = newVal;
+
             });
+            print(newVal);
           },
           value: _mySelectionPointRetrait,
         ),

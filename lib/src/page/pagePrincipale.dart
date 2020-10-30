@@ -22,6 +22,7 @@ class PagePrincipale extends StatefulWidget {
 }
 
 class _MainPageState extends State<PagePrincipale> {
+  final fromTextControllerSender = TextEditingController();
   final fromTextController = TextEditingController();
   final fromTextControllergnf = TextEditingController();
   final fromTextControllerMontant = TextEditingController();
@@ -33,6 +34,9 @@ class _MainPageState extends State<PagePrincipale> {
     if(jwt == null) return "";
     return jwt;
   }
+  double _conversion_eur;
+  double _conversion_usd;
+
   List<String> currencies;
   String fromCurrency = "USD";
   String toCurrency = "GBP";
@@ -124,10 +128,39 @@ class _MainPageState extends State<PagePrincipale> {
        return jwt;
     }
   }
+  displayPaymentInfo() async {
+    var jwt = await storage.read(key: "jwt");
+    Map<String, dynamic> responseJson = json.decode(jwt);
+    String token = responseJson["access_token"];
+    int user_id = responseJson["user_id"];
+    var res = await http.get(
+        Uri.encodeFull(
+            'https://gracetechnologie.pythonanywhere.com/api/payment/' +
+                '$user_id'),
+        headers: {
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        });
+    if (res.statusCode == 200) {
+
+      var resBody = json.decode(res.body);
+
+      _conversion_eur=resBody['API_transac_data']['conversion_eur'];
+      _conversion_usd=resBody['API_transac_data']['conversion_usd'];
+
+    }
+  }
+  Future<double> _doConversionEur(String valeurSaisie) async {
+    fromTextControllerSender.text='';
+    fromTextControllerSender.text=double.parse(valeurSaisie).toString();
+    fromTextControllergnf.text=(double.parse(valeurSaisie)*_conversion_eur).toString();
+    fromTextControllerReceive.text=double.parse(valeurSaisie).toString();
+  }
   @override
   void initState() {
     super.initState();
     checkLoginStatus();
+    this.displayPaymentInfo();
     _loadCurrencies();
     _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
     _selectedItem = _dropdownMenuItems[0].value;
@@ -276,20 +309,17 @@ class _MainPageState extends State<PagePrincipale> {
                                                 width: 220,
                                                 margin: EdgeInsets.only(left: 10),
                                                 child: TextFormField(
-                                                  decoration: InputDecoration(
-                                                    hintText: "1000€",
-                                                    labelText: 'Montant à Envoyer en USD',
-                                                    border: OutlineInputBorder(),
-                                                  ),
+                                                  controller: fromTextControllerSender,
+                                                    decoration: InputDecoration(
+                                                      hintText: "Saisir le montant à envoyer",
+                                                      border: OutlineInputBorder(),
+                                                    ),
                                                   keyboardType:
                                                   TextInputType.numberWithOptions(decimal: true),
-                                                  onChanged: (text) {
-                                                    print("$text");
-                                                    fromTextControllergnf.text=result;
-                                                    fromTextControllerReceive.text=result+12.toString();
-                                                    fromTextControllerTotal.text=fromTextControllergnf.text+10.toString();
-                                                    fromTextControllerCommission.text=10.toString();
+                                                  onChanged: (val) =>  {
+                                                    _doConversionEur(val)
                                                   },
+
                                                 ),
                                               ),
                                               Expanded(
@@ -315,6 +345,7 @@ class _MainPageState extends State<PagePrincipale> {
                                               margin: EdgeInsets.only(left: 10),
                                               width: 220,
                                               child: TextFormField(
+                                                controller: fromTextControllergnf,
                                                 readOnly: true,
                                                 decoration: InputDecoration(
                                                   hintText: "1000€",
@@ -346,6 +377,7 @@ class _MainPageState extends State<PagePrincipale> {
                                               width: 220,
                                               child: TextFormField(
                                                 readOnly: true,
+                                                controller: fromTextControllerReceive,
                                                 decoration: InputDecoration(
                                                   labelText: 'Montant à Recevoir en USD',
                                                   hintText: "1000€",
@@ -452,7 +484,7 @@ class _MainPageState extends State<PagePrincipale> {
   Container _buildBottomBar() {
     return Container(
       padding: const EdgeInsets.symmetric(
-        vertical: 8.0,
+        vertical: 2.0,
         horizontal: 100.0,
       ),
       child: Row(

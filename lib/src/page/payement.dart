@@ -269,7 +269,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                                      MaterialPageRoute(
                                          builder: (context) => NavigationPage()
                                      ),
-                                     ModalRoute.withName("/transaction")
+                                     ModalRoute.withName("/navigation")
                                  );
                                  },
                              )
