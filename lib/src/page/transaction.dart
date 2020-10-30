@@ -12,6 +12,7 @@ import 'package:mktransfert/src/page/operations/beneficiaireOperations.dart';
 import 'package:mktransfert/src/page/pagePrincipale.dart';
 import 'package:mktransfert/src/page/payement.dart';
 import 'package:mktransfert/src/page/paymentPage.dart';
+import 'package:mktransfert/src/page/registerBeneficiaire.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
 class TransactionPage extends StatefulWidget {
@@ -56,8 +57,10 @@ class _TransactionState extends State<TransactionPage> {
   List AllBeneficiaire;
   List data = List();
   var testCountry = List();
+  var beneficiaireList = List();
   List countrydata = List();
   Future<List<dynamic>> getSWData() async {
+    displayBeneficaireInfo();
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
     String token = responseJson["access_token"];
@@ -66,7 +69,6 @@ class _TransactionState extends State<TransactionPage> {
       "Accept": "application/json",
       'Authorization': 'Bearer $token',
     });
-    var beneficiaireList = List();
     var countryList = List();
     var point_retait = List();
     var resBody = json.decode(res.body);
@@ -84,7 +86,15 @@ class _TransactionState extends State<TransactionPage> {
     });
     return beneficiaireList;
   }
-
+  displayBeneficaireInfo() async {
+    var beneficiaireInfo = await storage.read(key: "beneficiaire");
+    List responseJsonBeneficiaire = json.decode(beneficiaireInfo);
+    if(beneficiaireInfo != null){
+      responseJsonBeneficiaire.forEach((element) {
+        beneficiaireList.add(element);
+      });
+    }
+  }
   displayPaymentInfo() async {
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
@@ -110,7 +120,6 @@ class _TransactionState extends State<TransactionPage> {
       resBody['point_retait']?.forEach((k, v) {
         receiver_point_retait.add(v[0]);
       });
-      print(receiver_point_retait);
     }
   }
 
@@ -222,7 +231,8 @@ class _TransactionState extends State<TransactionPage> {
                                                     ),
                                                   ))
                                                 ],
-                                              )),
+                                              )
+                                          ),
                                           const SizedBox(height: 20.0),
                                           Padding(
                                               padding: EdgeInsets.only(
@@ -416,7 +426,8 @@ class _TransactionState extends State<TransactionPage> {
   void initState() {
     super.initState();
     this.getSWData();
-    displayPaymentInfo();
+    this.displayBeneficaireInfo();
+    this.displayPaymentInfo();
     _loadCurrencies();
     _mySelectionCountry = "1";
     _dropdownMenuItemsGnf = buildDropDownMenuItemsGnf(_dropdownItemsGnf);
@@ -432,7 +443,6 @@ class _TransactionState extends State<TransactionPage> {
     currencies = curMap.keys.toList();
     currencies.where((f) => f == 'EUR' || f == 'USD').toList();
     setState(() {});
-    // print(currencies.where((f) => f == 'EUR' || f == 'USD').toList());
     return "Success";
   }
 
@@ -451,7 +461,6 @@ class _TransactionState extends State<TransactionPage> {
 
     _stripeAmount=double.parse(valeurSaisie)+double.parse(fromTextControllerCommission.text);
 
-    print(fromTextControllerToReceiveMontant.text);
   }
   Future<double> _doConversionDollard() async {
     var b =this._conversion_usd;
@@ -469,7 +478,6 @@ class _TransactionState extends State<TransactionPage> {
 
     _stripeAmount=double.parse(fromTextControllerSender.text)+double.parse(fromTextControllerCommission.text);
 
-    print(fromTextControllerToReceiveMontant.text);
   }
   _onFromChanged(String value) {
     setState(() {
@@ -584,14 +592,6 @@ class _TransactionState extends State<TransactionPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             ListTile(
-                              title: Text(
-                                "Choisir un beneficiaire",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                            ListTile(
                               title: Container(
                                 width: 50,
                                 padding: const EdgeInsets.only(
@@ -602,7 +602,8 @@ class _TransactionState extends State<TransactionPage> {
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButton(
                                     hint: Text("Choisir un bénéficiaire"),
-                                    items: data?.map((item) {
+                                    items:
+                                    data?.map((item) {
                                           return DropdownMenuItem(
                                             child: Text(
                                                 item['receiver_last_name']),
@@ -617,13 +618,21 @@ class _TransactionState extends State<TransactionPage> {
                                       });
                                     },
                                     value: _beneficiaireID,
+
                                   ),
                                 ),
                               ),
                               trailing: IconButton(
                                 color: Colors.blue,
                                 icon: Icon(Icons.person_add),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            RegisterBeneficiairePage()),
+                                  );
+                                },
                               ),
                             ),
                             const SizedBox(height: 10.0),
@@ -922,11 +931,9 @@ class _TransactionState extends State<TransactionPage> {
         ].toList(),
         onChanged: (value) {
           if(value==2){
-            print('im 2');
             _doConversionDollard();
           }
             if(value==1){
-              print('im 1');
               _doConversion(fromTextControllerSender.text);
           }
             ;

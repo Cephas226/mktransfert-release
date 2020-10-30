@@ -1,12 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mktransfert/src/page/beneficiaire.dart';
 import 'package:mktransfert/src/page/navigation.dart';
-
+import 'package:mktransfert/src/page/transaction.dart';
+import 'package:http/http.dart' as http;
 import 'chooseBeneficiaire.dart';
+import 'loginPage.dart';
 import 'mesclasses/beneficiaireClasses.dart';
 import 'operations/beneficiaireOperations.dart';
-
+List countrydata = List();
 class RegisterBeneficiairePage extends StatefulWidget {
   @override
   RegisterBeneficiairePageState createState() => RegisterBeneficiairePageState();
@@ -15,6 +19,13 @@ class RegisterBeneficiairePage extends StatefulWidget {
 class RegisterBeneficiairePageState  extends State <RegisterBeneficiairePage> {
   static final String path = "lib/src/pages/login/signup2.dart";
   Future<Beneficiaire> _futureBeneficiaire;
+  String _mySelectionCountry;
+  var saveReceiver_last_name = TextEditingController();
+  var saveReceiver_first_name = TextEditingController();
+  var saveReceiver_email = TextEditingController();
+  var saveReceiver_phone = TextEditingController();
+  var saveReceiver_country = TextEditingController();
+
   final _beneficiaire = Beneficiaire();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<DropdownMenuItem<ListItem>> buildDropDownMenuItems(List listItems) {
@@ -57,10 +68,33 @@ class RegisterBeneficiairePageState  extends State <RegisterBeneficiairePage> {
     ListItem(25,  " Timbi Madina"),
     ListItem(26,  "Touba"),
   ];
+  Future<String> displayCountriesInfo() async {
+    var jwt = await storage.read(key: "jwt");
+    var countryList = List();
+    Map<String, dynamic> responseJson = json.decode(jwt);
+    String token = responseJson["access_token"];
+    int user_id = responseJson["user_id"];
+    var res = await http.get(Uri.encodeFull(apiUrl + '$user_id'), headers: {
+      "Accept": "application/json",
+      'Authorization': 'Bearer $token',
+    });
+
+    var resBody = json.decode(res.body);
+    resBody['data_country']?.forEach((k, v) {
+      countryList.add(v[0]);
+    });
+    countrydata = countryList;
+    print(countrydata);
+    setState(() {
+      countrydata = countryList;
+    });
+    return 'succès';
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    this.displayCountriesInfo();
     _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
     _selectedItem = _dropdownMenuItems[0].value;
   }
@@ -86,7 +120,7 @@ class RegisterBeneficiairePageState  extends State <RegisterBeneficiairePage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const SizedBox(height: 20.0),
+                    /* const SizedBox(height: 20.0),
                     Stack(
                       children: <Widget>[
                         Padding(
@@ -98,193 +132,152 @@ class RegisterBeneficiairePageState  extends State <RegisterBeneficiairePage> {
                           ),
                         ),
                       ],
-                    ),
-                    const SizedBox(height: 20.0),
+                    ),*/
                     Padding(
                         padding: EdgeInsets.only(
-                            left: 25.0, right: 25.0, top: 25.0),
-                        child: new Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            new Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                new Text(
-                                  'Nom*',
-                                  style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                    ),
-                    Padding(
-                        padding: EdgeInsets.only(
-                            left: 25.0, right: 25.0, top: 2.0),
+                            left: 25.0,
+                            right: 25.0,
+                            top: 2.0),
                         child: new Row(
                           mainAxisSize: MainAxisSize.max,
                           children: <Widget>[
                             new Flexible(
-                              child: new TextFormField(
-                                onSaved: (val) => setState(() => _beneficiaire.nom = val),
-                                decoration: const InputDecoration(hintText: "Entrez un nom"),
-                              ),
-                            ),
-                          ],
-                        )),
-                    const SizedBox(height: 20.0),
-                    Padding(
-                        padding: EdgeInsets.only(
-                            left: 25.0, right: 25.0, top: 25.0),
-                        child: new Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            new Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                new Text(
-                                  'Prenom(s)*',
-                                  style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )),
-                    Padding(
-                        padding: EdgeInsets.only(
-                            left: 25.0, right: 25.0, top: 2.0),
-                        child: new Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            new Flexible(
-                              child: new TextFormField(
-                                onSaved: (val) => setState(() => _beneficiaire.prenom = val),
-                                decoration: const InputDecoration(
-                                    hintText: "Entrez un prenom"),
-                              ),
-                            ),
-                          ],
-                        )),
-                    const SizedBox(height: 20.0),
-                    Padding(
-                        padding: EdgeInsets.only(
-                            left: 25.0, right: 25.0, top: 25.0),
-                        child: new Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            new Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                new Text(
-                                  'Adresse mail',
-                                  style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )),
-                    Padding(
-                        padding: EdgeInsets.only(
-                            left: 25.0, right: 25.0, top: 2.0),
-                        child: new Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            new Flexible(
-                              child: new TextFormField(
-                                onSaved: (val) => setState(() => _beneficiaire.email = val),
-                                decoration: const InputDecoration(
-                                    hintText: "exemple@gmail.com"),
-                              ),
-                            ),
-                          ],
-                        )),
-                    const SizedBox(height: 20.0),
-                    Padding(
-                        padding: EdgeInsets.only(
-                            left: 25.0, right: 25.0, top: 25.0),
-                        child: new Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            new Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                new Text(
-                                  'Téléphone du bénéficiaire *',
-                                  style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )),
-                    Padding(
-                        padding: EdgeInsets.only(
-                            left: 25.0, right: 25.0, top: 2.0),
-                        child: new Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            new Flexible(
-                              child: new TextFormField(
-                                onSaved: (val) => setState(() => _beneficiaire.telephone = val),
-                                decoration: const InputDecoration(
-                                    hintText: "Entre un téléphone"),
-                              ),
-                            ),
-                          ],
-                        )),
-                    Padding(
-                        padding: EdgeInsets.only(
-                            left: 25.0, right: 25.0, top: 25.0),
-                        child: new Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            new Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                new Text(
-                                  'Pays',
-                                  style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )),
-                    Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Container(
-                                  padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                                child: Container(
+                                  padding:
+                                  const EdgeInsets.only(
+                                      left: 10.0,
+                                      right: 10.0),
                                   decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5.0),
+                                      borderRadius:
+                                      BorderRadius
+                                          .circular(5.0),
                                       border: Border.all()),
-                                  child: DropdownButtonHideUnderline(
+                                  child:
+                                  DropdownButtonHideUnderline(
                                     child: DropdownButton(
-                                        value: _selectedItem,
-                                        items: _dropdownMenuItems,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _selectedItem = value;
-                                          });
-                                        }),
-                                  ))),
-                        ]
+                                      hint: Text(
+                                          "Choisir un pays"),
+                                      items: countrydata
+                                          ?.map((item) {
+                                        return DropdownMenuItem(
+                                          child: Text(item[
+                                          'country_name']),
+                                          value: item[
+                                          'id']
+                                              .toString(),
+                                        );
+                                      })?.toList() ??
+                                          [],
+                                      onChanged: (country) {
+                                        setState(() {
+                                          // showLoaderDialog(context);
+                                          _mySelectionCountry =
+                                              country;
+                                        });
+                                      },
+                                      value:
+                                      _mySelectionCountry,
+                                    ),
+                                  ),
+                                ))
+                          ],
+                        )
+                    ),
+                    const SizedBox(height: 20.0),
+                    Padding(
+                        padding: EdgeInsets.only(
+                            left: 25.0, right: 25.0, top: 25.0),
+                        child: Row(
+                          children: <Widget>[
+                            Flexible(child: TextFormField(
+                              onSaved: (val) =>
+                                  setState(() =>
+                                  saveReceiver_last_name
+                                      .text = val),
+                              controller:
+                              TextEditingController()
+                                ..text =
+                                    saveReceiver_last_name
+                                        .text,
+                              decoration:
+                              const InputDecoration(
+                                hintText:
+                                "Entrez un nom",
+                                border:
+                                OutlineInputBorder(),
+                              ),
+                            )),
+                          ],
+                        )
+                    ),
+                    const SizedBox(height: 20.0),
+                    Padding(
+                        padding: EdgeInsets.only(
+                            left: 25.0, right: 25.0, top: 25.0),
+                        child: Row(
+                          children: <Widget>[
+                            Flexible(child: TextFormField(
+                              onSaved: (val) =>
+                                  setState(() =>
+                                  saveReceiver_first_name.text = val),
+                              controller:
+                              TextEditingController()..text = saveReceiver_first_name.text,
+                              decoration:
+                              const InputDecoration(
+                                hintText:
+                                "Entrez un prenom",
+                                border:
+                                OutlineInputBorder(),
+                              ),
+                            )),
+                          ],
+                        )
+                    ),
+                    const SizedBox(height: 20.0),
+                    Padding(
+                        padding: EdgeInsets.only(
+                            left: 25.0, right: 25.0, top: 25.0),
+                        child: Row(
+                          children: <Widget>[
+                            Flexible(child: TextFormField(
+                              onSaved: (val) =>
+                                  setState(() =>
+                                  saveReceiver_email.text = val),
+                              controller:
+                              TextEditingController()..text = saveReceiver_email.text,
+                              decoration:
+                              const InputDecoration(
+                                hintText:
+                                "example@gmail.com",
+                                border:
+                                OutlineInputBorder(),
+                              ),
+                            )),
+                          ],
+                        )
+                    ),
+                    const SizedBox(height: 20.0),
+                    Padding(
+                        padding: EdgeInsets.only(
+                            left: 25.0, right: 25.0, top: 25.0),
+                        child: Row(
+                          children: <Widget>[
+                            Flexible(child: TextFormField(
+                              onSaved: (val) =>
+                                  setState(() =>
+                                  saveReceiver_phone.text = val),
+                              controller:
+                              TextEditingController()..text = saveReceiver_phone.text,
+                              decoration:
+                              const InputDecoration(
+                                hintText:
+                                "Entre un telephone",
+                                border:
+                                OutlineInputBorder(),
+                              ),
+                            )),
+                          ],
+                        )
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
@@ -316,14 +309,15 @@ class RegisterBeneficiairePageState  extends State <RegisterBeneficiairePage> {
                             final form = _formKey.currentState;
                             if (form.validate()) {
                               form.save();
-                              _beneficiaire.saveMe(
-                                  _beneficiaire.nom,
-                                  _beneficiaire.prenom,
-                                  _beneficiaire.email,
-                                  _beneficiaire.telephone,
-                                  _beneficiaire.pays,
-                                  _beneficiaire.info_complementaire
-                              );
+                              storage.write(key: "beneficiaire", value: json.encode([
+                                {
+                                  "country_id":_mySelectionCountry,
+                                  "receiver_first_name":saveReceiver_first_name.text,
+                                  "receiver_last_name":saveReceiver_last_name.text,
+                                  "receiver_phone":saveReceiver_phone.text,
+                                  "receiver_email":saveReceiver_phone.text,
+                                }
+                              ]));
                               _showDialog(context);
                               {Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationPage()));};
                             }
