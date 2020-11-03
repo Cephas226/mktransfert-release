@@ -212,7 +212,8 @@ class RegisterBeneficiairePageState  extends State <RegisterBeneficiairePage> {
                                       value: _mySelectionCountry,
                                     ),
                                   ),
-                                ))
+                                )
+                            )
                           ],
                         )
                     ),

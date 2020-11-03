@@ -309,8 +309,9 @@ class _MainPageState extends State<PagePrincipale> {
                 }
               }
             }*/
+          _selectedCurrency=1;
           return (Scaffold(
-              body: currencies == null
+              body: _selectedCurrency == null
                   ? Center(child: CircularProgressIndicator())
                   : HeaderFooterwidget(
                       header: _buildDateHeader(DateTime.now()),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dio/dio.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    checkLoginStatus();
+   // checkLoginStatus();
     formVisible = false;
     _formsIndex = 1;
   }
@@ -236,7 +237,7 @@ class _LoginState extends State<LoginForm> {
   @override
   void initState() {
     super.initState();
-    checkLoginStatus();
+    //checkLoginStatus();
   }
 
   @override
@@ -298,17 +299,22 @@ class _LoginState extends State<LoginForm> {
                 },*/
                 onPressed: () async {
                   if (_formKey.currentState.validate()) {
-                    final form = _formKey.currentState;
-                    form.save();
                     var jwt = await logMe(_user.email, _user.password);
                     storage.write(key: "jwt", value: jwt);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PagePrincipale()));
-
-                    Scaffold.of(context).showSnackBar(
-                        SnackBar(content: Text('Processing Data')));
+                     final form = _formKey.currentState;
+                     form.save();
+                    Map<String, dynamic> responseJwtLogin = json.decode(await logMe(_user.email, _user.password));
+                    print(responseJwtLogin['message']);
+                    if (responseJwtLogin['message']=='invalide'){
+                      _onAlertLogin(context);
+                    }
+                    else {
+                      _onAlertLogin(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PagePrincipale()));
+                    }
                   }
                 },
 
@@ -367,10 +373,11 @@ class _LoginState extends State<LoginForm> {
       body: jsonEncode(data),
     );
     if (response.statusCode == 200) {
+      storage.write(key: "userInfo", value: response.body);
       print('Login User');
       return response.body;
     } else {
-      return null;
+      return 'invalide';
     }
   }
 
@@ -701,3 +708,17 @@ void displayDialog(context, title, text) => showDialog(
       builder: (context) =>
           AlertDialog(title: Text(title), content: Text(text)),
     );
+
+_onAlertLogin(context) {
+  AwesomeDialog(
+      context: context,
+      dialogType: DialogType.ERROR,
+      headerAnimationLoop: false,
+      animType: AnimType.TOPSLIDE,
+      title: 'Erreur',
+      desc:
+      'Le mot de passe ou le mail est incorrect',
+      btnCancelOnPress: () {},
+      btnOkOnPress: () {})
+    ..show();
+}

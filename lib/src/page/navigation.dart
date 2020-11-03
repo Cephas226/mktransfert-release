@@ -7,6 +7,7 @@ import 'package:mktransfert/src/page/pagePrincipale.dart';
 import 'package:mktransfert/src/page/transaction.dart';
 import 'package:mktransfert/src/page/user.dart';
 
+
 import 'beneficiaire.dart';
 import 'groupedchart.dart';
 class NavigationPage extends StatefulWidget {
@@ -56,7 +57,7 @@ class _NavigationPageState extends State<NavigationPage> {
                   });
                 },
               ),
-              IconButton(
+              /*IconButton(
                 iconSize: 30.0,
                 padding: EdgeInsets.only(left: 28.0),
                 icon: Icon(Icons.group),
@@ -65,7 +66,7 @@ class _NavigationPageState extends State<NavigationPage> {
                     _myPage.jumpToPage(2);
                   });
                 },
-              ),
+              ),*/
               IconButton(
                 iconSize: 30.0,
                 padding: EdgeInsets.only(right: 28.0),
@@ -96,14 +97,14 @@ class _NavigationPageState extends State<NavigationPage> {
               child: OperationListPage(),
             ),
           ),
-          Center(
+          /*Center(
             child: Container(
               child: BeneficiairePage(),
             ),
-          ),
+          ),*/
           Center(
             child: Container(
-              child: ProfileEightPage(),
+              child: UserProfilPage(),
             ),
           )
         ],

@@ -37,7 +37,7 @@ class _TransactionState extends State<TransactionPage> {
 
   int _beneficiaireID;
   int _mySelectionPointRetrait;
-  String _senderCurrency;
+  String _senderCurrency="eur";
   String _receiverCurrency;
   double _convertResult;
 
@@ -144,252 +144,252 @@ class _TransactionState extends State<TransactionPage> {
         // return object of type Dialog
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
-          return AlertDialog(
-            title: Container(
-              child: Text("Informations du bénéficiaire"),
-            ),
-            content: SingleChildScrollView(
-                child: Container(
-                    height: 400.0, // Change as per your requirement
-                    width: 400.0,
-                    child: FutureBuilder<List<dynamic>>(
-                        future: getSWData(),
-                        builder:
-                            (BuildContext context, AsyncSnapshot snapshot) {
-                          if (snapshot.hasData) {
-                            testCountry = List();
-                            countrydata.forEach((element) {
-                              testCountry.add(element);
-                            });
-                           var selectedBeneficiaire= data.map((item) => item).toList();
-                              selectedBeneficiaire.where((f) => f["id"] == _beneficiaireID);
-                           print(selectedBeneficiaire);
+              return AlertDialog(
+                title: Container(
+                  child: Text("Informations du bénéficiaire"),
+                ),
+                content: SingleChildScrollView(
+                    child: Container(
+                        height: 400.0, // Change as per your requirement
+                        width: 400.0,
+                        child: FutureBuilder<List<dynamic>>(
+                            future: getSWData(),
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.hasData) {
+                                testCountry = List();
+                                countrydata.forEach((element) {
+                                  testCountry.add(element);
+                                });
+                                var selectedBeneficiaire= data.map((item) => item).toList();
+                                selectedBeneficiaire.where((f) => f["id"] == _beneficiaireID);
+                                print(selectedBeneficiaire);
 
-                            selectedBeneficiaire.forEach((b) {
-                              if(b['id']==_beneficiaireID){
-                                print(b);
-                                editReceiver_first_name.text =
-                                b["receiver_first_name"];
-                                editReceiver_last_name.text =
-                                b["receiver_last_name"];
-                                editReceiver_country.text = b["receiver_country"];
-                                editReceiver_phone.text = b["receiver_phone"];
-                                editReceiver_email.text = b["receiver_email"];
-                              }
-                            });
-                            return ListView.builder(
-                                shrinkWrap: true,
-                                padding: EdgeInsets.all(8),
-                                itemCount: 1,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Container(
-                                    child: Form(
-                                      child: Column(
-                                        children: <Widget>[
-                                          Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: 25.0,
-                                                  right: 25.0,
-                                                  top: 2.0),
-                                              child: new Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: <Widget>[
-                                                  new Flexible(
-                                                      child: Container(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 10.0,
-                                                            right: 10.0),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(5.0),
-                                                        border: Border.all()),
-                                                    child:
-                                                        DropdownButtonHideUnderline(
-                                                      child: DropdownButton(
-                                                        hint: Text(
-                                                            "Choisir un pays"),
-                                                        items: testCountry
-                                                                ?.map((item) {
-                                                              return DropdownMenuItem(
-                                                                child: Text(item[
+                                selectedBeneficiaire.forEach((b) {
+                                  if(b['id']==_beneficiaireID){
+                                    print(b);
+                                    editReceiver_first_name.text =
+                                    b["receiver_first_name"];
+                                    editReceiver_last_name.text =
+                                    b["receiver_last_name"];
+                                    editReceiver_country.text = b["receiver_country"];
+                                    editReceiver_phone.text = b["receiver_phone"];
+                                    editReceiver_email.text = b["receiver_email"];
+                                  }
+                                });
+                                return ListView.builder(
+                                    shrinkWrap: true,
+                                    padding: EdgeInsets.all(8),
+                                    itemCount: 1,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      return Container(
+                                        child: Form(
+                                          child: Column(
+                                            children: <Widget>[
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 25.0,
+                                                      right: 25.0,
+                                                      top: 2.0),
+                                                  child: new Row(
+                                                    mainAxisSize: MainAxisSize.max,
+                                                    children: <Widget>[
+                                                      new Flexible(
+                                                          child: Container(
+                                                            padding:
+                                                            const EdgeInsets.only(
+                                                                left: 10.0,
+                                                                right: 10.0),
+                                                            decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                BorderRadius
+                                                                    .circular(5.0),
+                                                                border: Border.all()),
+                                                            child:
+                                                            DropdownButtonHideUnderline(
+                                                              child: DropdownButton(
+                                                                hint: Text(
+                                                                    "Choisir un pays"),
+                                                                items: testCountry
+                                                                    ?.map((item) {
+                                                                  return DropdownMenuItem(
+                                                                    child: Text(item[
                                                                     'country_name']),
-                                                                value: item[
-                                                                        'id']
-                                                                    .toString(),
-                                                              );
-                                                            })?.toList() ??
-                                                            [],
-                                                        onChanged: (country) {
-                                                          setState(() {
-                                                            // showLoaderDialog(context);
-                                                            _mySelectionCountry =
-                                                                country;
-                                                          });
-                                                        },
-                                                        value:
-                                                            _mySelectionCountry,
-                                                      ),
-                                                    ),
+                                                                    value: item[
+                                                                    'id']
+                                                                        .toString(),
+                                                                  );
+                                                                })?.toList() ??
+                                                                    [],
+                                                                onChanged: (country) {
+                                                                  setState(() {
+                                                                    // showLoaderDialog(context);
+                                                                    _mySelectionCountry =
+                                                                        country;
+                                                                  });
+                                                                },
+                                                                value:
+                                                                _mySelectionCountry,
+                                                              ),
+                                                            ),
+                                                          )
+                                                      )
+                                                    ],
                                                   )
-                                                  )
-                                                ],
-                                              )
-                                          ),
-                                          const SizedBox(height: 20.0),
-                                          Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: 25.0,
-                                                  right: 25.0,
-                                                  top: 2.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: <Widget>[
-                                                  Flexible(
-                                                    child: new TextFormField(
-                                                      onSaved: (val) =>
-                                                          setState(() =>
+                                              ),
+                                              const SizedBox(height: 20.0),
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 25.0,
+                                                      right: 25.0,
+                                                      top: 2.0),
+                                                  child: Row(
+                                                    mainAxisSize: MainAxisSize.max,
+                                                    children: <Widget>[
+                                                      Flexible(
+                                                        child: new TextFormField(
+                                                          onSaved: (val) =>
+                                                              setState(() =>
                                                               editReceiver_last_name
                                                                   .text = val),
-                                                      controller:
+                                                          controller:
                                                           TextEditingController()
                                                             ..text =
                                                                 editReceiver_last_name
                                                                     .text,
-                                                      decoration:
+                                                          decoration:
                                                           const InputDecoration(
-                                                        hintText:
+                                                            hintText:
                                                             "Entrez un nom",
-                                                        border:
+                                                            border:
                                                             OutlineInputBorder(),
+                                                          ),
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              )),
-                                          const SizedBox(height: 20.0),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                left: 25.0,
-                                                right: 25.0,
-                                                top: 2.0),
-                                            child: new Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: <Widget>[
-                                                new Flexible(
-                                                  child: new TextFormField(
-                                                    onSaved: (val) => setState(
-                                                        () =>
+                                                    ],
+                                                  )),
+                                              const SizedBox(height: 20.0),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 25.0,
+                                                    right: 25.0,
+                                                    top: 2.0),
+                                                child: new Row(
+                                                  mainAxisSize: MainAxisSize.max,
+                                                  children: <Widget>[
+                                                    new Flexible(
+                                                      child: new TextFormField(
+                                                        onSaved: (val) => setState(
+                                                                () =>
                                                             editReceiver_first_name
                                                                 .text = val),
-                                                    controller:
+                                                        controller:
                                                         TextEditingController()
                                                           ..text =
                                                               editReceiver_first_name
                                                                   .text,
-                                                    decoration:
+                                                        decoration:
                                                         const InputDecoration(
-                                                      hintText:
+                                                          hintText:
                                                           "Entrez un prenom",
-                                                      border:
+                                                          border:
                                                           OutlineInputBorder(),
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(height: 20.0),
-                                          Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: 25.0,
-                                                  right: 25.0,
-                                                  top: 2.0),
-                                              child: new Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: <Widget>[
-                                                  new Flexible(
-                                                    child: new TextFormField(
-                                                      onSaved: (val) =>
-                                                          setState(() =>
+                                              ),
+                                              const SizedBox(height: 20.0),
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 25.0,
+                                                      right: 25.0,
+                                                      top: 2.0),
+                                                  child: new Row(
+                                                    mainAxisSize: MainAxisSize.max,
+                                                    children: <Widget>[
+                                                      new Flexible(
+                                                        child: new TextFormField(
+                                                          onSaved: (val) =>
+                                                              setState(() =>
                                                               editReceiver_email
                                                                   .text = val),
-                                                      controller:
+                                                          controller:
                                                           TextEditingController()
                                                             ..text =
                                                                 editReceiver_email
                                                                     .text,
-                                                      decoration:
+                                                          decoration:
                                                           const InputDecoration(
-                                                        hintText:
+                                                            hintText:
                                                             "exemple@gmail.com",
-                                                        border:
+                                                            border:
                                                             OutlineInputBorder(),
+                                                          ),
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              )),
-                                          const SizedBox(height: 20.0),
-                                          Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: 25.0,
-                                                  right: 25.0,
-                                                  top: 2.0),
-                                              child: new Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: <Widget>[
-                                                  new Flexible(
-                                                    child: new TextFormField(
-                                                      onSaved: (val) =>
-                                                          setState(() =>
+                                                    ],
+                                                  )),
+                                              const SizedBox(height: 20.0),
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 25.0,
+                                                      right: 25.0,
+                                                      top: 2.0),
+                                                  child: new Row(
+                                                    mainAxisSize: MainAxisSize.max,
+                                                    children: <Widget>[
+                                                      new Flexible(
+                                                        child: new TextFormField(
+                                                          onSaved: (val) =>
+                                                              setState(() =>
                                                               editReceiver_phone
                                                                   .text = val),
-                                                      controller:
+                                                          controller:
                                                           TextEditingController()
                                                             ..text =
                                                                 editReceiver_phone
                                                                     .text,
-                                                      decoration: const InputDecoration(
-                                                          hintText:
+                                                          decoration: const InputDecoration(
+                                                              hintText:
                                                               "Entre un téléphone",
-                                                          border:
+                                                              border:
                                                               OutlineInputBorder()),
-                                                    ),
-                                                  ),
-                                                ],
-                                              )),
-                                          const SizedBox(height: 20.0),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                });
-                          } else {
-                            return Center(child: CircularProgressIndicator());
-                          }
-                        }))),
-            actions: <Widget>[
-              // usually buttons at the bottom of the dialog
-              Row(
-                children: <Widget>[
-                  new FlatButton(
-                    child: new Text("Annulez"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )),
+                                              const SizedBox(height: 20.0),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    });
+                              } else {
+                                return Center(child: CircularProgressIndicator());
+                              }
+                            }))),
+                actions: <Widget>[
+                  // usually buttons at the bottom of the dialog
+                  Row(
+                    children: <Widget>[
+                      new FlatButton(
+                        child: new Text("Annulez"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      new FlatButton(
+                          onPressed: () async {
+                            Navigator.pop(context, true);
+                          },
+                          child: new Text("OK"))
+                    ],
                   ),
-                  new FlatButton(
-                      onPressed: () async {
-                        Navigator.pop(context, true);
-                      },
-                      child: new Text("OK"))
                 ],
-              ),
-            ],
-          );
-        });
+              );
+            });
       },
     );
   }
@@ -860,7 +860,8 @@ class _TransactionState extends State<TransactionPage> {
                                             "devise_receive":_valueReceiver,
                                             "point_retrait":_mySelectionPointRetrait,
                                          }
-                                        ]));
+                                        ]
+                                        ));
                                         storage.write(key: "transactionBackend", value: json.encode([
                                           {
                                             "montant_send":fromTextControllerSender.text,
