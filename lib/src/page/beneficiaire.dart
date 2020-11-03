@@ -2,12 +2,47 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:mktransfert/core/presentation/widget/rounded_bordered_container.dart';
+import 'package:mktransfert/src/page/mesclasses/beneficiaireClasses.dart';
 
 import 'package:mktransfert/src/page/transaction.dart';
 
 import 'chooseBeneficiaire.dart';
+import 'loginPage.dart';
 import 'navigation.dart';
 import 'operations/beneficiaireOperations.dart';
+
+Future<List<dynamic>> fetchMyBeneficiaire() async {
+  var jwt = await storage.read(key: "jwt");
+  Map<String, dynamic> responseJson = json.decode(jwt);
+  String token = responseJson["access_token"];
+  int user_id = responseJson["user_id"];
+  var res = await http.get(Uri.encodeFull(apiUrl + '$user_id'), headers: {
+    "Accept": "application/json",
+    'Authorization': 'Bearer $token',
+  });
+  var countryList = List();
+  var beneficiaireList = List();
+  var resBody = json.decode(res.body);
+  var beneficiaireInfo = await storage.read(key: "beneficiaire");
+
+  if(beneficiaireInfo != null){
+    List responseJsonBeneficiaire = json.decode(beneficiaireInfo);
+    responseJsonBeneficiaire.forEach((element) {
+      beneficiaireList.add(element);
+    });
+  }
+  resBody['data_beneficiaire']?.forEach((k, v) {
+    beneficiaireList.add(v[0]);
+  });
+  resBody['data_country']?.forEach((k, v) {
+    countryList.add(v[0]);
+  });
+  data = beneficiaireList;
+  return beneficiaireList;
+}
+
+
+
 
 class BeneficiairePage extends StatefulWidget {
   static final String path = "lib/src/pages/settings/settings1.dart";
@@ -16,9 +51,10 @@ class BeneficiairePage extends StatefulWidget {
 }
 
 class _BeneficiairePageState extends State<BeneficiairePage> {
+  Future<List<dynamic>> _beneficiaire;
   TextEditingController searchController = new TextEditingController();
   String filter;
-  String _nom(dynamic beneficiaire){
+  String _receiver_first_name(dynamic beneficiaire){
     return beneficiaire['nom'];
   }
   String _email(dynamic beneficiaire){
@@ -27,6 +63,8 @@ class _BeneficiairePageState extends State<BeneficiairePage> {
   _BeneficiairePageState();
 
   @override  initState() {
+    fetchMyBeneficiaire();
+    _beneficiaire =fetchMyBeneficiaire();
     searchController.addListener(() {
       setState(() {
         filter = searchController.text;
@@ -94,10 +132,9 @@ class _BeneficiairePageState extends State<BeneficiairePage> {
             ),
             Flexible(
               child: FutureBuilder<List<dynamic>>(
-                future: fetchBeneficiaire(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                future: fetchMyBeneficiaire(),
+                builder: (BuildContext context,AsyncSnapshot<dynamic> snapshot) {
                   if(snapshot.hasData){
-
                     return ListView.builder(
                         padding: EdgeInsets.all(8),
                         itemCount: snapshot.data.length,
@@ -107,11 +144,11 @@ class _BeneficiairePageState extends State<BeneficiairePage> {
                               child: Column(
                                 children: <Widget>[
                                   ListTile(
-                                    title: Text(_nom(snapshot.data[index])),
-                                    leading: new CircleAvatar(
+                                      title:Text(snapshot.data[index]['receiver_first_name']),
+                                      leading: new CircleAvatar(
                                         backgroundColor: Colors.blue,
                                         child: Text(
-                                            '${_nom(snapshot.data[index]).substring(0, 1)}')),
+                                            '${snapshot.data[index]['receiver_first_name'].substring(0, 1)}')),
                                     onTap: () {
                                       Navigator.push(
                                         context,
@@ -120,8 +157,6 @@ class _BeneficiairePageState extends State<BeneficiairePage> {
                                         ),
                                       );
                                     },
-                                    //  subtitle: Text(_email(snapshot.data[index])),
-                                    // trailing: Text(_age(snapshot.data[index])),
                                   )
                                 ],
                               ),
@@ -132,165 +167,16 @@ class _BeneficiairePageState extends State<BeneficiairePage> {
                   }
                 },
               ),
-              /* child:ListView.builder(
-                itemCount: contacts.length,
-                itemBuilder: (context, index) {
-                  return filter == null || filter == ""?
-                  ListTile(
-                    title: Text(
-                      '${contacts[index].fullName}',
-                    ),
-                    subtitle: Text(
-                        '${contacts[index].email}',
-                    ),
-                    leading: new CircleAvatar(
-                        backgroundColor: Colors.blue,
-                        child: Text(
-                            '${contacts[index].fullName.substring(0, 1)}')),
-                    onTap: () => _onTapItem(context, contacts[index]),
-                  ):'${contacts[index].fullName}'.toLowerCase()
-                      .contains(filter.toLowerCase())
-                      ? ListTile(
-                    title: Text(
-                      '${contacts[index].fullName}',
-                    ),
-                    subtitle: Text('${contacts[index].email}'),
-                    leading: new CircleAvatar(
-                        backgroundColor: Colors.blue,
-                        child: Text(
-                            '${contacts[index].fullName.substring(0, 1)}')),
-                    onTap: () =>
-                        _onTapItem(context, contacts[index]),
-                  ): new Container();
-                },
-              ),*/
+
             ),
           ],
         ),
       ),
     );
   }
-/*  Widget cartItems(int index) {
-    return RoundedContainer(
-      padding: const EdgeInsets.all(0),
-      margin: EdgeInsets.all(10),
-      height: 130,
-      child: Row(
-        children: <Widget>[
-          Container(
-            width: 130,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(images[1]),
-                  fit: BoxFit.cover,
-                )),
-          ),
-          Flexible(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Flexible(
-                        child:GestureDetector(
-                            onTap: () {  Navigator.push(context, MaterialPageRoute(
-                                builder: (context) => TransactionPage()));},
-                            child: Text( "Nom:Cephas ZOUBGA",  style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 15),)
-                        ),
-                      ),
-                      Container(
-                        width: 50,
-                        child: IconButton(
-                          onPressed: () {
-                            print("Button Pressed");
-                          },
-                          color: Colors.red,
-                          icon: Icon(Icons.delete),
-                          iconSize: 20,
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Text("Email: "),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        '\cephaszoubga@gmail.com',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w300),
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Text("Adresse"),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text('\Casablanca',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w300,
-                            color: Colors.black,
-                          ))
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }*/
+
 }
 
-/*class Beneficiaire {
-  final String nom;
-  final String prenom;
-  final String email;
-  final String telephone;
-  final String pays;
-  final String info_complementaire;
-  Beneficiaire( {this.nom,
-    this.prenom,
-    this.email,
-    this.telephone,
-    this.pays, this.info_complementaire});
-  factory Beneficiaire.fromMap(Map<String, dynamic> json) =>Beneficiaire(
-    nom: json['nom'],
-    prenom: json['prenom'],
-    email: json['email'],
-    telephone: json['telephone'],
-    pays: json['pays'],
-    info_complementaire: json['info_complementaire'],
-  );
-  factory Beneficiaire.fromJson(Map<String, dynamic> data) {
-    return Beneficiaire(
-      nom: data['nom'],
-      prenom: data['prenom'],
-      email: data['email'],
-      telephone: data['telephone'],
-      pays: data['pays'],
-      info_complementaire: data['info_complementaire'],
-    );
-  }
-}*/
-class Contact {
-  final String fullName;
-  final String email;
-  final String adresse;
-
-  const Contact({this.fullName, this.email,this.adresse});
-}
-
-void _onTapItem(BuildContext context, Contact post) {
-  /* Scaffold.of(context).showSnackBar(
-      new SnackBar(content: new Text("Tap on " + ' - ' + post.fullName)));*/
+void _onTapItem(BuildContext context) {
   Navigator.push(context, MaterialPageRoute(builder: (context) =>TransactionPage()),);
 }

@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/credit_card_widget.dart';
 import 'package:intl/intl.dart';
@@ -17,6 +17,7 @@ String _transactionDate;
 String _transactionTime;
 String _receiver_Name;
 List transactionInfo = List();
+List transactionInfoBackend = List();
 class ExistingCardsPage extends StatefulWidget {
   ExistingCardsPage({Key key}) : super(key: key);
 
@@ -42,19 +43,31 @@ class ExistingCardsPageState extends State<ExistingCardsPage> {
     var jwt = await storage.read(key: "transaction");
     transactionInfo=json.decode(jwt);
     transactionInfo.forEach((transaction) {
-      _amount=transaction['montant_total'];
-      _currency=transaction['currency_sender'];
+      _amount=transaction['transac_total'];
+      _currency=transaction['devise_send'];
       _receiver_Name=transaction['receiver_name'];
     });
-    print(_amount);
     var now = new DateTime.now();
     var formatter = new DateFormat('yyyy-MM-dd');
      _transactionDate = formatter.format(now);
      _transactionTime= DateFormat.Hm().format(now);
-    print(_transactionDate);
     if(jwt == null) return   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => TransactionPage()), (Route<dynamic> route) => false);
     else {
       return jwt;
+    }
+  }
+  displayTransactionInfoBackend() async {
+    var transactionBackend = await storage.read(key: "transactionBackend");
+    transactionInfoBackend=json.decode(transactionBackend);
+  /*  transactionInfo=json.decode(jwt);
+    transactionInfo.forEach((transaction) {
+      _amount=transaction['transac_total'];
+      _currency=transaction['devise_send'];
+      _receiver_Name=transaction['receiver_name'];
+    });*/
+    if(transactionBackend == null) return   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => TransactionPage()), (Route<dynamic> route) => false);
+    else {
+      return transactionBackend;
     }
   }
   payViaExistingCard(BuildContext context, card) async {
@@ -83,6 +96,9 @@ class ExistingCardsPageState extends State<ExistingCardsPage> {
         )
     ).closed.then((_) {
       if(response.success){
+        displayTransactionInfo();
+        displayTransactionInfoBackend();
+        postTransaction();
         _paymentSuccessDialog(context);
       }
       else{
@@ -286,5 +302,24 @@ class PaymentSuccessDialog extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+postTransaction()async{
+  var jwt = await storage.read(key: "jwt");
+  Map<String, dynamic> responseJson = json.decode(jwt);
+  String token = responseJson["access_token"];
+  int user_id = responseJson["user_id"];
+
+  var res = await http.post(Uri.encodeFull('https://gracetechnologie.pythonanywhere.com/api/payment/' + '$user_id'), headers: {
+    "Accept": "application/json",
+    'Authorization': 'Bearer $token',
+  });
+  print(res.body);
+  if (res.statusCode==200){
+    var resGet = await http.get(Uri.encodeFull('https://gracetechnologie.pythonanywhere.com/api/success/' + '$user_id'), headers: {
+      "Accept": "application/json",
+      'Authorization': 'Bearer $token',
+    });
+    print(resGet.body);
   }
 }

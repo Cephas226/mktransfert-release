@@ -47,6 +47,7 @@ class StripeService {
       );
       if (response.status == 'succeeded') {
       //  _paymentSuccessDialog(context);
+
         return new StripeTransactionResponse(
             message: 'Transaction réussie',
             success: true

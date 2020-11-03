@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,7 +9,6 @@ import 'package:mktransfert/core/presentation/res/assets.dart';
 import 'package:mktransfert/src/page/navigation.dart';
 import 'package:http/http.dart';
 import 'package:mktransfert/src/page/pagePrincipale.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'mesclasses/user.model.dart';
 import 'operations/beneficiaireOperations.dart';
@@ -30,10 +30,24 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+    checkLoginStatus();
     formVisible = false;
     _formsIndex = 1;
   }
-
+  checkLoginStatus() async {
+    var jwt = await storage.read(key: "jwt");
+    print(jwt);
+    if (jwt == null)
+      return Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
+          ModalRoute.withName("/login"));
+    else {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) => PagePrincipale()),
+          ModalRoute.withName("/principale"));
+      return jwt;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -222,6 +236,7 @@ class _LoginState extends State<LoginForm> {
   @override
   void initState() {
     super.initState();
+    checkLoginStatus();
   }
 
   @override
@@ -240,6 +255,7 @@ class _LoginState extends State<LoginForm> {
             children: <Widget>[
               TextFormField(
                 onSaved: (val) => setState(() => _user.email = val),
+                validator: (value) => EmailValidator.validate(value) ? null : "Veuillez saisir un e-mail valide",
                 decoration: InputDecoration(
                   hintText: "Entrer un email",
                   border: OutlineInputBorder(),
@@ -247,6 +263,12 @@ class _LoginState extends State<LoginForm> {
               ),
               const SizedBox(height: 10.0),
               TextFormField(
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Veuillez saisir un mot de passe ';
+                  }
+                  return null;
+                },
                 onSaved: (val) => setState(() => _user.password = val),
                 obscureText: true,
                 decoration: InputDecoration(
@@ -274,7 +296,23 @@ class _LoginState extends State<LoginForm> {
                     _isLoading = true;
                   });
                 },*/
-                onPressed: _user.email == "" || _user.password == ""
+                onPressed: () async {
+                  if (_formKey.currentState.validate()) {
+                    final form = _formKey.currentState;
+                    form.save();
+                    var jwt = await logMe(_user.email, _user.password);
+                    storage.write(key: "jwt", value: jwt);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PagePrincipale()));
+
+                    Scaffold.of(context).showSnackBar(
+                        SnackBar(content: Text('Processing Data')));
+                  }
+                },
+
+                /*  _user.email == "" || _user.password == ""
                     ? null
                     : () async {
                         final form = _formKey.currentState;
@@ -282,18 +320,18 @@ class _LoginState extends State<LoginForm> {
                           form.save();
                           var jwt = await logMe(_user.email, _user.password);
                           storage.write(key: "jwt", value: jwt);
-                          if (jwt != null) {
+                          if (jwt ==500) {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => PagePrincipale()));
                           }
-                          else {
-                            displayDialog(context, "An Error Occurred",
-                                "No account was found matching that username and password");
-                          }
                         }
-                      },
+                        else {
+                          displayDialog(context, "An Error Occurred",
+                              "No account was found matching that username and password");
+                        }
+                      },*/
               ),
             ],
           ),
@@ -321,7 +359,7 @@ class _LoginState extends State<LoginForm> {
       'password': password,
     };
 
-     var response  = await post(
+    var response = await post(
       '$apiUrlLogin',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -333,6 +371,21 @@ class _LoginState extends State<LoginForm> {
       return response.body;
     } else {
       return null;
+    }
+  }
+
+  checkLoginStatus() async {
+    var jwt = await storage.read(key: "jwt");
+    print(jwt);
+    if (jwt == null)
+      return Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
+          ModalRoute.withName("/login"));
+    else {
+     Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) => PagePrincipale()),
+          ModalRoute.withName("/principale"));
+      return jwt;
     }
   }
 }
@@ -430,7 +483,14 @@ class _SignupFormState extends State<SignupPage> {
                       padding: const EdgeInsets.all(10.0),
                       children: <Widget>[
                         TextFormField(
-                          onSaved: (val) => setState(() => _user.last_name = val),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Veuillez saisir un nom';
+                            }
+                            return null;
+                          },
+                          onSaved: (val) =>
+                              setState(() => _user.last_name = val),
                           decoration: InputDecoration(
                             hintText: "Entrer votre nom *",
                             border: OutlineInputBorder(),
@@ -438,7 +498,14 @@ class _SignupFormState extends State<SignupPage> {
                         ),
                         const SizedBox(height: 10.0),
                         TextFormField(
-                          onSaved: (val) => setState(() => _user.first_name = val),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Veuillez saisir un prenom';
+                            }
+                            return null;
+                          },
+                          onSaved: (val) =>
+                              setState(() => _user.first_name = val),
                           decoration: InputDecoration(
                             hintText: "Entrer votre prenom(s) *",
                             border: OutlineInputBorder(),
@@ -446,6 +513,7 @@ class _SignupFormState extends State<SignupPage> {
                         ),
                         const SizedBox(height: 10.0),
                         TextFormField(
+                          validator: (value) => EmailValidator.validate(value) ? null : "Veuillez saisir un e-mail valide",
                           onSaved: (val) => setState(() => _user.email = val),
                           decoration: InputDecoration(
                             hintText: "example@gmail.com *",
@@ -454,8 +522,13 @@ class _SignupFormState extends State<SignupPage> {
                         ),
                         const SizedBox(height: 10.0),
                         TextFormField(
-                          onSaved: (val) =>
-                              setState(() => _user.phone = val),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Veuillez saisir un telephone';
+                            }
+                            return null;
+                          },
+                          onSaved: (val) => setState(() => _user.phone = val),
                           decoration: InputDecoration(
                             hintText: "Entrer votre téléphone *",
                             border: OutlineInputBorder(),
@@ -482,7 +555,8 @@ class _SignupFormState extends State<SignupPage> {
                                             onChanged: (value) {
                                               setState(() {
                                                 _selectedItem = value;
-                                                _user.country = _selectedItem.name;
+                                                _user.country =
+                                                    _selectedItem.name;
                                               });
                                             }),
                                       ))),
@@ -490,6 +564,12 @@ class _SignupFormState extends State<SignupPage> {
                         const SizedBox(height: 10.0),
                         TextFormField(
                           obscureText: true,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Veuillez saisir un mot de passe';
+                            }
+                            return null;
+                          },
                           onSaved: (val) =>
                               setState(() => _user.password = val),
                           decoration: InputDecoration(
@@ -497,16 +577,6 @@ class _SignupFormState extends State<SignupPage> {
                             border: OutlineInputBorder(),
                           ),
                         ),
-/*                        const SizedBox(height: 10.0),
-                        TextFormField(
-                          obscureText: true,
-                          onSaved: (val) =>
-                              setState(() => _user.cpassword = val),
-                          decoration: InputDecoration(
-                            hintText: "Confirmer Mot de passe *",
-                            border: OutlineInputBorder(),
-                          ),
-                        ),*/
                         const SizedBox(height: 10.0),
                         SizedBox(
                           width: double.infinity,
@@ -521,14 +591,14 @@ class _SignupFormState extends State<SignupPage> {
                             onPressed: () async {
                               final form = _formKey.currentState;
                               _user.country = _selectedItem.name;
-                              if (form.validate()) {
+                              if (_formKey.currentState.validate()) {
                                 form.save();
                                 if (_user.email.length < 4)
-                                  displayDialog(context, "Invalid Username",
-                                      "The username should be at least 4 characters long");
+                                  displayDialog(context, "Nom d'utilisateur invalide",
+                                      "Le nom d'utilisateur doit comporter au moins 4 caractères");
                                 else if (_user.password.length < 4)
                                   displayDialog(context, "Invalid Password",
-                                      "The password should be at least 4 characters long");
+                                      "Le mot de passe doit comporter au moins 4 caractères ");
                                 else {
                                   var res = await _user.saveMe(
                                     _user.last_name,
@@ -538,23 +608,23 @@ class _SignupFormState extends State<SignupPage> {
                                     _user.country,
                                     _user.password,
                                   );
-                                  if (res == 200){
+                                  if (res == 200) {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => PagePrincipale()));
+                                            builder: (context) =>
+                                                PagePrincipale()));
                                     _showDialog(context);
-                                   /* displayDialog(context, "Success",
+                                    /* displayDialog(context, "Success",
                                         "The user was created. Log in now.");*/
-                                  }
-                                  else if (res == 409)
+                                  } else if (res == 409)
                                     displayDialog(
                                         context,
-                                        "That username is already registered",
-                                        "Please try to sign up using another username or log in if you already have an account.");
+                                        "Ce nom d'utilisateur est déjà enregistré",
+                                        "Veuillez essayer de vous inscrire en utilisant un autre nom d'utilisateur ou vous connecter si vous avez déjà un compte.");
                                   else {
-                                    displayDialog(context, "Error",
-                                        "An unknown error occurred.");
+                                    displayDialog(context, "Erreur",
+                                        "Une erreur inconnue est survenue.");
                                   }
                                 }
                                 //  {Navigator.push(context, MaterialPageRoute(builder: (context) => f()));};
@@ -574,7 +644,7 @@ class _SignupFormState extends State<SignupPage> {
 }
 
 _showDialog(BuildContext context) {
-  Scaffold.of(context).showSnackBar(SnackBar(content: Text('Submitting form')));
+  Scaffold.of(context).showSnackBar(SnackBar(content: Text('Soumission du formulaire')));
 }
 
 class MySelectionItem extends StatelessWidget {

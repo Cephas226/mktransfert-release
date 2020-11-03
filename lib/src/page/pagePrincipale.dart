@@ -12,7 +12,6 @@ import 'package:mktransfert/src/page/beneficiaire.dart';
 import 'package:mktransfert/src/page/loginPage.dart';
 import 'package:mktransfert/src/page/navigation.dart';
 import 'package:mktransfert/src/page/transaction.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 final storage = FlutterSecureStorage();
 
@@ -125,15 +124,13 @@ class _MainPageState extends State<PagePrincipale> {
       ],
     );
   }
-
-  SharedPreferences sharedPreferences;
-
   checkLoginStatus() async {
     var jwt = await storage.read(key: "jwt");
+    print(jwt);
     if (jwt == null)
       return Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
-          (Route<dynamic> route) => false);
+        ModalRoute.withName("/Login"));
     else {
       return jwt;
     }
@@ -183,10 +180,11 @@ class _MainPageState extends State<PagePrincipale> {
   }
 
   @override
-  void initState() {
+  Future<void> initState()  {
     super.initState();
     checkLoginStatus();
     this.displayPaymentInfo();
+    storage.delete(key: "beneficiaire");
     _loadCurrencies();
     _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
     _selectedItem = _dropdownMenuItems[0].value;
@@ -650,7 +648,7 @@ Widget _buildDateHeader(DateTime date) {
   final TextStyle boldStyle = TextStyle(
       color: Colors.white,
       fontWeight: FontWeight.bold,
-      fontSize: 24,
+      fontSize: 20,
       letterSpacing: 2.0);
   return Row(
     children: <Widget>[
@@ -698,7 +696,7 @@ Widget _buildDateHeader(DateTime date) {
             ),*/
           Text(
             "Estimation du transfert",
-            style: boldStyle,
+            style: (boldStyle),
           )
         ],
       ),

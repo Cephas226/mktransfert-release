@@ -15,9 +15,6 @@ Future<List<Beneficiaire>> fetchBeneficiaire() async {
   var result = await http.get(apiUrl);
   return json.decode(result.body);
 }
+List data = List();
 
-/*List<Beneficiaire> decodeBeneficiaire(String responseBody) {
-  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-  return parsed.map<Beneficiaire>((json) => Beneficiaire.fromMap(json)).toList();
-}*/
 

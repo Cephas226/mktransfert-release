@@ -374,7 +374,7 @@ class RegisterBeneficiairePageState  extends State <RegisterBeneficiairePage> {
                   future: _futureBeneficiaire,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      return Text(snapshot.data.nom);
+                      return Text(snapshot.data.receiver_first_name);
                     }
                     else if (snapshot.hasError) {
                       return Text("${snapshot.error}");

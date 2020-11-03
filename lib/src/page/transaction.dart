@@ -38,7 +38,7 @@ class _TransactionState extends State<TransactionPage> {
   int _beneficiaireID;
   int _mySelectionPointRetrait;
   String _senderCurrency;
-
+  String _receiverCurrency;
   double _convertResult;
 
   double _stripeAmount;
@@ -851,16 +851,27 @@ class _TransactionState extends State<TransactionPage> {
 
                                         storage.write(key: "transaction", value: json.encode([
                                          {
-                                            "id":_beneficiaireID,
-                                            "montant_envoie":fromTextControllerSender.text,
-                                            "montant_reçu":fromTextControllerReceiver.text,
-                                            "montant_envoie":fromTextControllerSender.text,
-                                            "point_retrait":_mySelectionPointRetrait,
+                                            "montant_send":fromTextControllerSender.text,
+                                            "montant_receive":fromTextControllerReceiver.text,
+                                            "transac_commission":fromTextControllerCommission.text,
+                                            "transac_total":_stripeAmount,
+                                            "devise_send":_senderCurrency,
                                             "receiver_name":editReceiver_first_name.text,
-                                            "currency_sender":_senderCurrency,
-                                            "montant_total":_stripeAmount
+                                            "devise_receive":_valueReceiver,
+                                            "point_retrait":_mySelectionPointRetrait,
                                          }
                                         ]));
+                                        storage.write(key: "transactionBackend", value: json.encode([
+                                          {
+                                            "montant_send":fromTextControllerSender.text,
+                                            "montant_receive":fromTextControllerReceiver.text,
+                                            "transac_commission":fromTextControllerCommission.text,
+                                            "transac_total":_stripeAmount,
+                                            "devise_receive":_valueReceiver,
+                                            "point_retrait":_mySelectionPointRetrait,
+                                          }
+                                        ]));
+
                                         Navigator.pop(context);
                                         Navigator.push(
                                           context,
