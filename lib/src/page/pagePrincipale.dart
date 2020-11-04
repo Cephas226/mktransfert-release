@@ -36,9 +36,9 @@ class _MainPageState extends State<PagePrincipale> {
     return jwt;
   }
 
-  double _conversion_eur;
-  double _conversion_usd;
-
+  double _conversion_eur=11900.0;
+  double _conversion_usd=10000.0;
+String respresponseJwtLogin;
   List<String> currencies;
   String fromCurrency = "USD";
   String toCurrency = "GBP";
@@ -102,7 +102,7 @@ class _MainPageState extends State<PagePrincipale> {
                 child: Row(
                   children: <Widget>[
                     Text(lang.languageCode),
-                    Image.asset(lang.name, width: 50)
+                    Image.asset(lang.name, width: 30)
                   ],
                 ),
               );
@@ -127,11 +127,15 @@ class _MainPageState extends State<PagePrincipale> {
   checkLoginStatus() async {
     var jwt = await storage.read(key: "jwt");
     print(jwt);
-    if (jwt == null)
-      return Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
-        ModalRoute.withName("/Login"));
+    Map<String, dynamic> responseJwtLogin = json.decode(jwt);
+    print(responseJwtLogin['access_token']);
+    respresponseJwtLogin=responseJwtLogin['access_token'];
+    if (responseJwtLogin['access_token']==null){
+          MaterialPageRoute(builder: (BuildContext context) => LoginPage());
+          print('je suis null');
+    }
     else {
+      print('je suis jwt');
       return jwt;
     }
   }
@@ -151,7 +155,6 @@ class _MainPageState extends State<PagePrincipale> {
         });
     if (res.statusCode == 200) {
       var resBody = json.decode(res.body);
-
       _conversion_eur = resBody['API_transac_data']['conversion_eur'];
       _conversion_usd = resBody['API_transac_data']['conversion_usd'];
     }
@@ -182,9 +185,9 @@ class _MainPageState extends State<PagePrincipale> {
   @override
   Future<void> initState()  {
     super.initState();
-    checkLoginStatus();
     this.displayPaymentInfo();
     storage.delete(key: "beneficiaire");
+    this.checkLoginStatus();
     _loadCurrencies();
     _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
     _selectedItem = _dropdownMenuItems[0].value;
@@ -276,7 +279,7 @@ class _MainPageState extends State<PagePrincipale> {
           child: Row(
             children: <Widget>[
               Text(listItem.name),
-              Image.asset(listItem.imageGnf, width: 50),
+              Image.asset(listItem.imageGnf, width: 30),
             ],
           ),
           value: listItem,
@@ -292,26 +295,32 @@ class _MainPageState extends State<PagePrincipale> {
       home: FutureBuilder(
         future: jwtOrEmpty,
         builder: (context, snapshot) {
-          /*if(!snapshot.hasData) return CircularProgressIndicator();
-            if(snapshot.data != "") {
-              var str = snapshot.data;
-              var jwt = str.split(".");
 
-              if(jwt.length !=3) {
-                return LoginPage();
-              }
-              else{
+            if(snapshot.data == "") {
+              return Container(
+                child: Row(
+                  children: <Widget>[
+                    Text('Patientez s\'il vous plait'),
+                    CircularProgressIndicator(),
+                  ],
+                ),
+              );
+             /* if(jwt.length !=3) {
+                return CircularProgressIndicator();
+              }*/
+             /* else{
                 var payload = json.decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
                 if(DateTime.fromMillisecondsSinceEpoch(payload["exp"]*1000).isAfter(DateTime.now())) {
                   return PagePrincipale();
                 } else {
                   return LoginPage();
                 }
-              }
-            }*/
+              }*/
+            }
           _selectedCurrency=1;
+          displayPaymentInfo();
           return (Scaffold(
-              body: _selectedCurrency == null
+              body: respresponseJwtLogin == null
                   ? Center(child: CircularProgressIndicator())
                   : HeaderFooterwidget(
                       header: _buildDateHeader(DateTime.now()),
@@ -359,9 +368,14 @@ class _MainPageState extends State<PagePrincipale> {
                                   const SizedBox(
                                     height: 20.0,
                                   ),
-                                  Text(_selectedCurrency==1?"1 € = $_conversion_eur GNF":
-                                          "1 \$ = $_conversion_usd GNF",
+                                  Text(_selectedCurrency==2?
+                                  "1 \$ = 10000.0 GNF":'',
                                       style: TextStyle(color: Colors.blue)),
+                                  Text("1 € = 11900.0 GNF",
+                                      style: TextStyle(color: Colors.blue)),
+                                  /*Text(_selectedCurrency==2?"1 € = $_conversion_eur GNF":
+                                          "1 \$ = $_conversion_usd GNF",
+                                      style: TextStyle(color: Colors.blue)),*/
                                   const SizedBox(height: 20.0),
                                   Row(
                                     children: <Widget>[
@@ -388,6 +402,7 @@ class _MainPageState extends State<PagePrincipale> {
                                             ),
                                             Expanded(
                                               child: Container(
+                                                width: 30,
                                                 child: _buildDropButtonTo(),
                                               ),
                                             )

@@ -26,7 +26,7 @@ class _OperationListPageState extends State<OperationListPage> {
   @override
   void initState() {
     super.initState();
-   // fetchMyTransaction();
+    // fetchMyTransaction();
   }
 
   var resBody;
@@ -45,7 +45,7 @@ class _OperationListPageState extends State<OperationListPage> {
         });
     json.decode(res.body);
     resBody = json.decode(res.body);
-
+    print(resBody);
     return transactionList;
   }
 
@@ -57,104 +57,119 @@ class _OperationListPageState extends State<OperationListPage> {
         automaticallyImplyLeading: false,
       ),
       backgroundColor: Colors.grey.shade300,
-      body: SingleChildScrollView(
-        child: FutureBuilder<List<dynamic>>(
-            future: fetchMyTransaction(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
-                var _dataTransaction = List();
-                resBody['data_transactions']?.forEach((k, v) {
-                  _dataTransaction.add(v[0]);
-                });
-                //_dataTransaction = transactionList;
-                return Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Container(
-                        child: BorderedContainer(
-                          margin: const EdgeInsets.symmetric(
-                            vertical: 4.0,
-                            horizontal: 8.0,
-                          ),
-                          child: ExpansionPanelList(
-                            children:
-                                _dataTransaction.map<ExpansionPanel>((item) {
-                              return ExpansionPanel(
-                                isExpanded: false,
-                                headerBuilder:
-                                    (BuildContext context, bool isExpanded) {
-                                  return ListTile(
-                                    title: Text(item['transac_num'],
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold)),
-                                    subtitle: Text(item['receiver_first_name']),
-                                    trailing: Text(
-                                        item['transac_montant_send'] +
-                                            item['transac_montant_send']),
-                                  );
-                                },
-                                body: Column(
+      body: Stack(
+      children: <Widget>[
+      SingleChildScrollView(
+      child:
+      FutureBuilder<List<dynamic>>(
+      future: fetchMyTransaction(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (!snapshot.hasData) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Center(child: CircularProgressIndicator())
+              ],
+            );
+          }
+          else{
+            var _dataTransaction = List();
+            resBody['data_transactions']?.forEach((k, v) {
+              _dataTransaction.add(v[0]);
+            });
+            //_dataTransaction = transactionList;
+            return  Row(
+              children: <Widget>[
+                Expanded(
+                  child: Container(
+                    child: BorderedContainer(
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 4.0,
+                        horizontal: 8.0,
+                      ),
+                      child: ExpansionPanelList(
+                        children: _dataTransaction
+                            .map<ExpansionPanel>((item) {
+                          return ExpansionPanel(
+                            isExpanded: false,
+                            headerBuilder: (BuildContext context,
+                                bool isExpanded) {
+                              return ListTile(
+                                title: Text(item['transac_num'],
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold)),
+                                subtitle:
+                                Text(item['receiver_first_name']),
+                                trailing: Text(
+                                    item['transac_montant_send'] +
+                                        item['transac_montant_send']),
+                              );
+                            },
+                            body: Column(
+                              children: <Widget>[
+                                Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.start,
                                   children: <Widget>[
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Row(children: <Widget>[
-                                          const SizedBox(width: 15.0),
-                                          Text('Status:',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold)),
-                                          Text(item['transac_status'],
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.green)),
-                                        ]),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10.0),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Row(children: <Widget>[
-                                          const SizedBox(width: 15.0),
-                                          Text('Date de transaction :',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold)),
-                                          Text(item['transac_date']),
-                                        ]),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10.0),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Row(children: <Widget>[
-                                          const SizedBox(width: 15.0),
-                                          Text('Paiement par :',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold)),
-                                          Text('Carte Bancaire'),
-                                        ]),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10.0),
+                                    Row(children: <Widget>[
+                                      const SizedBox(width: 15.0),
+                                      Text('Status:',
+                                          style: TextStyle(
+                                              fontWeight:
+                                              FontWeight.bold)),
+                                      Text(item['transac_status'],
+                                          style: TextStyle(
+                                              fontWeight:
+                                              FontWeight.bold,
+                                              color: Colors.green)),
+                                    ]),
                                   ],
                                 ),
-                                //   isExpanded: item.isExpanded,
-                              );
-                            }).toList(),
-                          ),
-                        ),
+                                const SizedBox(height: 10.0),
+                                Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(children: <Widget>[
+                                      const SizedBox(width: 15.0),
+                                      Text('Date de transaction :',
+                                          style: TextStyle(
+                                              fontWeight:
+                                              FontWeight.bold)),
+                                      Text(item['transac_date']),
+                                    ]),
+                                  ],
+                                ),
+                                const SizedBox(height: 10.0),
+                                Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(children: <Widget>[
+                                      const SizedBox(width: 15.0),
+                                      Text('Paiement par :',
+                                          style: TextStyle(
+                                              fontWeight:
+                                              FontWeight.bold)),
+                                      Text('Carte Bancaire'),
+                                    ]),
+                                  ],
+                                ),
+                                const SizedBox(height: 10.0),
+                              ],
+                            ),
+                            //   isExpanded: item.isExpanded,
+                          );
+                        }).toList(),
                       ),
-                    )
-                  ],
-                );
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-            }),
+                    ),
+                  ),
+                )
+              ],
+            );
+          }
+        }))
+    ],
       ),
     );
   }

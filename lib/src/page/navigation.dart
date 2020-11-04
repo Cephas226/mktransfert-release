@@ -6,6 +6,7 @@ import 'package:mktransfert/src/page/server.dart';
 import 'package:mktransfert/src/page/pagePrincipale.dart';
 import 'package:mktransfert/src/page/transaction.dart';
 import 'package:mktransfert/src/page/user.dart';
+import 'package:mktransfert/src/utils/oval-right-clipper.dart';
 
 
 import 'beneficiaire.dart';
@@ -17,8 +18,11 @@ class NavigationPage extends StatefulWidget {
   _NavigationPageState createState() => _NavigationPageState();
 }
 
+
+
 class _NavigationPageState extends State<NavigationPage> {
   PageController _myPage = PageController(initialPage: 0);
+  final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,18 +39,18 @@ class _NavigationPageState extends State<NavigationPage> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-             Row(children: <Widget>[
-               IconButton(
-                 iconSize: 30.0,
-                 padding: EdgeInsets.only(left: 28.0),
-                 icon: Icon(Icons.home),
-                 onPressed: () {
-                   setState(() {
-                     _myPage.jumpToPage(0);
-                   });
-                 },
-               ),
-             ],),
+              Row(children: <Widget>[
+                IconButton(
+                  iconSize: 30.0,
+                  padding: EdgeInsets.only(left: 28.0),
+                  icon: Icon(Icons.home),
+                  onPressed: () {
+                    setState(() {
+                      _myPage.jumpToPage(0);
+                    });
+                  },
+                ),
+              ],),
               IconButton(
                 iconSize: 30.0,
                 padding: EdgeInsets.only(right: 28.0),
@@ -116,7 +120,9 @@ class _NavigationPageState extends State<NavigationPage> {
         width: 65.0,
         child: FittedBox(
           child: FloatingActionButton(
-            onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => TransactionPage()),);},
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => PagePrincipale()),);
+            },
             child: Icon(
               Icons.swap_horiz,
               color: Colors.white,

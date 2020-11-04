@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-   // checkLoginStatus();
+    checkLoginStatus();
     formVisible = false;
     _formsIndex = 1;
   }
@@ -304,12 +304,17 @@ class _LoginState extends State<LoginForm> {
                      final form = _formKey.currentState;
                      form.save();
                     Map<String, dynamic> responseJwtLogin = json.decode(await logMe(_user.email, _user.password));
-                    print(responseJwtLogin['message']);
-                    if (responseJwtLogin['message']=='invalide'){
+                    if (identical(responseJwtLogin['message'], 'invalide')){
                       _onAlertLogin(context);
                     }
-                    else {
+                    if (identical(responseJwtLogin, 'invalide')){
                       _onAlertLogin(context);
+                    }
+                    if (responseJwtLogin == null){
+                      _onAlertLogin(context);
+                    }
+                    if (responseJwtLogin != null){
+                      storage.write(key: "jwt", value: jwt);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -372,9 +377,10 @@ class _LoginState extends State<LoginForm> {
       },
       body: jsonEncode(data),
     );
+    print(response.statusCode);
     if (response.statusCode == 200) {
       storage.write(key: "userInfo", value: response.body);
-      print('Login User');
+      print('succès');
       return response.body;
     } else {
       return 'invalide';

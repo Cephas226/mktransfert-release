@@ -80,105 +80,113 @@ class ProfilePageState extends State<UserProfilPage> {
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
-        body: SingleChildScrollView(
-            child: FutureBuilder<List<dynamic>>(
-                future: displayProleInfo(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasData) {
-                    return Column(
-                      children: <Widget>[
-                        ProfileHeader(
-                          avatar: NetworkImage(avatars[0]),
-                          coverImage: NetworkImage(images[1]),
-                          title: displayUser_first_name,
-                          actions: <Widget>[
-                            MaterialButton(
-                              color: Colors.white,
-                              shape: CircleBorder(),
-                              elevation: 0,
-                              child: Icon(Icons.edit),
-                              onPressed: () {
-                                _showUserInfo();
-                              },
-                            )
-                          ],
+        body: Stack(
+          children: <Widget>[
+        FutureBuilder<List<dynamic>>(
+            future: displayProleInfo(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (!snapshot.hasData) {
+            return  Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Center(child: Body())
+              ],
+            );
+          }
+          else {
+            return  Column(
+              children: <Widget>[
+                ProfileHeader(
+                  avatar: NetworkImage('https://firebasestorage.googleapis.com/v0/b/mktransfert-d6990.appspot.com/o/LogoMKWhite_Plan%20de%20travail%201%20copie%204.png?alt=media&token=15bd19f2-0ca8-4058-81cb-bcbdf09201f6'),
+                  coverImage: NetworkImage(images[1]),
+                  title: displayUser_first_name,
+                  actions: <Widget>[
+                    MaterialButton(
+                      color: Colors.white,
+                      shape: CircleBorder(),
+                      elevation: 0,
+                      child: Icon(Icons.edit),
+                      onPressed: () {
+                        _showUserInfo();
+                      },
+                    )
+                  ],
+                ),
+                const SizedBox(height: 10.0),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        padding: const EdgeInsets.only(
+                            left: 8.0, bottom: 4.0),
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "Information de l'utilisateur",
+                          style: TextStyle(
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                          ),
+                          textAlign: TextAlign.left,
                         ),
-                        const SizedBox(height: 10.0),
-                        Container(
-                          padding: EdgeInsets.all(10),
+                      ),
+                      Card(
+                        child: Container(
+                          alignment: Alignment.topLeft,
+                          padding: EdgeInsets.all(15),
                           child: Column(
                             children: <Widget>[
-                              Container(
-                                padding: const EdgeInsets.only(
-                                    left: 8.0, bottom: 4.0),
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  "Information de l'utilisateur",
-                                  style: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                              Card(
-                                child: Container(
-                                  alignment: Alignment.topLeft,
-                                  padding: EdgeInsets.all(15),
-                                  child: Column(
-                                    children: <Widget>[
-                                      Column(
-                                        children: <Widget>[
-                                          ...ListTile.divideTiles(
-                                            color: Colors.grey,
-                                            tiles: [
-                                              ListTile(
-                                                contentPadding:
-                                                    EdgeInsets.symmetric(
-                                                        horizontal: 12,
-                                                        vertical: 4),
-                                                leading:
-                                                    Icon(Icons.my_location),
-                                                title: Text("Adresse"),
-                                                subtitle: Text("Kathmandu"),
-                                              ),
-                                              ListTile(
-                                                leading: Icon(Icons.email),
-                                                title: Text("Email"),
-                                                subtitle:
-                                                    Text(displayUser_email),
-                                              ),
-                                              ListTile(
-                                                leading: Icon(Icons.phone),
-                                                title: Text("Phone"),
-                                                subtitle: Text("99--99876-56"),
-                                              ),
-                                             /* ListTile(
+                              Column(
+                                children: <Widget>[
+                                  ...ListTile.divideTiles(
+                                    color: Colors.grey,
+                                    tiles: [
+                                      ListTile(
+                                        contentPadding:
+                                        EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                            vertical: 4),
+                                        leading:
+                                        Icon(Icons.my_location),
+                                        title: Text("Adresse"),
+                                        subtitle: Text("Kathmandu"),
+                                      ),
+                                      ListTile(
+                                        leading: Icon(Icons.email),
+                                        title: Text("Email"),
+                                        subtitle:
+                                        Text(displayUser_email),
+                                      ),
+                                      ListTile(
+                                        leading: Icon(Icons.phone),
+                                        title: Text("Phone"),
+                                        subtitle: Text("99--99876-56"),
+                                      ),
+                                      /* ListTile(
                                                 leading: Icon(Icons.person),
                                                 title: Text("About Me"),
                                                 subtitle: Text(
                                                     "This is a about me link and you can khow about me in this section."),
                                               ),*/
-                                            ],
-                                          ),
-                                        ],
-                                      )
                                     ],
                                   ),
-                                ),
+                                ],
                               )
                             ],
                           ),
-                        )
-                      ],
-                    );
-                  }
-                  else {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                }))
-    );
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            );
+
+          }
+        })
+    ],
+    ));
   }
 
   void _showUserInfo() {
@@ -506,7 +514,14 @@ class UserInfo extends StatelessWidget {
     );
   }
 }
-
+class Body extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return CircularProgressIndicator(
+      backgroundColor: Colors.cyan,
+      strokeWidth: 5,);
+  }
+}
 class ProfileHeader extends StatelessWidget {
   final ImageProvider<dynamic> coverImage;
   final ImageProvider<dynamic> avatar;
@@ -578,6 +593,7 @@ class ProfileHeader extends StatelessWidget {
       ],
     );
   }
+
 }
 
 class Avatar extends StatelessWidget {
@@ -613,4 +629,5 @@ class Avatar extends StatelessWidget {
       ),
     );
   }
+
 }

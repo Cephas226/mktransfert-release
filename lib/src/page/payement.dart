@@ -16,6 +16,7 @@ String _currency;
 String _transactionDate;
 String _transactionTime;
 String _receiver_Name;
+String _receiver_Email;
 List transactionInfo = List();
 List transactionInfoBackend = List();
 class ExistingCardsPage extends StatefulWidget {
@@ -46,6 +47,7 @@ class ExistingCardsPageState extends State<ExistingCardsPage> {
       _amount=transaction['transac_total'];
       _currency=transaction['devise_send'];
       _receiver_Name=transaction['receiver_name'];
+      _receiver_Email=transaction['receiver_email'];
     });
     var now = new DateTime.now();
     var formatter = new DateFormat('yyyy-MM-dd');
@@ -59,6 +61,7 @@ class ExistingCardsPageState extends State<ExistingCardsPage> {
   displayTransactionInfoBackend() async {
     var transactionBackend = await storage.read(key: "transactionBackend");
     transactionInfoBackend=json.decode(transactionBackend);
+    print(transactionInfoBackend);
   /*  transactionInfo=json.decode(jwt);
     transactionInfo.forEach((transaction) {
       _amount=transaction['transac_total'];
@@ -203,7 +206,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                         ),
                         Text(_receiver_Name),
                         Text(
-                          "cephaszoubga@gmail.com",
+                          _receiver_Email,
                           style: subtitle,
                         ),
                       ],
@@ -310,10 +313,13 @@ postTransaction()async{
   String token = responseJson["access_token"];
   int user_id = responseJson["user_id"];
 
-  var res = await http.post(Uri.encodeFull('https://gracetechnologie.pythonanywhere.com/api/payment/' + '$user_id'), headers: {
+  var res = await http.post(Uri.encodeFull('https://gracetechnologie.pythonanywhere.com/api/payment/' + '$user_id'),
+      headers: {
     "Accept": "application/json",
     'Authorization': 'Bearer $token',
-  });
+  },
+    body: jsonEncode(transactionInfoBackend)
+  );
   print(res.body);
   if (res.statusCode==200){
     var resGet = await http.get(Uri.encodeFull('https://gracetechnologie.pythonanywhere.com/api/success/' + '$user_id'), headers: {

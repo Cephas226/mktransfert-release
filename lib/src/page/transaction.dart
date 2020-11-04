@@ -13,7 +13,10 @@ import 'package:mktransfert/src/page/pagePrincipale.dart';
 import 'package:mktransfert/src/page/payement.dart';
 import 'package:mktransfert/src/page/paymentPage.dart';
 import 'package:mktransfert/src/page/registerBeneficiaire.dart';
+import 'package:mktransfert/src/utils/oval-right-clipper.dart';
 import 'package:stripe_payment/stripe_payment.dart';
+
+import 'dashboard.dart';
 
 class TransactionPage extends StatefulWidget {
   static final String path = "lib/src/pages/login/auth3.dart";
@@ -573,88 +576,215 @@ class _TransactionState extends State<TransactionPage> {
       ],
     );
   }
+  Divider _buildDivider() {
+    final Color divider = Colors.grey.shade600;
+    return Divider(
+      color: divider,
+    );
+  }
 
+  Widget _buildRow(IconData icon,
+      String title, {bool showBadge = false}) {
+    final TextStyle tStyle = TextStyle(color: active, fontSize: 16.0);
+    return Container(
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
+        child:GestureDetector(
+       /*   onTap: () {
+            print(
+                Navigator.push(context, MaterialPageRoute(builder: (context) => routeMenu),)
+            );
+          },*/
+          child: Row(children: [
+            Icon(
+              icon,
+              color: active,
+            ),
+            SizedBox(width: 10.0),
+            Text(
+              title,
+              style: tStyle,
+            ),
+
+            Spacer(),
+            /*   if (showBadge)
+          Material(
+            color: Colors.deepOrange,
+            elevation: 5.0,
+            shadowColor: Colors.red,
+            borderRadius: BorderRadius.circular(5.0),
+            child: Container(
+              width: 25,
+              height: 25,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.deepOrange,
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              child: Text(
+                "10+",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),*/
+          ]),
+        )
+    );
+  }
+  _buildDrawer() {
+
+    return ClipPath(
+      clipper: OvalRightBorderClipper(),
+      child: Drawer(
+        child: Container(
+          padding: const EdgeInsets.only(left: 16.0, right: 40),
+          decoration: BoxDecoration(
+              color: primary, boxShadow: [BoxShadow(color: Colors.black45)]),
+          width: 300,
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.power_settings_new,
+                        color: active,
+                      ),
+                      onPressed: () {},
+                    ),
+                  ),
+                  Container(
+                    height: 90,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                            colors: [Colors.blue, Colors.deepOrange])
+                    ),
+                    child: CircleAvatar(
+                      radius: 40,
+                      backgroundImage: NetworkImage('https://firebasestorage.googleapis.com/v0/b/mktransfert-d6990.appspot.com/o/Me.png?alt=media&token=044e199c-908b-4d22-9a2c-a720e4a6c6f3'),
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Cephas ZOUBGA",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  Text(
+                    "cephaszoubga@gmail.com",
+                    style: TextStyle(color: active, fontSize: 16.0),
+                  ),
+                  SizedBox(height: 30.0),
+                  // _buildRow(Icons.home, "Accueil"),
+                  _buildDivider(),
+                  _buildRow(Icons.person_pin, "Mon profil"),
+                       _buildDivider(),
+               // _buildRow(Icons.message, "Messages", showBadge: true),*/
+                 // _buildDivider(),
+                   _buildRow(Icons.settings, "Reglages"),
+                  _buildDivider(),
+              _buildRow(Icons.email, "Nous contacter"),
+                //  _buildDivider(),
+                  //  _buildRow(Icons.info_outline, "Aide"),
+                  _buildDivider(),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Effectuer votre transfert"),
       ),
+      drawer: _buildDrawer(),
       body: currencies == null
           ? Center(child: CircularProgressIndicator())
           : Container(
-              width: MediaQuery.of(context).size.width,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Card(
-                    color: _colorFromHex("#F7FAFF"),
-                    elevation: 3.0,
-                    child: ListView(
-                      children: <Widget>[
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            ListTile(
-                              title: Container(
-                                width: 50,
-                                padding: const EdgeInsets.only(
-                                    left: 10.0, right: 10.0),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5.0),
-                                    border: Border.all()),
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButton(
-                                    hint: Text("Choisir un bénéficiaire"),
-                                    items:
-                                    data?.map((item) {
-                                          return DropdownMenuItem(
-                                            child: Text(
-                                                item['receiver_last_name']),
-                                            value: item['id'],
-                                          );
-                                        })?.toList() ??
-                                        [],
-                                    onChanged: (newVal) {
-                                      setState(() {
-                                        _beneficiaireID = newVal;
-                                        _showBeneficiaireInfo();
-                                      });
-                                    },
-                                    value: _beneficiaireID,
+        width: MediaQuery.of(context).size.width,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Card(
+              color: _colorFromHex("#F7FAFF"),
+              elevation: 3.0,
+              child: ListView(
+                children: <Widget>[
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      ListTile(
+                        title: Container(
+                          width: 50,
+                          padding: const EdgeInsets.only(
+                              left: 10.0, right: 10.0),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5.0),
+                              border: Border.all()),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton(
+                              hint: Text("Choisir un bénéficiaire"),
+                              items:
+                              data?.map((item) {
+                                return DropdownMenuItem(
+                                  child: Text(
+                                      item['receiver_last_name']),
+                                  value: item['id'],
+                                );
+                              })?.toList() ??
+                                  [],
+                              onChanged: (newVal) {
+                                setState(() {
+                                  _beneficiaireID = newVal;
+                                  _showBeneficiaireInfo();
+                                });
+                              },
+                              value: _beneficiaireID,
 
-                                  ),
-                                ),
-                              ),
-                              trailing: IconButton(
-                                color: Colors.blue,
-                                icon: Icon(Icons.person_add),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            RegisterBeneficiairePage()),
-                                  );
-                                },
-                              ),
                             ),
-                            const SizedBox(height: 10.0),
-                            ListTile(
-                              title: TextFormField(
-                                decoration: InputDecoration(
-                                  hintText: "Saisir le montant à envoyer",
-                                  border: OutlineInputBorder(),
-                                ),
-                                controller: fromTextControllerSender,
-                                style: TextStyle(
-                                    fontSize: 20.0, color: Colors.black),
-                                keyboardType: TextInputType.numberWithOptions(
-                                    decimal: true),
-                                onChanged: (text) {
-                                  // result=(double.parse(fromTextController.text) * (10)).toStringAsFixed(2);
-                                  _doConversion(fromTextControllerSender.text);
-                                 // fromTextControllerTotal.text=(double.parse(fromTextControllerSender.text)+_taux).toString();
-                                 /* fromTextControllergnf.text = result;
+                          ),
+                        ),
+                        trailing: IconButton(
+                          color: Colors.blue,
+                          icon: Icon(Icons.person_add),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      RegisterBeneficiairePage()),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 10.0),
+                      ListTile(
+                        title: TextFormField(
+                          decoration: InputDecoration(
+                            hintText: "Saisir le montant à envoyer",
+                            border: OutlineInputBorder(),
+                          ),
+                          controller: fromTextControllerSender,
+                          style: TextStyle(
+                              fontSize: 20.0, color: Colors.black),
+                          keyboardType: TextInputType.numberWithOptions(
+                              decimal: true),
+                          onChanged: (text) {
+                            // result=(double.parse(fromTextController.text) * (10)).toStringAsFixed(2);
+                            _doConversion(fromTextControllerSender.text);
+                            // fromTextControllerTotal.text=(double.parse(fromTextControllerSender.text)+_taux).toString();
+                            /* fromTextControllergnf.text = result;
                                   fromTextControllerReceive.text =
                                       fromTextControllergnf.text +
                                           12.toString();
@@ -663,127 +793,127 @@ class _TransactionState extends State<TransactionPage> {
                                           10.toString();
                                   fromTextControllerCommission.text =
                                       10.toString();*/
-                                },
-                              ),
-                              trailing: _buildDropDownSender(),
-                            ),
-                            const SizedBox(height: 20.0),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  "1€ = 1.0 GNF | Montant Reçu en dévise locale",
+                          },
+                        ),
+                        trailing: _buildDropDownSender(),
+                      ),
+                      const SizedBox(height: 20.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            "1€ = 11900.0 GNF | Montant Reçu en dévise locale",
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.w500),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 20.0),
+                      ListTile(
+                        title: TextFormField(
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            hintText: "Resultat attendu",
+                            border: OutlineInputBorder(),
+                          ),
+                          controller: fromTextControllerReceiver,
+                          style: TextStyle(
+                              fontSize: 20.0, color: Colors.black),
+                        ),
+                        trailing: _buildDropDownReceiver(),
+                      ),
+                      const SizedBox(height: 20.0),
+                      ListTile(
+                        title:  _buildDropDownPointRetrait(),
+                      ),
+                      const SizedBox(height: 20.0),
+                      Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            left: BorderSide(
+                                width: 10.0, color: Colors.indigoAccent),
+                          ),
+                        ),
+                        height: 80,
+                        child: Card(
+                          color: _colorFromHex("#F7FAFF"),
+                          elevation: 3.0,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                const EdgeInsets.only(left: 10.0),
+                                child: Text(
+                                  "Montant à recevoir :" +
+                                      fromTextControllerToReceiveMontant.text,
                                   style: TextStyle(
-                                      color: Colors.blue,
+                                      color: Colors.black,
                                       fontWeight: FontWeight.w500),
-                                )
-                              ],
-                            ),
-                            const SizedBox(height: 20.0),
-                            ListTile(
-                              title: TextFormField(
-                                readOnly: true,
-                                decoration: InputDecoration(
-                                  hintText: "Resultat attendu",
-                                  border: OutlineInputBorder(),
-                                ),
-                                controller: fromTextControllerReceiver,
-                                style: TextStyle(
-                                    fontSize: 20.0, color: Colors.black),
-                              ),
-                              trailing: _buildDropDownReceiver(),
-                            ),
-                            const SizedBox(height: 20.0),
-                            ListTile(
-                              title:  _buildDropDownPointRetrait(),
-                            ),
-                            const SizedBox(height: 20.0),
-                            Container(
-                              decoration: const BoxDecoration(
-                                border: Border(
-                                  left: BorderSide(
-                                      width: 10.0, color: Colors.indigoAccent),
                                 ),
                               ),
-                              height: 80,
-                              child: Card(
-                                color: _colorFromHex("#F7FAFF"),
-                                elevation: 3.0,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 10.0),
-                                      child: Text(
-                                        "Montant à recevoir :" +
-                                            fromTextControllerToReceiveMontant.text,
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                  ],
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20.0),
+                      Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            left: BorderSide(
+                                width: 10.0, color: Colors.black54),
+                          ),
+                        ),
+                        height: 80,
+                        child: Card(
+                          color: _colorFromHex("#F7FAFF"),
+                          elevation: 3.0,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                const EdgeInsets.only(left: 10.0),
+                                child: Text(
+                                  "Montant commission :" +
+                                      fromTextControllerCommission.text,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500),
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 20.0),
-                            Container(
-                              decoration: const BoxDecoration(
-                                border: Border(
-                                  left: BorderSide(
-                                      width: 10.0, color: Colors.black54),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20.0),
+                      Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            left: BorderSide(
+                                width: 10.0, color: Colors.redAccent),
+                          ),
+                        ),
+                        height: 80,
+                        child: Card(
+                          color: _colorFromHex("#F7FAFF"),
+                          elevation: 3.0,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                const EdgeInsets.only(left: 10.0),
+                                child: Text(
+                                  "Montant total à payer :" +
+                                      fromTextControllerTotal.text,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500),
                                 ),
                               ),
-                              height: 80,
-                              child: Card(
-                                color: _colorFromHex("#F7FAFF"),
-                                elevation: 3.0,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 10.0),
-                                      child: Text(
-                                        "Montant commission :" +
-                                            fromTextControllerCommission.text,
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 20.0),
-                            Container(
-                              decoration: const BoxDecoration(
-                                border: Border(
-                                  left: BorderSide(
-                                      width: 10.0, color: Colors.redAccent),
-                                ),
-                              ),
-                              height: 80,
-                              child: Card(
-                                color: _colorFromHex("#F7FAFF"),
-                                elevation: 3.0,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 10.0),
-                                      child: Text(
-                                        "Montant total à payer :" +
-                                            fromTextControllerTotal.text,
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                    /* Chip(
+                              /* Chip(
                                 backgroundColor: Colors.transparent,
                                 label: result != null ?
                                 Text(
@@ -792,111 +922,112 @@ class _TransactionState extends State<TransactionPage> {
                                 )
                                     : Text(""),
                               )*/
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: double.infinity,
-                              height: 50.0,
-                              child: RaisedButton(
-                                color: Colors.blue,
-                                textColor: Colors.white,
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: Text("Effectuer un transfert"),
-                                onPressed: () {
-                                  if (fromTextControllerSender.text.isEmpty) {
-                                    FancyAlertDialog.showFancyAlertDialog(
-                                      context,
-                                      'Alerte',
-                                      'Veillez remplir le montant',
-                                      Colors.red,
-                                      icon: Icon(
-                                        Icons.warning,
-                                        color: Colors.white,
-                                      ),
-                                      labelPositiveButton: 'Ok',
-                                      onTapPositiveButton: () {
-                                        Navigator.pop(context);
-                                      },
-                                      labelNegativeButton: '',
-                                      onTapNegativeButton: () {
-                                        Navigator.pop(context);
-                                        print('tap negative button');
-                                      },
-                                    );
-                                  } else {
-                                    FancyAlertDialog.showFancyAlertDialog(
-                                      context,
-                                      'Confirmation',
-                                      'Le montant a envoyé est de' +
-                                          fromTextControllerSender.text +
-                                          '.Le montant à recevoir est de' +
-                                           fromTextControllerReceiver.text
-                                              +
-                                          '.Le montant de la commission est de' +
-                                          fromTextControllerCommission.text+
-                                          '.Le montant total est de ' +
-                                            fromTextControllerTotal.text,
-                                      Colors.blue,
-                                      icon: Icon(
-                                        Icons.clear,
-                                        color: Colors.white,
-                                      ),
-                                      labelPositiveButton: 'OK',
-                                      onTapPositiveButton: () {
-
-                                        storage.write(key: "transaction", value: json.encode([
-                                         {
-                                            "montant_send":fromTextControllerSender.text,
-                                            "montant_receive":fromTextControllerReceiver.text,
-                                            "transac_commission":fromTextControllerCommission.text,
-                                            "transac_total":_stripeAmount,
-                                            "devise_send":_senderCurrency,
-                                            "receiver_name":editReceiver_first_name.text,
-                                            "devise_receive":_valueReceiver,
-                                            "point_retrait":_mySelectionPointRetrait,
-                                         }
-                                        ]
-                                        ));
-                                        storage.write(key: "transactionBackend", value: json.encode([
-                                          {
-                                            "montant_send":fromTextControllerSender.text,
-                                            "montant_receive":fromTextControllerReceiver.text,
-                                            "transac_commission":fromTextControllerCommission.text,
-                                            "transac_total":_stripeAmount,
-                                            "devise_receive":_valueReceiver,
-                                            "point_retrait":_mySelectionPointRetrait,
-                                          }
-                                        ]));
-
-                                        Navigator.pop(context);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  PaymentPage()),
-                                        );
-                                      },
-                                      labelNegativeButton: 'Annulez',
-                                      onTapNegativeButton: () {
-                                        Navigator.pop(context);
-                                        print('tap negative button');
-                                      },
-                                    );
-                                  }
-                                },
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ],
-                    )),
-              ),
-            ),
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50.0,
+                        child: RaisedButton(
+                          color: Colors.blue,
+                          textColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Text("Effectuer un transfert"),
+                          onPressed: () {
+                            if (fromTextControllerSender.text.isEmpty) {
+                              FancyAlertDialog.showFancyAlertDialog(
+                                context,
+                                'Alerte',
+                                'Veillez remplir le montant',
+                                Colors.red,
+                                icon: Icon(
+                                  Icons.warning,
+                                  color: Colors.white,
+                                ),
+                                labelPositiveButton: 'Ok',
+                                onTapPositiveButton: () {
+                                  Navigator.pop(context);
+                                },
+                                labelNegativeButton: '',
+                                onTapNegativeButton: () {
+                                  Navigator.pop(context);
+                                  print('tap negative button');
+                                },
+                              );
+                            } else {
+                              FancyAlertDialog.showFancyAlertDialog(
+                                context,
+                                'Confirmation',
+                                'Le montant a envoyé est de' +
+                                    fromTextControllerSender.text +
+                                    '.Le montant à recevoir est de' +
+                                    fromTextControllerReceiver.text
+                                    +
+                                    '.Le montant de la commission est de' +
+                                    fromTextControllerCommission.text+
+                                    '.Le montant total est de ' +
+                                    fromTextControllerTotal.text,
+                                Colors.blue,
+                                icon: Icon(
+                                  Icons.clear,
+                                  color: Colors.white,
+                                ),
+                                labelPositiveButton: 'OK',
+                                onTapPositiveButton: () {
+
+                                  storage.write(key: "transaction", value: json.encode([
+                                    {
+                                      "montant_send":fromTextControllerSender.text,
+                                      "montant_receive":fromTextControllerReceiver.text,
+                                      "transac_commission":fromTextControllerCommission.text,
+                                      "transac_total":_stripeAmount,
+                                      "devise_send":_senderCurrency,
+                                      "receiver_name":editReceiver_first_name.text,
+                                      "receiver_email":editReceiver_email.text,
+                                      "devise_receive":_valueReceiver,
+                                      "point_retrait":_mySelectionPointRetrait,
+                                    }
+                                  ]
+                                  ));
+                                  storage.write(key: "transactionBackend", value: json.encode([
+                                    {
+                                      "montant_send":fromTextControllerSender.text,
+                                      "montant_receive":fromTextControllerReceiver.text,
+                                      "transac_commission":fromTextControllerCommission.text,
+                                      "transac_total":_stripeAmount,
+                                      "devise_receive":_valueReceiver,
+                                      "point_retrait":_mySelectionPointRetrait,
+                                    }
+                                  ]));
+
+                                  Navigator.pop(context);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            PaymentPage()),
+                                  );
+                                },
+                                labelNegativeButton: 'Annulez',
+                                onTapNegativeButton: () {
+                                  Navigator.pop(context);
+                                  print('tap negative button');
+                                },
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )),
+        ),
+      ),
     );
   }
 
@@ -948,10 +1079,10 @@ class _TransactionState extends State<TransactionPage> {
           if(value==2){
             _doConversionDollard();
           }
-            if(value==1){
-              _doConversion(fromTextControllerSender.text);
+          if(value==1){
+            _doConversion(fromTextControllerSender.text);
           }
-            ;
+          ;
           setState(() {
             _valueReceiver = value;
           });
@@ -973,7 +1104,7 @@ class _TransactionState extends State<TransactionPage> {
         child: DropdownButton(
           hint: Text("Choisir un point de retrait"),
           items: receiver_point_retait?.map((item) {
-          country_isdisponible=item['country_isdisponible'];
+            country_isdisponible=item['country_isdisponible'];
             return DropdownMenuItem(
               child: Text(item['agence_name']),
               value: item['id'],
@@ -981,7 +1112,7 @@ class _TransactionState extends State<TransactionPage> {
           })?.toList() ??
               [],
           onChanged: (newVal) {
-          /*  where((f) => f["id"] == _beneficiaireID);*/
+            /*  where((f) => f["id"] == _beneficiaireID);*/
             setState(() {
               var selectedPoint= receiver_point_retait.map((item) => item).toList();
               selectedPoint.forEach((f) => {
@@ -1040,21 +1171,21 @@ class MySelectionItem extends StatelessWidget {
       height: 60.0,
       child: isForList
           ? Padding(
-              child: _buildItem(context),
-              padding: EdgeInsets.all(10.0),
-            )
+        child: _buildItem(context),
+        padding: EdgeInsets.all(10.0),
+      )
           : Card(
-              margin: EdgeInsets.symmetric(horizontal: 10.0),
-              child: Stack(
-                children: <Widget>[
-                  _buildItem(context),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Icon(Icons.arrow_drop_down),
-                  )
-                ],
-              ),
-            ),
+        margin: EdgeInsets.symmetric(horizontal: 10.0),
+        child: Stack(
+          children: <Widget>[
+            _buildItem(context),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Icon(Icons.arrow_drop_down),
+            )
+          ],
+        ),
+      ),
     );
   }
 
@@ -1064,8 +1195,8 @@ class MySelectionItem extends StatelessWidget {
       alignment: Alignment.center,
       child: FittedBox(
           child: Text(
-        title,
-      )),
+            title,
+          )),
     );
   }
 }
