@@ -531,25 +531,25 @@ class _TransactionState extends State<TransactionPage> {
   dynamic _selectedCountry;
 
   Language _selectedLanguage;
-  List<ListItemGnf> _dropdownItemsGnf = [
-    ListItemGnf("assets/Image/gnf.png", "GNF"),
+  List<ListItemReceiver> _dropdownItemsGnf = [
+    ListItemReceiver("assets/Image/gnf.png", "GNF",1),
   ];
 
-  List<DropdownMenuItem<ListItemGnf>> _dropdownMenuItemsGnf;
-  ListItemGnf _selectedItemGnf;
+  List<DropdownMenuItem<ListItemReceiver>> _dropdownMenuItemsGnf;
+  ListItemReceiver _selectedItemGnf;
 
   //------
 
-  List<DropdownMenuItem<ListItemGnf>> buildDropDownMenuItemsGnf(
+  List<DropdownMenuItem<ListItemReceiver>> buildDropDownMenuItemsGnf(
       List listItems) {
-    List<DropdownMenuItem<ListItemGnf>> items = List();
-    for (ListItemGnf listItem in listItems) {
+    List<DropdownMenuItem<ListItemReceiver>> items = List();
+    for (ListItemReceiver listItem in listItems) {
       items.add(
         DropdownMenuItem(
           child: Row(
             children: <Widget>[
               Text(listItem.name),
-              Image.asset(listItem.imageGnf, width: 50),
+              Image.asset(listItem.imageReceiver, width: 50),
             ],
           ),
           value: listItem,

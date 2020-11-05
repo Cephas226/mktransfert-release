@@ -20,10 +20,11 @@ class PaymentsScreen extends StatefulWidget {
 
 class _PaymentsScreenState extends State<PaymentsScreen> {
   int amount = 10;
-  double amountWaitted=1;
+  double amountWaitted=10;
   int _beneficiaireID;
   int _mySelectionPointRetrait;
-  String _senderCurrency="EUR";
+  String _senderCurrency="";
+  String _senderCurrencySymbole="";
   String _receiverCurrency;
   double _convertResult;
 
@@ -52,32 +53,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       bottomNavigationBar: _buildButtonsSection(),
     );
   }
-  List<ListItemGnf> _dropdownItemsGnf = [
-    ListItemGnf("assets/Image/gnf.png", "GNF"),
-    ListItemGnf("assets/Image/eu.png", "EUR"),
-  ];
 
-  List<DropdownMenuItem<ListItemGnf>> _dropdownMenuItemsGnf;
-  ListItemGnf _selectedItemGnf;
-
-  List<DropdownMenuItem<ListItemGnf>> buildDropDownMenuItemsGnf(
-      List listItems) {
-    List<DropdownMenuItem<ListItemGnf>> items = List();
-    for (ListItemGnf listItem in listItems) {
-      items.add(
-        DropdownMenuItem(
-          child: Row(
-            children: <Widget>[
-              Text(listItem.name),
-              Image.asset(listItem.imageGnf, width: 30),
-            ],
-          ),
-          value: listItem,
-        ),
-      );
-    }
-    return items;
-  }
   displayPaymentInfo() async {
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
@@ -90,46 +66,85 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
         headers: {
           "Accept": "application/json",
           'Authorization': 'Bearer $token',
-        });
-    if (res.statusCode == 200) {
+        }).then((value) => {
+          if (value.statusCode==200){
+            _senderCurrency = json.decode(value.body)['API_transac_data']['devise_sender'],
+             _taux=json.decode(value.body)['API_transac_data']['taux'],
+            _conversion_eur=json.decode(value.body)['API_transac_data']['conversion_eur'],
+            _conversion_usd=json.decode(value.body)['API_transac_data']['conversion_usd'],
+            json.decode(value.body)['point_retait']?.forEach((k, v) {
+                  receiver_point_retait.add(v[0]);
+                }),
+              },}
+              ).catchError((erreur)=>print(erreur));
 
-      var resBody = json.decode(res.body);
-
-      _senderCurrency = resBody['API_transac_data']['devise_sender'];
-      _taux=resBody['API_transac_data']['taux'];
-      _conversion_eur=resBody['API_transac_data']['conversion_eur'];
-      _conversion_usd=resBody['API_transac_data']['conversion_usd'];
-
-      resBody['point_retait']?.forEach((k, v) {
-        receiver_point_retait.add(v[0]);
-      });
+            if(_senderCurrency=='eur'){
+             setState(() {
+               _dropdownMenuItemsReceiver.add(
+                   DropdownMenuItem(
+                     child: Row(
+                       children: <Widget>[
+                         Text('EUR'),
+                         Image.asset("assets/Image/eu.png", width: 30),
+                       ],
+                     ),
+                     value:  ListItemReceiver("assets/Image/eu.png", "EUR",2),
+                   ));
+               _doConversionEur();
+               this._senderCurrencySymbole='€';
+             });
+            }
+    if(_senderCurrency=='usd'){
+      _dropdownMenuItemsReceiver.add(
+          DropdownMenuItem(
+            child: Row(
+              children: <Widget>[
+                Text('EUR'),
+                Image.asset("assets/Image/eu.png", width: 30),
+              ],
+            ),
+            value:  ListItemReceiver("assets/Image/us.png", "USD",2),
+          ));
+      this._senderCurrencySymbole='\$';
     }
-    //print(_taux);
   }
   @override
   Future<void> initState()  {
     super.initState();
     this.displayPaymentInfo();
-    _dropdownMenuItemsGnf = buildDropDownMenuItemsGnf(_dropdownItemsGnf);
-    _selectedItemGnf = _dropdownMenuItemsGnf[0].value;
+    _dropdownMenuItemsReceiver = buildDropDownMenuItemsReceiver(_dropdownItemsReceiver);
+    _selectedItemReceiver = _dropdownMenuItemsReceiver[0].value;
+  }
+  List<ListItemReceiver> _dropdownItemsReceiver = [
+    ListItemReceiver("assets/Image/gnf.png", "GNF",1),
+  /*  ListItemReceiver("assets/Image/eu.png", "EUR",2),
+    ListItemReceiver("assets/Image/us.png", "USD",3),*/
+  ];
+
+  List<DropdownMenuItem<ListItemReceiver>> _dropdownMenuItemsReceiver;
+  ListItemReceiver _selectedItemReceiver;
+
+  List<DropdownMenuItem<ListItemReceiver>> buildDropDownMenuItemsReceiver(
+      List listItems) {
+    List<DropdownMenuItem<ListItemReceiver>> items = List();
+    for (ListItemReceiver listItem in listItems) {
+      items.add(
+        DropdownMenuItem(
+          child: Row(
+            children: <Widget>[
+              Text(listItem.name),
+              Image.asset(listItem.imageReceiver, width: 30),
+            ],
+          ),
+          value: listItem,
+        ),
+      );
+    }
+    return items;
   }
   Future<double> _doConversionEur() async {
-   /* _convertResult=0;
-    fromTextControllerReceiver.text="";
-    fromTextControllerToReceiveMontant.text="";
-    fromTextControllerCommission.text="";
-    --
-    _convertResult=(double.parse(valeurSaisie)*b)+a;
-    fromTextControllerReceiver.text=_convertResult.toString();
-    fromTextControllerToReceiveMontant.text=fromTextControllerReceiver.text;
-    fromTextControllerCommission.text=a.toString();
-    fromTextControllerTotal.text=(double.parse(fromTextControllerToReceiveMontant.text)+double.parse(fromTextControllerCommission.text)).toString();
-
-    _stripeAmount=double.parse(valeurSaisie)+double.parse(fromTextControllerCommission.text);
-    */
     this.amountWaitted=(this.amount*this._taux)+this._conversion_eur;
     print(amountWaitted);
-
   }
   Widget _buildBody() {
     return Container(
@@ -165,7 +180,14 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                   text: amount,
                   onTap: () {
                     setState(() {
-                      this.amount = int.parse(amount);
+                      if (_selectedItemReceiver.name!='GNF'){
+                        this.amount = int.parse(amount);
+                        this.amountWaitted=this.amount.toDouble();
+                      }
+                      if (_selectedItemReceiver.name=='GNF'){
+                        this.amount = int.parse(amount);
+                        _doConversionEur();
+                      }
                     });
                   },
                 );
@@ -180,20 +202,22 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     );
   }
   Widget _buildDropButtonTo() {
+   // this.displayPaymentInfo();
+  //  print(_senderCurrency);
+
     return Row(
       children: <Widget>[
         DropdownButtonHideUnderline(
           child: DropdownButton(
-              value: _selectedItemGnf,
-              items: _dropdownMenuItemsGnf,
+              value: _selectedItemReceiver,
+              items: _dropdownMenuItemsReceiver,
               onChanged: (value) {
                 setState(() {
-                  _selectedItemGnf = value;
-                  //.. _user.pays=_selectedItem.name;
-                  if (_selectedItemGnf.name!='GNF'){
+                  _selectedItemReceiver = value;
+                  if (_selectedItemReceiver.name!='GNF'){
                     this.amountWaitted=this.amount.toDouble();
                   }
-                  if (_selectedItemGnf.name=='GNF'){
+                  if (_selectedItemReceiver.name=='GNF'){
                     _doConversionEur();
                   }
                 });
@@ -213,11 +237,11 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
               RoundButton(
                 onTap: () {
                   setState(() {
-                    if (_selectedItemGnf.name!='GNF'){
+                    if (_selectedItemReceiver.name!='GNF'){
                       amount--;
                       this.amountWaitted=this.amount.toDouble();
                     }
-                    if (_selectedItemGnf.name=='GNF'){
+                    if (_selectedItemReceiver.name=='GNF'){
                       amount--;
                       _doConversionEur();
                     }
@@ -226,7 +250,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                 icon: Icons.remove,
               ),
               Text(
-                this._senderCurrency.toUpperCase()+" "+"$amount",
+                this._senderCurrencySymbole+" "+"$amount",
                 style: TextStyle(
                   color: kPrimaryColor,
                   fontSize: 42,
@@ -235,11 +259,11 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
               RoundButton(
                 onTap: () {
                   setState(() {
-                    if (_selectedItemGnf.name!='GNF'){
+                    if (_selectedItemReceiver.name!='GNF'){
                       amount++;
                       this.amountWaitted=this.amount.toDouble();
                     }
-                    if (_selectedItemGnf.name=='GNF'){
+                    if (_selectedItemReceiver.name=='GNF'){
                       amount++;
                       _doConversionEur();
                     }
@@ -254,7 +278,14 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
             onChanged: (newValue) {
               _doConversionEur();
               setState(() {
-                amount = newValue.toInt();
+                if (_selectedItemReceiver.name!='GNF'){
+                  amount = newValue.toInt();
+                  this.amountWaitted=this.amount.toDouble();
+                }
+                if (_selectedItemReceiver.name=='GNF'){
+                  amount = newValue.toInt();
+                  _doConversionEur();
+                }
               });
             },
             min: 10,

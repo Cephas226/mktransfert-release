@@ -265,23 +265,23 @@ String respresponseJwtLogin;
 
   //-----------
 
-  List<ListItemGnf> _dropdownItemsGnf = [
-    ListItemGnf("assets/Image/gnf.png", "GNF"),
+  List<ListItemReceiver> _dropdownItemsGnf = [
+    ListItemReceiver("assets/Image/gnf.png", "GNF",1),
   ];
 
-  List<DropdownMenuItem<ListItemGnf>> _dropdownMenuItemsGnf;
-  ListItemGnf _selectedItemGnf;
+  List<DropdownMenuItem<ListItemReceiver>> _dropdownMenuItemsGnf;
+  ListItemReceiver _selectedItemGnf;
 
-  List<DropdownMenuItem<ListItemGnf>> buildDropDownMenuItemsGnf(
+  List<DropdownMenuItem<ListItemReceiver>> buildDropDownMenuItemsGnf(
       List listItems) {
-    List<DropdownMenuItem<ListItemGnf>> items = List();
-    for (ListItemGnf listItem in listItems) {
+    List<DropdownMenuItem<ListItemReceiver>> items = List();
+    for (ListItemReceiver listItem in listItems) {
       items.add(
         DropdownMenuItem(
           child: Row(
             children: <Widget>[
               Text(listItem.name),
-              Image.asset(listItem.imageGnf, width: 30),
+              Image.asset(listItem.imageReceiver, width: 30),
             ],
           ),
           value: listItem,
@@ -600,11 +600,11 @@ String respresponseJwtLogin;
   }
 }
 
-class ListItemGnf {
-  String imageGnf;
+class ListItemReceiver {
+  String imageReceiver;
   String name;
-
-  ListItemGnf(this.imageGnf, this.name);
+  int id;
+  ListItemReceiver(this.imageReceiver, this.name,this.id);
 }
 
 class ListItemFrom {
