@@ -300,21 +300,16 @@ class _LoginState extends State<LoginForm> {
                 onPressed: () async {
                   if (_formKey.currentState.validate()) {
                     var jwt = await logMe(_user.email, _user.password);
-                    storage.write(key: "jwt", value: jwt);
+                    var jwtUser = await logMe(_user.email, _user.password);
                      final form = _formKey.currentState;
                      form.save();
-                    Map<String, dynamic> responseJwtLogin = json.decode(await logMe(_user.email, _user.password));
-                    if (identical(responseJwtLogin['message'], 'invalide')){
+                    Map<String, dynamic> responseJwtLogin = json.decode(jwt);
+                    if (responseJwtLogin['message']=='invalide'){
                       _onAlertLogin(context);
                     }
-                    if (identical(responseJwtLogin, 'invalide')){
-                      _onAlertLogin(context);
-                    }
-                    if (responseJwtLogin == null){
-                      _onAlertLogin(context);
-                    }
-                    if (responseJwtLogin != null){
+                    else{
                       storage.write(key: "jwt", value: jwt);
+                      storage.write(key: "userInfo", value: jwtUser);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -377,14 +372,16 @@ class _LoginState extends State<LoginForm> {
       },
       body: jsonEncode(data),
     );
+    print(response.body);
     print(response.statusCode);
-    if (response.statusCode == 200) {
+    return response.body;
+ /*   if (response.body == 200) {
       storage.write(key: "userInfo", value: response.body);
       print('succès');
       return response.body;
     } else {
       return 'invalide';
-    }
+    }*/
   }
 
   checkLoginStatus() async {

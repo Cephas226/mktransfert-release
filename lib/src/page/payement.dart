@@ -307,18 +307,48 @@ class PaymentSuccessDialog extends StatelessWidget {
     );
   }
 }
+Future<http.Response> postTransaction() async {
+
+  var jwt = await storage.read(key: "jwt");
+  Map<String, dynamic> responseJson = json.decode(jwt);
+  String token = responseJson["access_token"];
+  int user_id = responseJson["user_id"];
+  await http.post(
+    'https://gracetechnologie.pythonanywhere.com/api/success/'+ '$user_id',
+    headers:{
+      "Accept": "application/json",
+      'Authorization': 'Bearer $token',
+    },
+    body: transactionInfoBackend,
+  )   .then((value) => print(value.body))
+      .catchError((onError){
+    print(onError);
+  });
+   await http.get(Uri.encodeFull('https://gracetechnologie.pythonanywhere.com/api/success/' + '$user_id'),
+       headers: {
+    "Accept": "application/json",
+    'Authorization': 'Bearer $token',
+  }).then((value) => print(value))
+    .catchError((onError){
+       print(onError);
+     });
+}
+/*
 postTransaction()async{
   var jwt = await storage.read(key: "jwt");
   Map<String, dynamic> responseJson = json.decode(jwt);
   String token = responseJson["access_token"];
   int user_id = responseJson["user_id"];
 
-  var res = await http.post(Uri.encodeFull('https://gracetechnologie.pythonanywhere.com/api/payment/' + '$user_id'),
+
+
+
+
+*//*  var res = await http.post(Uri.encodeFull('https://gracetechnologie.pythonanywhere.com/api/payment/' + '$user_id'),
       headers: {
     "Accept": "application/json",
     'Authorization': 'Bearer $token',
-  },
-    body: jsonEncode(transactionInfoBackend)
+  }, body: jsonEncode(transactionInfoBackend)
   );
   print(res.body);
   if (res.statusCode==200){
@@ -327,5 +357,5 @@ postTransaction()async{
       'Authorization': 'Bearer $token',
     });
     print(resGet.body);
-  }
-}
+  }*//*
+}*/

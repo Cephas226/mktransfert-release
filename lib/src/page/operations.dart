@@ -35,6 +35,7 @@ class _OperationListPageState extends State<OperationListPage> {
     Map<String, dynamic> responseJson = json.decode(jwt);
     String token = responseJson["access_token"];
     int user_id = responseJson["user_id"];
+    print(token);
     var res = await http.get(
         Uri.encodeFull(
             'https://gracetechnologie.pythonanywhere.com/api/transactions/' +

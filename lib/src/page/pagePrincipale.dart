@@ -13,6 +13,8 @@ import 'package:mktransfert/src/page/loginPage.dart';
 import 'package:mktransfert/src/page/navigation.dart';
 import 'package:mktransfert/src/page/transaction.dart';
 
+import 'beneficiaireScreen.dart';
+
 final storage = FlutterSecureStorage();
 
 class PagePrincipale extends StatefulWidget {
@@ -540,7 +542,7 @@ String respresponseJwtLogin;
             onTap: () => {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => NavigationPage()),
+                MaterialPageRoute(builder: (context) => PaymentsScreen()),
               ),
             }, //
             child: Text(

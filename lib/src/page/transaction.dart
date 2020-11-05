@@ -1081,8 +1081,7 @@ class _TransactionState extends State<TransactionPage> {
           }
           if(value==1){
             _doConversion(fromTextControllerSender.text);
-          }
-          ;
+          };
           setState(() {
             _valueReceiver = value;
           });

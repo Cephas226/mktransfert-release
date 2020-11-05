@@ -150,6 +150,18 @@ class _BeneficiairePageState extends State<BeneficiairePage> {
                                         child: Text(
                                             '${snapshot.data[index]['receiver_first_name'].substring(0, 1)}')),
                                     onTap: () {
+                                      print(snapshot.data[index]);
+                                      storage.write(key: "beneficiaireInfo", value: json.encode([
+                                        {
+                                          "id":snapshot.data[index]['id'],
+                                          "receiver_first_name":snapshot.data[index]['receiver_first_name'],
+                                          "receiver_last_name":snapshot.data[index]['receiver_last_name'],
+                                          "receiver_email":snapshot.data[index]['receiver_email'],
+                                          "receiver_phone":snapshot.data[index]['receiver_phone'],
+                                          "receiver_country":snapshot.data[index]['receiver_country'],
+                                          "receiver_description":snapshot.data[index]['receiver_description']
+                                        }
+                                      ]));
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(

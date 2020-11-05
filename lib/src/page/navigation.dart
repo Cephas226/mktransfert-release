@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mktransfert/src/page/profil.dart';
+import 'package:mktransfert/src/page/beneficiaireScreen.dart';
 import 'package:mktransfert/src/page/dashboard.dart';
 import 'package:mktransfert/src/page/operations.dart';
 import 'package:mktransfert/src/page/server.dart';
@@ -61,7 +61,7 @@ class _NavigationPageState extends State<NavigationPage> {
                   });
                 },
               ),
-              /*IconButton(
+          /* IconButton(
                 iconSize: 30.0,
                 padding: EdgeInsets.only(left: 28.0),
                 icon: Icon(Icons.group),
@@ -103,7 +103,7 @@ class _NavigationPageState extends State<NavigationPage> {
           ),
           /*Center(
             child: Container(
-              child: BeneficiairePage(),
+              child: PaymentsScreen(),
             ),
           ),*/
           Center(
