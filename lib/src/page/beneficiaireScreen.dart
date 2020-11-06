@@ -14,7 +14,7 @@ import 'package:mktransfert/src/widget/round_corner_image.dart';
 import 'package:http/http.dart' as http;
 import '../../recipients_provider.dart';
 import 'AccueilBottomBar.dart';
-import 'groupedchart.dart';
+import 'transfertRecap.dart';
 
 class PaymentsScreen extends StatefulWidget {
   @override
@@ -24,6 +24,7 @@ class PaymentsScreen extends StatefulWidget {
 class _PaymentsScreenState extends State<PaymentsScreen> {
   int amount = 10;
   double amountWaitted=10;
+  double amountTotal;
   int _beneficiaireID;
   int _mySelectionPointRetrait;
   String _senderCurrency="";
@@ -149,6 +150,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
   }
   Future<double> _doConversionEur() async {
     this.amountWaitted=(this.amount*this._taux)+this._conversion_eur;
+    this.amountTotal=this.amount+this._taux;
   }
   Widget _buildBody() {
     return Container(
@@ -360,7 +362,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                             style: TextStyle(
                                 color: Colors.white, fontWeight: FontWeight.w500),
                           ),
-                          trailing: Text("22",
+                          trailing: Text(this.amountWaitted.toString()+'•'+_selectedItemReceiver.name,
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w500)),
@@ -395,7 +397,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                             style: TextStyle(
                                 color: Colors.black, fontWeight: FontWeight.w500),
                           ),
-                          trailing: Text("22",
+                          trailing: Text(this._taux.toString(),
                               style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w500)),
@@ -430,7 +432,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                             style: TextStyle(
                                 color: Colors.black, fontWeight: FontWeight.w500),
                           ),
-                          trailing: Text("22",
+                          trailing: Text(this.amountTotal.toString()+'•'+_senderCurrencySymbole,
                               style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w500)),
@@ -529,7 +531,17 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
             Expanded(
               child: RaisedButton(
                 onPressed: () {
-                 currentTabSelected = 1;
+                  storage.write(key: "transactionResume", value: json.encode([
+                    {
+                      "montant_send":this.amount,
+                      "montant_receive":this.amountWaitted,
+                      "transac_commission":this._taux,
+                      "transac_total":this.amountTotal,
+                      "devise_send":_senderCurrency,
+                      "devise_send_symbol":_senderCurrencySymbole,
+                      "devise_receive":_selectedItemReceiver.name
+                    }
+                  ]));
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => ExpenseTrackerApp()),

@@ -49,6 +49,7 @@ class ExistingCardsPageState extends State<ExistingCardsPage> {
       _receiver_Name=transaction['receiver_name'];
       _receiver_Email=transaction['receiver_email'];
     });
+    print(_amount.truncate());
     var now = new DateTime.now();
     var formatter = new DateFormat('yyyy-MM-dd');
      _transactionDate = formatter.format(now);
@@ -87,7 +88,7 @@ class ExistingCardsPageState extends State<ExistingCardsPage> {
       expYear: int.parse(expiryArr[1]),
     );
     var response = await StripeService.payViaExistingCard(
-        amount: (_amount.toInt()).toString(),
+        amount: (_amount*100).truncate().toString(),
         currency: "$_currency",
         card: stripeCard
     );

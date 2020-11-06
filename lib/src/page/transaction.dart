@@ -1133,7 +1133,6 @@ class _TransactionState extends State<TransactionPage> {
     );
   }
 }
-
 showAlertDialog(BuildContext context) {  // set up the button
   Alert(
     context: context,

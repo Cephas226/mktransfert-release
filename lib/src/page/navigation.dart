@@ -10,7 +10,7 @@ import 'package:mktransfert/src/utils/oval-right-clipper.dart';
 
 
 import 'beneficiaire.dart';
-import 'groupedchart.dart';
+import 'transfertRecap.dart';
 class NavigationPage extends StatefulWidget {
   static final String path = "lib/src/pages/login/auth3.dart";
 

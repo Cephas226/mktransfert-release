@@ -51,6 +51,7 @@ class HomePageState extends State<PaymentPage> {
   displayTransactionInfo() async {
     var jwt = await storage.read(key: "transaction");
     transactionInfo=json.decode(jwt);
+    print(transactionInfo);
     transactionInfo.forEach((transaction) {
       _amount=transaction['montant_total'];
       _currency=transaction['currency_sender'];
