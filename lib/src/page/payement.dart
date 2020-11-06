@@ -10,6 +10,7 @@ import 'package:mktransfert/src/services/payment-service.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
+import 'beneficiaireScreen.dart';
 import 'loginPage.dart';
 double _amount;
 String _currency;
@@ -63,12 +64,6 @@ class ExistingCardsPageState extends State<ExistingCardsPage> {
     var transactionBackend = await storage.read(key: "transactionBackend");
     transactionInfoBackend=json.decode(transactionBackend);
     print(transactionInfoBackend);
-  /*  transactionInfo=json.decode(jwt);
-    transactionInfo.forEach((transaction) {
-      _amount=transaction['transac_total'];
-      _currency=transaction['devise_send'];
-      _receiver_Name=transaction['receiver_name'];
-    });*/
     if(transactionBackend == null) return   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => TransactionPage()), (Route<dynamic> route) => false);
     else {
       return transactionBackend;
@@ -287,9 +282,9 @@ class PaymentSuccessDialog extends StatelessWidget {
                                  Navigator.pushAndRemoveUntil(
                                      context,
                                      MaterialPageRoute(
-                                         builder: (context) => NavigationPage()
+                                         builder: (context) => PaymentsScreen()
                                      ),
-                                     ModalRoute.withName("/navigation")
+                                     ModalRoute.withName("/transactionNew")
                                  );
                                  },
                              )
