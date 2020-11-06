@@ -7,11 +7,14 @@ import 'package:flutter/rendering.dart';
 import 'package:mktransfert/src/contant/constant.dart';
 import 'package:mktransfert/src/page/navigation.dart';
 import 'package:mktransfert/src/page/pagePrincipale.dart';
+import 'package:mktransfert/src/page/transaction.dart';
 import 'package:mktransfert/src/widget/round_button.dart';
 import 'package:mktransfert/src/widget/round_corner_button.dart';
 import 'package:mktransfert/src/widget/round_corner_image.dart';
 import 'package:http/http.dart' as http;
 import '../../recipients_provider.dart';
+import 'AccueilBottomBar.dart';
+import 'groupedchart.dart';
 
 class PaymentsScreen extends StatefulWidget {
   @override
@@ -42,6 +45,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
         title: Text(
           "Envoyer de l'argent",
         ),
@@ -144,7 +149,6 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
   }
   Future<double> _doConversionEur() async {
     this.amountWaitted=(this.amount*this._taux)+this._conversion_eur;
-    print(amountWaitted);
   }
   Widget _buildBody() {
     return Container(
@@ -202,9 +206,6 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     );
   }
   Widget _buildDropButtonTo() {
-   // this.displayPaymentInfo();
-  //  print(_senderCurrency);
-
     return Row(
       children: <Widget>[
         DropdownButtonHideUnderline(
@@ -528,9 +529,10 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
             Expanded(
               child: RaisedButton(
                 onPressed: () {
+                 currentTabSelected = 1;
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => NavigationPage()),
+                    MaterialPageRoute(builder: (context) => ExpenseTrackerApp()),
                   );
                 },
                 color: kPrimaryColor,

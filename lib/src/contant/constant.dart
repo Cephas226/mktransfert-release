@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mktransfert/core/presentation/res/assets.dart';
 
 const apiKey =
     'pk_test_51HNmJoCNGrJkhMzw3HkzG7ce5sI60PcDIdRHPAiITkO12v4MElGRi8oCJFo23LX0vWC8qm3Qo3dYTJDknXLCNJCk00rhbPwdFz';
@@ -18,6 +19,14 @@ const kBackgroundBorderTotalColor=Color(0xffD9211C);
 
 const kAmounts = ["50", "100", "250", "500"];
 
+final String image = images[0];
+int currentTabSelected = 0;
+
+int currentIndex;
+
+final Color primary = Colors.white;
+final Color active = Colors.grey.shade800;
+final color = Color(0xFF11E8161);
 
 const kTextStyle = TextStyle(
   fontWeight: FontWeight.bold,

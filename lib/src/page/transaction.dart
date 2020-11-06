@@ -7,6 +7,7 @@ import 'package:fancy_dialog/fancy_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:mktransfert/src/contant/constant.dart';
 import 'package:mktransfert/src/page/mesclasses/beneficiaireClasses.dart';
 import 'package:mktransfert/src/page/operations/beneficiaireOperations.dart';
 import 'package:mktransfert/src/page/pagePrincipale.dart';
@@ -14,9 +15,10 @@ import 'package:mktransfert/src/page/payement.dart';
 import 'package:mktransfert/src/page/paymentPage.dart';
 import 'package:mktransfert/src/page/registerBeneficiaire.dart';
 import 'package:mktransfert/src/utils/oval-right-clipper.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
-import 'dashboard.dart';
+import 'AccueilBottomBar.dart';
 
 class TransactionPage extends StatefulWidget {
   static final String path = "lib/src/pages/login/auth3.dart";
@@ -709,7 +711,7 @@ class _TransactionState extends State<TransactionPage> {
       appBar: AppBar(
         title: Text("Effectuer votre transfert"),
       ),
-      drawer: _buildDrawer(),
+      //drawer: _buildDrawer(),
       body: currencies == null
           ? Center(child: CircularProgressIndicator())
           : Container(
@@ -1131,26 +1133,25 @@ class _TransactionState extends State<TransactionPage> {
     );
   }
 }
+
 showAlertDialog(BuildContext context) {  // set up the button
-  FancyAlertDialog.showFancyAlertDialog(
-    context,
-    'Alerte',
-    'Reception uniquement en Franc guinéen pour ce point de retrait',
-    Colors.red,
-    icon: Icon(
-      Icons.warning,
-      color: Colors.white,
-    ),
-    labelPositiveButton: 'Ok',
-    onTapPositiveButton: () {
-      Navigator.pop(context);
-    },
-    labelNegativeButton: '',
-    onTapNegativeButton: () {
-      Navigator.pop(context);
-      print('tap negative button');
-    },
-  );
+  Alert(
+    context: context,
+    type: AlertType.info,
+    title: "Alerte",
+    desc: "cette destionation n'est pas encore  fonctionnelle",
+    buttons: [
+      DialogButton(
+        child: Text(
+          "OK",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        onPressed: () => Navigator.pop(context),
+        color: kPrimaryColor,
+        radius: BorderRadius.circular(10.0),
+      ),
+    ],
+  ).show();
 }
 Color _colorFromHex(String hexColor) {
   final hexCode = hexColor.replaceAll('#', '');

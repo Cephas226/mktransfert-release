@@ -569,7 +569,8 @@ class _SignupFormState extends State<SignupPage> {
                                                     _selectedItem.name;
                                               });
                                             }),
-                                      ))),
+                                      )
+                                  )),
                             ]),
                         const SizedBox(height: 10.0),
                         TextFormField(

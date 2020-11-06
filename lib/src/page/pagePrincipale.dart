@@ -13,6 +13,7 @@ import 'package:mktransfert/src/page/loginPage.dart';
 import 'package:mktransfert/src/page/navigation.dart';
 import 'package:mktransfert/src/page/transaction.dart';
 
+import 'AccueilBottomBar.dart';
 import 'beneficiaireScreen.dart';
 
 final storage = FlutterSecureStorage();
@@ -542,7 +543,8 @@ String respresponseJwtLogin;
             onTap: () => {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PaymentsScreen()),
+                MaterialPageRoute(builder: (context) => AccueilBootomBarPage(),
+                ),
               ),
             }, //
             child: Text(
