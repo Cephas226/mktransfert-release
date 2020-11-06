@@ -25,8 +25,8 @@ class ExpenseTrackerApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: HomePage(),
       theme: ThemeData.dark().copyWith(
-        primaryColor: Color(0xff1C1934),
-        accentColor: Colors.pink,
+        primaryColor: Color(0xff1346A1),
+        accentColor: Color(0xff1346A1),
       ),
     );
   }
@@ -557,7 +557,7 @@ displayRecap() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: Colors.white,
       body: Stack(
         children: <Widget>[
           _buildBody()
@@ -579,18 +579,12 @@ displayRecap() async {
         Expanded(
           child: Container(
             decoration: BoxDecoration(
+              color:kPrimaryColor ,
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(
                 66,
               )),
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xff682CFC),
-                  Color(0xffB730F9),
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
+
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -661,8 +655,8 @@ displayRecap() async {
                     padding: const EdgeInsets.symmetric(
                         vertical: 36, horizontal: 12),
                     child: Icon(
-                      FontAwesomeIcons.piggyBank,
-                      color: Color(0xffFB71BC),
+                      FontAwesomeIcons.moneyCheckAlt,
+                      color: Colors.white,
                       size: 100,
                     ),
                   ),
@@ -684,10 +678,11 @@ displayRecap() async {
       width: 50,
       padding: const EdgeInsets.only(left: 10.0, right: 10.0),
       decoration: BoxDecoration(
+        color: kPrimaryColor,
           borderRadius: BorderRadius.circular(5.0), border: Border.all()),
       child: DropdownButtonHideUnderline(
         child: DropdownButton(
-          hint: Text("Choisir un point de retrait"),
+          hint: Text("Choisir un point de retrait",),
           items: receiver_point_retait?.map((item) {
                 return DropdownMenuItem(
                   child: Text(item['agence_name']),
@@ -730,7 +725,7 @@ displayRecap() async {
             child: Text(
               "Choisissez un point de retrait",
               style: TextStyle(
-                  fontWeight: FontWeight.w600, color: Colors.grey.shade600),
+                  fontWeight: FontWeight.w600, color: Colors.black),
             ),
           ),
           ListTile(
@@ -743,7 +738,7 @@ displayRecap() async {
             child: Text(
               "Choisissez un destinataire",
               style: TextStyle(
-                  fontWeight: FontWeight.w600, color: Colors.grey.shade600),
+                  fontWeight: FontWeight.w600, color: Colors.black),
             ),
           ),
           Flexible(
@@ -756,13 +751,14 @@ displayRecap() async {
                       itemCount: snapshot.data.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Card(
+                          color: kPrimaryColor,
                           child: Column(
                             children: <Widget>[
                               ListTile(
                                 title: Text(snapshot.data[index]
                                     ['receiver_first_name']),
                                 leading: new CircleAvatar(
-                                    backgroundColor: Colors.blue,
+                                    backgroundColor: Colors.white,
                                     child: Text(
                                         '${snapshot.data[index]['receiver_first_name'].substring(0, 1)}')),
                                 onTap: () {
@@ -845,7 +841,7 @@ displayRecap() async {
       ),
     );
   }
-  Widget _buildBottomBar() {
+/*  Widget _buildBottomBar() {
     return Card(
       color: Color(0xff2D294A),
       shape: RoundedRectangleBorder(
@@ -903,5 +899,5 @@ displayRecap() async {
         ]),
       ),
     );
-  }
+  }*/
 }

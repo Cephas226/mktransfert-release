@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mktransfert/src/contant/constant.dart';
+import 'package:mktransfert/src/page/AccueilBottomBar.dart';
 import 'package:mktransfert/src/page/accueil.dart';
 import 'package:mktransfert/src/page/beneficiaireScreen.dart';
 import 'package:mktransfert/src/page/loginPage.dart';
@@ -35,7 +36,8 @@ class MyApp extends StatelessWidget {
         '/navigation': (context) => NavigationPage(),
         '/login': (context) => LoginPage(),
         '/principale': (context) => PagePrincipale(),
-        '/transactionNew': (context) => PaymentsScreen()
+        '/transactionNew': (context) => PaymentsScreen(),
+        '/accueilBottom': (context) => AccueilBootomBarPage()
       },
     );
   }

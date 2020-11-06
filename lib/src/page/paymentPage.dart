@@ -9,6 +9,7 @@ import 'package:mktransfert/src/services/payment-service.dart';
 
 import 'package:progress_dialog/progress_dialog.dart';
 
+import 'AccueilBottomBar.dart';
 import 'beneficiaireScreen.dart';
 import 'loginPage.dart';
 double _amount;
@@ -169,9 +170,9 @@ class PaymentSuccessDialog extends StatelessWidget {
                                   Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => PaymentsScreen()
+                                          builder: (context) => AccueilBootomBarPage()
                                       ),
-                                      ModalRoute.withName("/transactionNew")
+                                      ModalRoute.withName("/accueilBottom")
                                   );
                                 },
                               )

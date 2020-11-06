@@ -2,8 +2,10 @@ import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mktransfert/src/contant/constant.dart';
+import 'package:mktransfert/src/page/operations.dart';
 
 import 'package:mktransfert/src/page/transaction.dart';
+import 'package:mktransfert/src/page/user.dart';
 
 import 'beneficiaireScreen.dart';
 import 'items/help_page.dart';
@@ -48,10 +50,11 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       backgroundColor: Theme.of(context).primaryColor,
       body: Stack(
         children: <Widget>[
-          _buildBody(),
+         // _buildBody(),
           Align(child: _buildBottomBar(),
             alignment: Alignment.bottomCenter,
           ),
@@ -59,6 +62,7 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
       ),
     );
   }
+/*
 
   Widget _buildBody() {
     return Column(
@@ -144,20 +148,24 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                   /* ActionButton(icon: FontAwesomeIcons.minus, onTap: () {
+                   */
+/* ActionButton(icon: FontAwesomeIcons.minus, onTap: () {
                       if (amount == 1) {
                         return;
                       }
                       setState(() {
                         amount--;
                       });
-                    }),*/
+                    }),*//*
+
                     Text("\$$amount", style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),),
-                  /*  ActionButton(icon: FontAwesomeIcons.plus, onTap: () {
+                  */
+/*  ActionButton(icon: FontAwesomeIcons.plus, onTap: () {
                       setState(() {
                         amount++;
                       });
-                    }),*/
+                    }),*//*
+
                   ],
                 ),
               ),
@@ -191,6 +199,7 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
       ],
     );
   }
+*/
 
   Widget _buildBottomBar() {
 
@@ -243,7 +252,7 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
                 Icons.folder_open,
                 color: Colors.indigo,
               ),
-              title: Text('Folders'),
+              title: Text('Transaction'),
             ),
             BubbleBottomBarItem(
               backgroundColor: Colors.deepPurple,
@@ -266,15 +275,15 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
           ),
         )
             : (currentIndex == 1)
-            ? Icon(
-          Icons.folder_open,
-          size: 150.0,
-          color: Colors.indigo,
+            ? Center(
+          child: Container(
+            child: OperationListPage(),
+          ),
         )
-            : Icon(
-          Icons.access_time,
-          size: 150.0,
-          color: Colors.deepPurple,
+            : Center(
+          child: Container(
+            child: UserProfilPage(),
+          ),
         ),
       );
   }
