@@ -1,4 +1,5 @@
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
+import 'package:fancy_alert_dialog/fancy_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mktransfert/src/contant/constant.dart';
@@ -7,9 +8,11 @@ import 'package:mktransfert/src/page/operations.dart';
 import 'package:mktransfert/src/page/transaction.dart';
 import 'package:mktransfert/src/page/user.dart';
 
+import 'accueil.dart';
 import 'beneficiaireScreen.dart';
 import 'items/help_page.dart';
 import 'items/stats_page.dart';
+import 'loginPage.dart';
 
 
 /*class ExpenseTrackerApp extends StatelessWidget {
@@ -211,8 +214,35 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
           centerTitle: true,
         ),*/
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: Icon(Icons.add),
+          onPressed: () {
+            FancyAlertDialog.showFancyAlertDialog(
+              context,
+              'Confirmation',
+              'Voulez vous vous déconnectez ?',
+              Colors.blue,
+              icon: Icon(
+                Icons.clear,
+                color: Colors.white,
+              ),
+              labelPositiveButton: 'OK',
+              onTapPositiveButton: () {
+                Navigator.pop(context);
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => LoginPage()
+                    ),
+                    ModalRoute.withName("/login")
+                );
+              },
+              labelNegativeButton: 'Annulez',
+              onTapNegativeButton: () {
+                Navigator.pop(context);
+                print('tap negative button');
+              },
+            );
+          },
+          child: Icon(Icons.power_settings_new),
           backgroundColor: Colors.red,
         ),
         floatingActionButtonLocation:
@@ -257,14 +287,14 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
             BubbleBottomBarItem(
               backgroundColor: Colors.deepPurple,
               icon: Icon(
-                Icons.access_time,
+                Icons.contact_mail,
                 color: Colors.black,
               ),
               activeIcon: Icon(
-                Icons.access_time,
+                Icons.contact_mail,
                 color: Colors.deepPurple,
               ),
-              title: Text('Log'),
+              title: Text('Profil'),
             ),
           ],
         ),

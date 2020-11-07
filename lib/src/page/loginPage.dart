@@ -52,173 +52,172 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(accueil),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Stack(
-        children: <Widget>[
-          Container(
-            color: Colors.black54,
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: ListView(
-                    children: <Widget>[
-                      Image.network(
-                          'https://firebasestorage.googleapis.com/v0/b/mktransfert-d6990.appspot.com/o/LogoMKWhite_Plan%20de%20travail%201%20copie%204.png?alt=media&token=15bd19f2-0ca8-4058-81cb-bcbdf09201f6',
-                          height: 250),
-                      Text(
-                        "Bienvenu",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 30.0,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 10.0),
-                      Text(
-                        "Envoyez de l'argent partout en Guinee\n avec des taux défiants toutes concurrences.",
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 18.0,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: RaisedButton(
-                        color: Colors.blue,
-                        textColor: Colors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: Text("Connexion"),
-                        onPressed: () {
-                          setState(() {
-                            formVisible = true;
-                            _formsIndex = 1;
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 10.0),
-                    Expanded(
-                      child: RaisedButton(
-                        color: Colors.grey.shade700,
-                        textColor: Colors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: Text("S'inscrire"),
-                        onPressed: () {
-                          /* Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationPage()),);*/
-                          setState(() {
-                            formVisible = true;
-                            _formsIndex = 2;
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 10.0),
-                  ],
-                ),
-                const SizedBox(height: 20.0),
-              ],
-            ),
-          ),
-          AnimatedSwitcher(
-            duration: Duration(milliseconds: 200),
-            child: (!formVisible)
-                ? null
-                : Container(
-                    color: Colors.black54,
-                    alignment: Alignment.center,
-                    child: Column(
-                      children: <Widget>[
-                        const SizedBox(height: 50.0),
-                        Expanded(
-                          child: ListView(
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  RaisedButton(
-                                    textColor: _formsIndex == 1
-                                        ? Colors.white
-                                        : Colors.black,
-                                    color: _formsIndex == 1
-                                        ? Colors.blue
-                                        : Colors.white,
-                                    child: Text("Connexion"),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0)),
-                                    onPressed: () {
-                                      /*   Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationPage()),);*/
-                                      setState(() {
-                                        _formsIndex = 1;
-                                      });
-                                    },
-                                  ),
-                                  const SizedBox(width: 10.0),
-                                  RaisedButton(
-                                    textColor: _formsIndex == 2
-                                        ? Colors.white
-                                        : Colors.black,
-                                    color: _formsIndex == 2
-                                        ? Colors.blue
-                                        : Colors.white,
-                                    child: Text("S'enregistrer"),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0)),
-                                    onPressed: () {
-                                      /*  Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationPage()),);*/
-                                      setState(() {
-                                        _formsIndex = 2;
-                                      });
-                                    },
-                                  ),
-                                  const SizedBox(width: 10.0),
-                                  IconButton(
-                                    color: Colors.white,
-                                    icon: Icon(Icons.clear),
-                                    onPressed: () {
-                                      setState(() {
-                                        formVisible = false;
-                                      });
-                                    },
-                                  )
-                                ],
-                              ),
-                              Container(
-                                child: AnimatedSwitcher(
-                                  duration: Duration(milliseconds: 300),
-                                  child: _formsIndex == 1
-                                      ? LoginForm()
-                                      : SignupPage(),
-                                ),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    )),
-          )
-        ],
-      ),
-    ));
+         body: Container(
+           decoration: BoxDecoration(
+             image: DecorationImage(
+               image: AssetImage(accueil),
+               fit: BoxFit.cover,
+             ),
+           ),
+           child: Stack(
+             children: <Widget>[
+               Container(
+                 color: Colors.black54,
+                 child: Column(
+                   children: <Widget>[
+                     Expanded(
+                       child: ListView(
+                         children: <Widget>[
+                           Image.network(
+                               'https://firebasestorage.googleapis.com/v0/b/mktransfert-d6990.appspot.com/o/LogoMKWhite_Plan%20de%20travail%201%20copie%204.png?alt=media&token=15bd19f2-0ca8-4058-81cb-bcbdf09201f6',
+                               height: 250),
+                           Text(
+                             "Bienvenu",
+                             style: TextStyle(
+                               color: Colors.white,
+                               fontWeight: FontWeight.w500,
+                               fontSize: 30.0,
+                             ),
+                             textAlign: TextAlign.center,
+                           ),
+                           const SizedBox(height: 10.0),
+                           Text(
+                             "Envoyez de l'argent partout en Guinee\n avec des taux défiants toutes concurrences.",
+                             style: TextStyle(
+                               color: Colors.white70,
+                               fontSize: 18.0,
+                             ),
+                             textAlign: TextAlign.center,
+                           ),
+                         ],
+                       ),
+                     ),
+                     Row(
+                       children: <Widget>[
+                         Expanded(
+                           child: RaisedButton(
+                             color: Colors.blue,
+                             textColor: Colors.white,
+                             elevation: 0,
+                             shape: RoundedRectangleBorder(
+                               borderRadius: BorderRadius.circular(20.0),
+                             ),
+                             child: Text("Connexion"),
+                             onPressed: () {
+                               setState(() {
+                                 formVisible = true;
+                                 _formsIndex = 1;
+                               });
+                             },
+                           ),
+                         ),
+                         const SizedBox(width: 10.0),
+                         Expanded(
+                           child: RaisedButton(
+                             color: Colors.grey.shade700,
+                             textColor: Colors.white,
+                             elevation: 0,
+                             shape: RoundedRectangleBorder(
+                               borderRadius: BorderRadius.circular(20.0),
+                             ),
+                             child: Text("S'inscrire"),
+                             onPressed: () {
+                               /* Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationPage()),);*/
+                               setState(() {
+                                 formVisible = true;
+                                 _formsIndex = 2;
+                               });
+                             },
+                           ),
+                         ),
+                         const SizedBox(width: 10.0),
+                       ],
+                     ),
+                     const SizedBox(height: 20.0),
+                   ],
+                 ),
+               ),
+               AnimatedSwitcher(
+                 duration: Duration(milliseconds: 200),
+                 child: (!formVisible)
+                     ? null
+                     : Container(
+                     color: Colors.black54,
+                     alignment: Alignment.center,
+                     child: Column(
+                       children: <Widget>[
+                         const SizedBox(height: 50.0),
+                         Expanded(
+                           child: ListView(
+                             children: <Widget>[
+                               Row(
+                                 mainAxisAlignment: MainAxisAlignment.center,
+                                 children: <Widget>[
+                                   RaisedButton(
+                                     textColor: _formsIndex == 1
+                                         ? Colors.white
+                                         : Colors.black,
+                                     color: _formsIndex == 1
+                                         ? Colors.blue
+                                         : Colors.white,
+                                     child: Text("Connexion"),
+                                     shape: RoundedRectangleBorder(
+                                         borderRadius:
+                                         BorderRadius.circular(20.0)),
+                                     onPressed: () {
+                                       /*   Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationPage()),);*/
+                                       setState(() {
+                                         _formsIndex = 1;
+                                       });
+                                     },
+                                   ),
+                                   const SizedBox(width: 10.0),
+                                   RaisedButton(
+                                     textColor: _formsIndex == 2
+                                         ? Colors.white
+                                         : Colors.black,
+                                     color: _formsIndex == 2
+                                         ? Colors.blue
+                                         : Colors.white,
+                                     child: Text("S'enregistrer"),
+                                     shape: RoundedRectangleBorder(
+                                         borderRadius:
+                                         BorderRadius.circular(20.0)),
+                                     onPressed: () {
+                                       /*  Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationPage()),);*/
+                                       setState(() {
+                                         _formsIndex = 2;
+                                       });
+                                     },
+                                   ),
+                                   const SizedBox(width: 10.0),
+                                   IconButton(
+                                     color: Colors.white,
+                                     icon: Icon(Icons.clear),
+                                     onPressed: () {
+                                       setState(() {
+                                         formVisible = false;
+                                       });
+                                     },
+                                   )
+                                 ],
+                               ),
+                               Container(
+                                 child: AnimatedSwitcher(
+                                   duration: Duration(milliseconds: 300),
+                                   child: _formsIndex == 1
+                                       ? LoginForm()
+                                       : SignupPage(),
+                                 ),
+                               )
+                             ],
+                           ),
+                         )
+                       ],
+                     )),
+               )
+             ],
+           )));
   }
 }
 

@@ -285,8 +285,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
               _doConversionEur();
               setState(() {
                 if (_selectedItemReceiver.name!='GNF'){
-                  amount = newValue.toInt();
                   this.amountWaitted=this.amount.toDouble();
+                  amount = newValue.toInt();
                 }
                 if (_selectedItemReceiver.name=='GNF'){
                   amount = newValue.toInt();
