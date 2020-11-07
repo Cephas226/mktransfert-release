@@ -48,8 +48,9 @@ dependencies:
   animated_dialog_box: ^0.0.2
   flutter_secure_storage: ^3.3.1+1
   flutter_launcher_icons: ^0.8.0
+  ticket_pass_package: 0.1.0
 
-#data
+  #data
 
 
 

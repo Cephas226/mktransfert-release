@@ -89,6 +89,7 @@ class _HomePageState extends State<HomePage> {
   var editReceiver_email = TextEditingController();
   var editReceiver_phone = TextEditingController();
   var editReceiver_country = TextEditingController();
+  var editReceiver_description = TextEditingController();
 
   int _beneficiaireID;
   int _mySelectionCountry;
@@ -122,7 +123,6 @@ class _HomePageState extends State<HomePage> {
       receiver_point_retait;
     });
   }
-  var beneficiaireList = List();
   Future<List<dynamic>> getSWData() async {
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
@@ -134,10 +134,11 @@ class _HomePageState extends State<HomePage> {
     });
     var countryList = List();
     var point_retait = List();
+    var beneficiaireList = List();
     var resBody = json.decode(res.body);
-    var beneficiaireInfo = await storage.read(key: "beneficiaire");
+    var beneficiaireInfo = await storage.read(key: "beneficiaireNew");
 
-    if (beneficiaireInfo != null) {
+    if(beneficiaireInfo != null){
       List responseJsonBeneficiaire = json.decode(beneficiaireInfo);
       responseJsonBeneficiaire.forEach((element) {
         beneficiaireList.add(element);
@@ -155,6 +156,7 @@ class _HomePageState extends State<HomePage> {
       data = beneficiaireList;
       countrydata = countryList;
     });
+    print(beneficiaireList);
     return beneficiaireList;
   }
 
@@ -206,7 +208,7 @@ class _HomePageState extends State<HomePage> {
                     height: 400.0, // Change as per your requirement
                     width: 400.0,
                     child: FutureBuilder<List<dynamic>>(
-                        future: getSWData(),
+                        future: this.getSWData(),
                         builder:
                             (BuildContext context, AsyncSnapshot snapshot) {
                           if (snapshot.hasData) {
@@ -433,8 +435,38 @@ class _HomePageState extends State<HomePage> {
                                                     ),
                                                   ),
                                                 ],
-                                              )),
+                                              )
+                                          ),
                                           const SizedBox(height: 20.0),
+                                          Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 25.0,
+                                                  right: 25.0,
+                                                  top: 2.0),
+                                              child: new Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: <Widget>[
+                                                  new Flexible(
+                                                    child: new TextFormField(
+                                                      onSaved: (val) =>
+                                                          setState(() =>
+                                                          editReceiver_phone
+                                                              .text = val),
+                                                      controller:
+                                                      TextEditingController()
+                                                        ..text =
+                                                            editReceiver_phone
+                                                                .text,
+                                                      decoration: const InputDecoration(
+                                                          hintText:
+                                                          "Description",
+                                                          border:
+                                                          OutlineInputBorder()),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -474,6 +506,19 @@ class _HomePageState extends State<HomePage> {
                     child:   RaisedButton(
                       onPressed: () {
                         //updateUserProfile();
+                        storage.write(
+                            key: "beneficiaireInfo",
+                            value: json.encode([
+                              {
+                                "id":_beneficiaireID,
+                                "receiver_first_name": editReceiver_first_name.text,
+                                "receiver_last_name": editReceiver_last_name.text,
+                                "receiver_email": editReceiver_email.text,
+                                "receiver_phone": editReceiver_phone.text,
+                                "receiver_country": editReceiver_country.text,
+                                "receiver_description":  editReceiver_description.text,
+                              }
+                            ]));
                         Navigator.of(context).pop();
                         storage.write(key: "transactionBackend", value: json.encode([
                           {
@@ -551,10 +596,10 @@ displayRecap() async {
   @override
   void initState() {
     super.initState();
-    this.displayPaymentInfo();
+    this.getSWData();
     this.fetchMyBeneficiaire();
+    this.displayPaymentInfo();
     this.displayRecap();
-    print(beneficiaireList);
   }
 
   @override
@@ -791,7 +836,7 @@ displayRecap() async {
           ),
           Flexible(
             child: FutureBuilder<List<dynamic>>(
-              future: fetchMyBeneficiaire(),
+              future: this.getSWData(),
               builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                 if (snapshot.hasData) {
                   return ListView.builder(
@@ -819,34 +864,6 @@ displayRecap() async {
 
                                 ),
                                 onTap: () {
-                                  storage.write(
-                                      key: "beneficiaireInfo",
-                                      value: json.encode([
-                                        {
-                                          "id": snapshot.data[index]['id'],
-                                          "receiver_first_name":
-                                              snapshot.data[index]
-                                                  ['receiver_first_name'],
-                                          "receiver_last_name":
-                                              snapshot.data[index]
-                                                  ['receiver_last_name'],
-                                          "receiver_email": snapshot.data[index]
-                                              ['receiver_email'],
-                                          "receiver_phone": snapshot.data[index]
-                                              ['receiver_phone'],
-                                          "receiver_country": snapshot
-                                              .data[index]['receiver_country'],
-                                          "receiver_description":
-                                              snapshot.data[index]
-                                                  ['receiver_description']
-                                        }
-                                      ]));
-                                  /*Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => TransactionPage(),
-                                      ),
-                                    );*/
                                   _beneficiaireID = snapshot.data[index]['id'];
                                   _showBeneficiaireInfo();
                                 },
