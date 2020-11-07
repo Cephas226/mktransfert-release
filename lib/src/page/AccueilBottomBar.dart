@@ -227,13 +227,11 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
               labelPositiveButton: 'OK',
               onTapPositiveButton: () {
                 Navigator.pop(context);
-                Navigator.pushAndRemoveUntil(
+                Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => LoginPage()
-                    ),
-                    ModalRoute.withName("/login")
-                );
+                ));
               },
               labelNegativeButton: 'Annulez',
               onTapNegativeButton: () {
@@ -275,11 +273,11 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
             BubbleBottomBarItem(
               backgroundColor: Colors.indigo,
               icon: Icon(
-                Icons.folder_open,
+                Icons.credit_card,
                 color: Colors.black,
               ),
               activeIcon: Icon(
-                Icons.folder_open,
+                Icons.credit_card,
                 color: Colors.indigo,
               ),
               title: Text('Transaction'),

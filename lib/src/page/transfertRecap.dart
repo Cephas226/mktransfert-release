@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mktransfert/src/contant/constant.dart';
 import 'package:mktransfert/src/page/paymentPage.dart';
+import 'package:mktransfert/src/page/registerBeneficiaire.dart';
 import 'package:mktransfert/src/page/transaction.dart';
 import 'package:mktransfert/src/widget/round_corner_image.dart';
 import 'package:http/http.dart' as http;
@@ -121,7 +122,7 @@ class _HomePageState extends State<HomePage> {
       receiver_point_retait;
     });
   }
-
+  var beneficiaireList = List();
   Future<List<dynamic>> getSWData() async {
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
@@ -133,7 +134,6 @@ class _HomePageState extends State<HomePage> {
     });
     var countryList = List();
     var point_retait = List();
-    var beneficiaireList = List();
     var resBody = json.decode(res.body);
     var beneficiaireInfo = await storage.read(key: "beneficiaire");
 
@@ -170,12 +170,13 @@ class _HomePageState extends State<HomePage> {
     var countryList = List();
     var beneficiaireList = List();
     var resBody = json.decode(res.body);
-    var beneficiaireInfo = await storage.read(key: "beneficiaire");
-
+    var beneficiaireInfo = await storage.read(key: "beneficiaireNew");
     if (beneficiaireInfo != null) {
-      List responseJsonBeneficiaire = json.decode(beneficiaireInfo);
-      responseJsonBeneficiaire.forEach((element) {
-        beneficiaireList.add(element);
+      setState(() {
+        List responseJsonBeneficiaire = json.decode(beneficiaireInfo);
+        responseJsonBeneficiaire.forEach((element) {
+          beneficiaireList.add(element);
+        });
       });
     }
     resBody['data_beneficiaire']?.forEach((k, v) {
@@ -546,12 +547,14 @@ displayRecap() async {
    });
   });
 }
+
   @override
   void initState() {
     super.initState();
     this.displayPaymentInfo();
     this.fetchMyBeneficiaire();
     this.displayRecap();
+    print(beneficiaireList);
   }
 
   @override
@@ -750,11 +753,41 @@ displayRecap() async {
             padding: const EdgeInsets.symmetric(
               vertical: 16,
             ),
-            child: Text(
-              "Choisissez un destinataire",
-              style: TextStyle(
-                  fontWeight: FontWeight.w600, color: Colors.black),
-            ),
+            child: ListTile(
+                    title: Text(
+                      "Choisissez un destinataire",
+                      style: TextStyle(
+                      fontWeight: FontWeight.w600, color: Colors.black),
+                      ),
+                    trailing: MaterialButton(
+                      color: kPrimaryColor,
+                      shape: CircleBorder(),
+                      elevation: 0,
+                      child: Icon(Icons.person_add,color: Colors.white),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  RegisterBeneficiairePage()),
+                          //   ModalRoute.withName('/')
+                        );
+                        //_showUserPassword();
+                      },
+                    )
+                    /*IconButton(
+                      color: Colors.blue,
+                      icon: Icon(Icons.person_add),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  RegisterBeneficiairePage()),
+                        );
+                      },
+                    ),*/
+                   )
           ),
           Flexible(
             child: FutureBuilder<List<dynamic>>(
