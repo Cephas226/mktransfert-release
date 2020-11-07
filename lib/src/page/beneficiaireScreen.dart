@@ -219,6 +219,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                   _selectedItemReceiver = value;
                   if (_selectedItemReceiver.name!='GNF'){
                     this.amountWaitted=this.amount.toDouble();
+                    this.amountTotal=this.amount+this._taux;
                   }
                   if (_selectedItemReceiver.name=='GNF'){
                     _doConversionEur();
@@ -242,6 +243,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                   setState(() {
                     if (_selectedItemReceiver.name!='GNF'){
                       amount--;
+                      this.amountTotal=this.amount+this._taux;
                       this.amountWaitted=this.amount.toDouble();
                     }
                     if (_selectedItemReceiver.name=='GNF'){
@@ -265,6 +267,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                     if (_selectedItemReceiver.name!='GNF'){
                       amount++;
                       this.amountWaitted=this.amount.toDouble();
+                      this.amountTotal=this.amount+this._taux;
                     }
                     if (_selectedItemReceiver.name=='GNF'){
                       amount++;

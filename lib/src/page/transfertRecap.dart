@@ -24,7 +24,7 @@ class ExpenseTrackerApp extends StatelessWidget {
       title: "Expense Tracker",
       debugShowCheckedModeBanner: false,
       home: HomePage(),
-      theme: ThemeData.dark().copyWith(
+      theme: ThemeData.light().copyWith(
         primaryColor: Color(0xff1346A1),
         accentColor: Color(0xff1346A1),
       ),
@@ -601,7 +601,7 @@ displayRecap() async {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         MaterialButton(
-                          color: Colors.black,
+                          color: Colors.white,
                           shape: CircleBorder(),
                           elevation: 0,
                           child: Icon(Icons.arrow_back),
@@ -617,10 +617,11 @@ displayRecap() async {
                           },
                         ),
                         Text(
-                          "Transfert",
+                          "Transfert sécurisé",
                           style: TextStyle(
-                            fontSize: 28,
+                            fontSize: 22,
                             fontWeight: FontWeight.w600,
+                            color: Colors.white
                           ),
                         ),
                         Column(
@@ -631,6 +632,7 @@ displayRecap() async {
                               style: TextStyle(
                                 fontSize: 42,
                                 fontWeight: FontWeight.bold,
+                                  color: Colors.white
                               ),
                             ),
                             SizedBox(
@@ -640,9 +642,15 @@ displayRecap() async {
                               title: Text('Commission',
                                 style: TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.w600,
+                                    color: Colors.white
                                 ),
                               ),
-                              trailing: Text(_transac_commission.toString()),
+                              trailing: Text(_transac_commission.toString(),
+                                  style: TextStyle(
+                                      fontSize: 15, fontWeight: FontWeight.w600,
+                                      color: Colors.white
+                                  )
+                              ),
                             ),
                           ],
                         ),
@@ -680,36 +688,43 @@ displayRecap() async {
       decoration: BoxDecoration(
         color: kPrimaryColor,
           borderRadius: BorderRadius.circular(5.0), border: Border.all()),
+      child: ButtonTheme(
+      alignedDropdown: true,
       child: DropdownButtonHideUnderline(
         child: DropdownButton(
-          hint: Text("Choisir un point de retrait",),
+          hint: Text("Choisir un point de retrait",
+         style: TextStyle(fontSize: 14.0, color: Color(0xFFF5F5F5)),),
           items: receiver_point_retait?.map((item) {
-                return DropdownMenuItem(
-                  child: Text(item['agence_name']),
-                  value: item['id'],
-                );
-              })?.toList() ??
+            return DropdownMenuItem(
+              child: Text(item['agence_name']),
+              value: item['id'],
+            );
+          })?.toList() ??
               [],
           onChanged: (newVal) {
             setState(() {
               var selectedPoint =
-                  receiver_point_retait.map((item) => item).toList();
+              receiver_point_retait.map((item) => item).toList();
               selectedPoint.forEach((f) => {
-                    if (f['id'] == newVal)
+                if (f['id'] == newVal)
+                  {
+                    if (!f['agence_isdisponible'])
                       {
-                        if (!f['agence_isdisponible'])
-                          {
-                            print("indispo"),
-                            showAlertDialogPointRetrait(context)
-                          }
+                        print("indispo"),
+                        showAlertDialogPointRetrait(context)
                       }
-                  });
+                  }
+              });
               _mySelectionPointRetrait = newVal;
             });
           },
           value: _mySelectionPointRetrait,
+          style: new TextStyle(
+            color: Colors.black,
+          ),
         ),
       ),
+      )
     );
   }
 
@@ -756,11 +771,20 @@ displayRecap() async {
                             children: <Widget>[
                               ListTile(
                                 title: Text(snapshot.data[index]
-                                    ['receiver_first_name']),
+                                    ['receiver_first_name'],
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                        color: Colors.white
+                                    )
+                                ),
                                 leading: new CircleAvatar(
                                     backgroundColor: Colors.white,
                                     child: Text(
-                                        '${snapshot.data[index]['receiver_first_name'].substring(0, 1)}')),
+                                        '${snapshot.data[index]['receiver_first_name'].substring(0, 1)}',
+
+                                    ),
+
+                                ),
                                 onTap: () {
                                   storage.write(
                                       key: "beneficiaireInfo",
