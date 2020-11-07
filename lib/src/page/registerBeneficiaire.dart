@@ -42,6 +42,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
   var saveReceiver_email = TextEditingController();
   var saveReceiver_phone = TextEditingController();
   var saveReceiver_country = TextEditingController();
+  var saveReceiver_info = TextEditingController();
 
   final _beneficiaire = Beneficiaire();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -304,21 +305,40 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                     children: <Widget>[
                                       Flexible(
                                           child: TextFormField(
-                                        validator: (value) {
-                                          if (value.isEmpty) {
-                                            return 'Veuillez saisir un telephone';
-                                          }
-                                          return null;
-                                        },
-                                        onSaved: (val) => setState(() =>
+                                            validator: (value) {
+                                              if (value.isEmpty) {
+                                                return 'Veuillez saisir un telephone';
+                                              }
+                                              return null;
+                                            },
+                                            onSaved: (val) => setState(() =>
                                             saveReceiver_phone.text = val),
-                                        controller: TextEditingController()
-                                          ..text = saveReceiver_phone.text,
-                                        decoration: const InputDecoration(
-                                          hintText: "Entre un telephone",
-                                          border: OutlineInputBorder(),
-                                        ),
-                                      )),
+                                            controller: TextEditingController()
+                                              ..text = saveReceiver_phone.text,
+                                            decoration: const InputDecoration(
+                                              hintText: "Entre un telephone",
+                                              border: OutlineInputBorder(),
+                                            ),
+                                          )),
+                                    ],
+                                  )),
+                              const SizedBox(height: 20.0),
+                              Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 25.0, right: 25.0, top: 25.0),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Flexible(
+                                          child: TextFormField(
+                                            onSaved: (val) => setState(() =>
+                                            saveReceiver_info.text = val),
+                                            controller: TextEditingController()
+                                              ..text = saveReceiver_info.text,
+                                            decoration: const InputDecoration(
+                                              hintText: "Information complémentaire",
+                                              border: OutlineInputBorder(),
+                                            ),
+                                          )),
                                     ],
                                   )),
                               Padding(
@@ -374,6 +394,8 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                                     saveReceiver_phone.text,
                                                 "receiver_email":
                                                     saveReceiver_email.text,
+                                                "receiver_info":
+                                                saveReceiver_info.text,
                                               }
                                             ]));
                                         //_showDialog(context);

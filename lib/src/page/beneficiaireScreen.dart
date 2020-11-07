@@ -46,6 +46,10 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PagePrincipale()))
+        ),
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
         title: Text(

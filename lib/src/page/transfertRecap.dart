@@ -230,6 +230,7 @@ class _HomePageState extends State<HomePage> {
                                     b["receiver_country"];
                                 editReceiver_phone.text = b["receiver_phone"];
                                 editReceiver_email.text = b["receiver_email"];
+                                editReceiver_description.text = b["receiver_description"];
                               }
                             });
                             return ListView.builder(
@@ -450,12 +451,12 @@ class _HomePageState extends State<HomePage> {
                                                     child: new TextFormField(
                                                       onSaved: (val) =>
                                                           setState(() =>
-                                                          editReceiver_phone
+                                                          editReceiver_description
                                                               .text = val),
                                                       controller:
                                                       TextEditingController()
                                                         ..text =
-                                                            editReceiver_phone
+                                                            editReceiver_description
                                                                 .text,
                                                       decoration: const InputDecoration(
                                                           hintText:
