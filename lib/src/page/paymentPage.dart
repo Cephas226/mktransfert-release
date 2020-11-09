@@ -8,11 +8,11 @@ import 'package:mktransfert/src/page/payement.dart';
 import 'package:mktransfert/src/page/succesPage.dart';
 import 'package:mktransfert/src/page/transaction.dart';
 import 'package:mktransfert/src/services/payment-service.dart';
-
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:ticket_pass_package/ticket_pass.dart';
-
+import 'package:http/http.dart';
 import 'AccueilBottomBar.dart';
+import 'package:http/http.dart' as http;
 import 'beneficiaireScreen.dart';
 import 'loginPage.dart';
 double _amount;
@@ -22,6 +22,8 @@ String _transactionDate;
 String _transactionTime;
 String _receiver_Name;
 String _receiver_Email;
+String _receiver_last_name;
+String _transac_status;
 List transactionInfoBackend = List();
 class PaymentPage extends StatefulWidget {
   PaymentPage({Key key}) : super(key: key);
@@ -362,7 +364,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                                     CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        'PRIX',
+                                        'MONTANT',
                                         style: TextStyle(
                                             color:
                                             Colors.black.withOpacity(0.5)),
@@ -387,6 +389,8 @@ class PaymentSuccessDialog extends StatelessWidget {
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
+            storage.delete(key: "transactionBackend");
+            print('ok');
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => AccueilBootomBarPage()),
@@ -405,13 +409,16 @@ class HomePageState extends State<PaymentPage> {
   displayTransactionInfo() async {
     var jwt = await storage.read(key: "transaction");
     transactionInfo=json.decode(jwt);
+
     transactionInfo.forEach((transaction) {
+      print(transaction['receiver_last_name']);
       _amount=transaction['transac_total'];
       _currency=transaction['devise_send'];
       _receiver_Name=transaction['receiver_name'];
       _receiver_Email=transaction['receiver_email'];
+      receiver_last_name = transaction['receiver_last_name'];
+      _receiver_Email = transaction['receiver_email'];
     });
-    print(transactionInfo);
     var now = new DateTime.now();
     var formatter = new DateFormat('yyyy-MM-dd');
     _transactionDate = formatter.format(now);
@@ -447,11 +454,46 @@ class HomePageState extends State<PaymentPage> {
     }
   }
 
+
+  Future<http.Response> postTransaction() async {
+    var jwt = await storage.read(key: "jwt");
+    Map<String, dynamic> responseJson = json.decode(jwt);
+    String token = responseJson["access_token"];
+    int user_id = responseJson["user_id"];
+   /* final Response response = await post(
+      '$apiUrlRegister',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(data),
+    );*/
+    final Response response= await post(
+      'https://www.mktransfert.com/api/success/' + '$user_id',
+      headers: {
+        "Accept": "application/json",
+        'Authorization': 'Bearer $token',
+      },
+      body: transactionInfoBackend,
+    );
+    await http
+        .get(
+        Uri.encodeFull(
+            'https://www.mktransfert.com/api/transactions/' +
+                '$user_id'),
+        headers: {
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        })
+        .then((value) => print(value.body))
+        .catchError((onError) {
+      print(onError);
+    });
+  }
   payViaNewCard(BuildContext context) async {
     this.displayTransactionInfo();
     ProgressDialog dialog = new ProgressDialog(context);
     dialog.style(
-        message: 'Please wait...'
+        message: 'Patientez un instant...'
     );
     await dialog.show();
     var response = await StripeService.payWithNewCard(
@@ -503,10 +545,10 @@ class HomePageState extends State<PaymentPage> {
                   icon = Icon(Icons.add_circle, color: theme.primaryColor);
                   text = Text('Payer avec une nouvelle carte');
                   break;
-                case 1:
+               /* case 1:
                   icon = Icon(Icons.credit_card, color: theme.primaryColor);
                   text = Text('Payer via une carte existante');
-                  break;
+                  break;*/
               }
 
               return InkWell(

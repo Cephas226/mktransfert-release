@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:dio/dio.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -238,7 +237,26 @@ class _LoginState extends State<LoginForm> {
     super.initState();
     //checkLoginStatus();
   }
+  Future<String> logMe(
+      String email,
+      String password,
+      ) async {
+    Map data = {
+      'email': email,
+      'password': password,
+    };
 
+    final Response response = await post(
+      '$apiUrlLogin',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(data),
+    );
+    print(response.body);
+    print(response.statusCode);
+    return response.body;
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -354,34 +372,6 @@ class _LoginState extends State<LoginForm> {
     }
   }
 */
-
-  Future<String> logMe(
-    String email,
-    String password,
-  ) async {
-    Map data = {
-      'email': email,
-      'password': password,
-    };
-
-    var response = await post(
-      '$apiUrlLogin',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(data),
-    );
-    print(response.body);
-    print(response.statusCode);
-    return response.body;
- /*   if (response.body == 200) {
-      storage.write(key: "userInfo", value: response.body);
-      print('succès');
-      return response.body;
-    } else {
-      return 'invalide';
-    }*/
-  }
 
   checkLoginStatus() async {
     var jwt = await storage.read(key: "jwt");
@@ -623,11 +613,11 @@ class _SignupFormState extends State<SignupPage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                PagePrincipale()));
+                                                LoginPage()));
                                     _showDialog(context);
                                     /* displayDialog(context, "Success",
                                         "The user was created. Log in now.");*/
-                                  } else if (res == 409)
+                                  } else if (res == 403)
                                     displayDialog(
                                         context,
                                         "Ce nom d'utilisateur est déjà enregistré",
@@ -654,7 +644,15 @@ class _SignupFormState extends State<SignupPage> {
 }
 
 _showDialog(BuildContext context) {
-  Scaffold.of(context).showSnackBar(SnackBar(content: Text('Soumission du formulaire')));
+  final snackBar = SnackBar(
+    content: Text('Enregistrement avec succèss'),
+    action: SnackBarAction(
+      label: 'Ok',
+      onPressed: () {
+        //Navigator.pop(context,true);
+      },
+    ),
+  );
 }
 
 class MySelectionItem extends StatelessWidget {

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:mktransfert/core/presentation/res/assets.dart';
+import 'package:mktransfert/src/contant/constant.dart';
 import 'package:mktransfert/src/page/beneficiaire.dart';
 import 'package:mktransfert/src/page/loginPage.dart';
 import 'package:mktransfert/src/page/navigation.dart';
@@ -39,8 +40,8 @@ class _MainPageState extends State<PagePrincipale> {
     return jwt;
   }
 
-  double _conversion_eur=11900.0;
-  double _conversion_usd=10000.0;
+  double _conversion_eur;
+  double _conversion_usd;
 String respresponseJwtLogin;
   List<String> currencies;
   String fromCurrency = "USD";
@@ -67,7 +68,6 @@ String respresponseJwtLogin;
               onChanged: (value) {
                 setState(() {
                   _selectedItemGnf = value;
-                  //.. _user.pays=_selectedItem.name;
                 });
               }),
         )
@@ -99,13 +99,13 @@ String respresponseJwtLogin;
         DropdownButtonHideUnderline(
           child: DropdownButton(
             underline: SizedBox(),
-            items: Currency.getLanguages().map((Currency lang) {
+            items: Currency.getCurrency().map((Currency curr) {
               return DropdownMenuItem(
-                value: lang.id,
+                value: curr.id,
                 child: Row(
                   children: <Widget>[
-                    Text(lang.languageCode),
-                    Image.asset(lang.name, width: 30)
+                    Text(curr.currencyCode),
+                    Image.asset(curr.name, width: 30)
                   ],
                 ),
               );
@@ -113,11 +113,22 @@ String respresponseJwtLogin;
             onChanged: (val) {
               setState(() {
                 _selectedCurrency = val;
+                print(_selectedCurrency);
                 if (_selectedCurrency==2){
-                  _doConversionDollard();
+                  if (fromTextControllerSender.text == null){
+                    _displaySnackMessage();
+                  }
+                  else {
+                    _doConversionDollard();
+                  }
                 }
                 if (_selectedCurrency==1){
-                  _doConversionEur();
+                  if (fromTextControllerSender.text == null){
+                    _displaySnackMessage();
+                  }
+                  else {
+                    _doConversionEur();
+                  }
                 }
               });
             },
@@ -150,7 +161,7 @@ String respresponseJwtLogin;
     int user_id = responseJson["user_id"];
     var res = await http.get(
         Uri.encodeFull(
-            'https://gracetechnologie.pythonanywhere.com/api/payment/' +
+            'https://www.mktransfert.com/api/payment/' +
                 '$user_id'),
         headers: {
           "Accept": "application/json",
@@ -160,29 +171,35 @@ String respresponseJwtLogin;
       var resBody = json.decode(res.body);
       _conversion_eur = resBody['API_transac_data']['conversion_eur'];
       _conversion_usd = resBody['API_transac_data']['conversion_usd'];
+      setState(() {
+        _conversion_eur = resBody['API_transac_data']['conversion_eur'];
+        _conversion_usd = resBody['API_transac_data']['conversion_usd'];
+      });
     }
   }
 
   Future<double> _doConversionEur() async {
+
     // fromTextControllerSender.text=double.parse(valeurSaisie).toString();
-    fromTextControllergnf.text =
-        (double.parse(fromTextControllerSender.text) * _conversion_eur)
-            .toString();
-    fromTextControllerReceive.text =
-        double.parse(fromTextControllerSender.text).toString();
+    if (fromTextControllerSender.text!=''){
+      fromTextControllergnf.text =
+          (double.parse(fromTextControllerSender.text) * _conversion_eur)
+              .toString();
+      fromTextControllerReceive.text =
+          double.parse(fromTextControllerSender.text).toString();
+    }
   }
 
   Future<double> _doConversionDollard() async {
-    // fromTextControllerSender.text=double.parse(valeurSaisie).toString();
     print(_conversion_usd);
-    fromTextControllergnf.text = '';
-    fromTextControllerReceive.text = '';
-    fromTextControllergnf.text =
-        (double.parse(fromTextControllerSender.text) * _conversion_usd)
-            .toString();
-    fromTextControllerReceive.text =
-        double.parse(fromTextControllerSender.text).toString();
-    print(fromTextControllergnf.text);
+    if(fromTextControllerSender.text!=''){
+      fromTextControllergnf.text =
+          (double.parse(fromTextControllerSender.text) * _conversion_usd)
+              .toString();
+      fromTextControllerReceive.text =
+          double.parse(fromTextControllerSender.text).toString();
+      print(fromTextControllergnf.text);
+    }
   }
 
   @override
@@ -237,7 +254,21 @@ String respresponseJwtLogin;
       toCurrency = value;
     });
   }
+  _displaySnackMessage (){
+    final snackBar = SnackBar(
+      content: Text('Veuillez entrer un montant'),
+      action: SnackBarAction(
+        label: 'Ok',
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+    );
 
+    // Find the Scaffold in the widget tree and use
+    // it to show a SnackBar.
+    Scaffold.of(context).showSnackBar(snackBar);
+  }
   List<DropdownMenuItem<ListItem>> buildDropDownMenuItems(List listItems) {
     List<DropdownMenuItem<ListItem>> items = List();
     for (ListItem listItem in listItems) {
@@ -320,7 +351,6 @@ String respresponseJwtLogin;
                 }
               }*/
             }
-          _selectedCurrency=1;
           displayPaymentInfo();
           return (Scaffold(
               body: respresponseJwtLogin == null
@@ -371,14 +401,14 @@ String respresponseJwtLogin;
                                   const SizedBox(
                                     height: 20.0,
                                   ),
-                                  Text(_selectedCurrency==2?
+                                  /*Text(_selectedCurrency==2?
                                   "1 \$ = 10000.0 GNF":'',
                                       style: TextStyle(color: Colors.blue)),
                                   Text("1 € = 11900.0 GNF",
-                                      style: TextStyle(color: Colors.blue)),
-                                  /*Text(_selectedCurrency==2?"1 € = $_conversion_eur GNF":
-                                          "1 \$ = $_conversion_usd GNF",
                                       style: TextStyle(color: Colors.blue)),*/
+                                  Text(_selectedCurrency==1?"1 € = $_conversion_eur GNF":
+                                          "1 \$ = $_conversion_usd GNF",
+                                      style: TextStyle(color: kPrimaryColor)),
                                   const SizedBox(height: 20.0),
                                   Row(
                                     children: <Widget>[
@@ -386,7 +416,7 @@ String respresponseJwtLogin;
                                         child: Row(
                                           children: <Widget>[
                                             Container(
-                                              margin: EdgeInsets.only(left: 10),
+                                             // margin: EdgeInsets.only(left: 10),
                                               width: 220,
                                               child: TextFormField(
                                                 controller:
@@ -421,7 +451,7 @@ String respresponseJwtLogin;
                                         child: Row(
                                           children: <Widget>[
                                             Container(
-                                              margin: EdgeInsets.only(left: 10),
+                                            //  margin: EdgeInsets.only(left: 10),
                                               width: 220,
                                               child: TextFormField(
                                                 readOnly: true,
@@ -557,7 +587,13 @@ String respresponseJwtLogin;
           IconButton(
             color: Colors.white70,
             icon: Icon(Icons.send),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AccueilBootomBarPage(),
+                ),
+              );
+            },
           )
         ],
       ),
@@ -824,12 +860,12 @@ class HeaderFooterwidget extends StatelessWidget {
 class Currency {
   final int id;
   final String name;
-  final String languageCode;
+  final String currencyCode;
 
-  Currency(this.id, this.name, this.languageCode);
+  Currency(this.id, this.name, this.currencyCode);
 /*  ListItem("assets/Image/eu.png",  "EUR"),
   ListItem("assets/Image/us.png",  "USD"),*/
-  static List<Currency> getLanguages() {
+  static List<Currency> getCurrency() {
     return <Currency>[
       Currency(1, 'assets/Image/eu.png', 'EUR'),
       Currency(2, 'assets/Image/us.png', 'USD'),

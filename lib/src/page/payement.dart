@@ -22,7 +22,9 @@ String _currency;
 String _transactionDate;
 String _transactionTime;
 String _receiver_Name;
+String receiver_last_name;
 String _receiver_Email;
+String _status;
 List transactionInfo = List();
 List transactionInfoBackend = List();
 
@@ -57,7 +59,9 @@ class ExistingCardsPageState extends State<ExistingCardsPage> {
       _amount = transaction['transac_total'];
       _currency = transaction['devise_send'];
       _receiver_Name = transaction['receiver_name'];
+      receiver_last_name = transaction['receiver_last_name'];
       _receiver_Email = transaction['receiver_email'];
+      _status = transaction['status'];
     });
     print(_amount.truncate());
     var now = new DateTime.now();
@@ -114,7 +118,7 @@ class ExistingCardsPageState extends State<ExistingCardsPage> {
       if (response.success) {
         displayTransactionInfo();
         displayTransactionInfoBackend();
-        postTransaction();
+        //postTransaction();
         _paymentSuccessDialog(context);
       } else {
         Navigator.pop(context);
@@ -165,159 +169,6 @@ class PaymentSuccessDialog extends StatelessWidget {
   final image = images[2];
   final TextStyle subtitle = TextStyle(fontSize: 12.0, color: Colors.grey);
   final TextStyle label = TextStyle(fontSize: 14.0, color: Colors.grey);
-  /* @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: SizedBox(
-        height: 550,
-        child: Dialog(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.green,
-                  child: Icon(Icons.check_circle,size: 90,color: Colors.white,),
-                ),
-                SizedBox(height: 5.0),
-                Text(
-                  "Merci!",
-                  style: TextStyle(color: Colors.green),
-                ),
-                Text(
-                  "Votre transaction a réussi",
-                  style: label,
-                ),
-                Divider(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      "DATE",
-                      style: label,
-                    ),
-                    Text("HEURE", style: label)
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[Text(_transactionDate), Text(_transactionTime.toString())],
-                ),
-                SizedBox(height: 20.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          "A",
-                          style: label,
-                        ),
-                        Text(_receiver_Name),
-                        Text(
-                          _receiver_Email,
-                          style: subtitle,
-                        ),
-                      ],
-                    ),
-                    CircleAvatar(
-                      backgroundColor: Colors.green,
-                      //backgroundImage: AssetImage(image),
-                    )
-                  ],
-                ),
-                SizedBox(height: 20.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          "MONTANT",
-                          style: label,
-                        ),
-                        Text("$_currency $_amount"),
-                      ],
-                    ),
-                    Text(
-                      "TERMINÉ",
-                      style: label,
-                    )
-                  ],
-                ),
-                SizedBox(height: 20.0),
-                Container(
-                  padding: EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(5.0)),
-                  child: Row(
-                    children: <Widget>[
-                      CircleAvatar(
-                        backgroundColor: Colors.green,
-                        child: Icon(Icons.account_balance_wallet),
-                      ),
-                      SizedBox(width: 10.0),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text("Carte de crédit / débit"),
-                          Text(
-                            "Master Card se terminant ***5",
-                            style: subtitle,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Divider(),
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                     Expanded(
-                       child: Container(
-                         padding: EdgeInsets.all(10.0),
-                         child:  Column(
-                           children: <Widget>[
-                             RaisedButton(
-                               color: Colors.blue,
-                               textColor: Colors.white,
-                               elevation: 0,
-                               shape: RoundedRectangleBorder(
-                                 borderRadius: BorderRadius.circular(10.0),
-                               ),
-                               child: Text("Effectué un autre"),
-                               onPressed: () {
-                                  storage.delete(key: 'beneficiaireNew');
-                                // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => TransactionPage()),);
-                                 Navigator.pushAndRemoveUntil(
-                                     context,
-                                     MaterialPageRoute(
-                                         builder: (context) => AccueilBootomBarPage()
-                                     ),
-                                     ModalRoute.withName("/accueilBottom")
-                                 );
-                                 },
-                             )
-                           ],
-                         ),
-                       ),
-                     )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }*/
   List<String> sample = <String>[
     'ZOUBGA Cephas',
     'OUOBA Fayçal',
@@ -363,7 +214,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                purchaserList: sample,
+                //purchaserList: sample,
                 separatorColor: Colors.black,
                 separatorHeight: 2.0,
                 color: Colors.white,
@@ -444,7 +295,32 @@ class PaymentSuccessDialog extends StatelessWidget {
                                           ),
                                         ),
                                         Text(
-                                          _receiver_Name,
+                                          _receiver_Name+''+receiver_last_name,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          'Status',
+                                          style: TextStyle(
+                                            color:
+                                            Colors.black.withOpacity(0.5),
+                                          ),
+                                        ),
+                                        Text(
+                                          _status,
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                           style: TextStyle(
@@ -529,38 +405,6 @@ class PaymentSuccessDialog extends StatelessWidget {
   }
 }
 
-Future<http.Response> postTransaction() async {
-  var jwt = await storage.read(key: "jwt");
-  Map<String, dynamic> responseJson = json.decode(jwt);
-  String token = responseJson["access_token"];
-  int user_id = responseJson["user_id"];
-  await http
-      .post(
-        'https://gracetechnologie.pythonanywhere.com/api/success/' + '$user_id',
-        headers: {
-          "Accept": "application/json",
-          'Authorization': 'Bearer $token',
-        },
-        body: transactionInfoBackend,
-      )
-      .then((value) => print(value.body))
-      .catchError((onError) {
-    print(onError);
-  });
-  await http
-      .get(
-          Uri.encodeFull(
-              'https://gracetechnologie.pythonanywhere.com/api/success/' +
-                  '$user_id'),
-          headers: {
-            "Accept": "application/json",
-            'Authorization': 'Bearer $token',
-          })
-      .then((value) => print(value))
-      .catchError((onError) {
-        print(onError);
-      });
-}
 /*
 postTransaction()async{
   var jwt = await storage.read(key: "jwt");
@@ -572,7 +416,7 @@ postTransaction()async{
 
 
 
-*/ /*  var res = await http.post(Uri.encodeFull('https://gracetechnologie.pythonanywhere.com/api/payment/' + '$user_id'),
+*/ /*  var res = await http.post(Uri.encodeFull('https://www.mktransfert.com/api/payment/' + '$user_id'),
       headers: {
     "Accept": "application/json",
     'Authorization': 'Bearer $token',
@@ -580,7 +424,7 @@ postTransaction()async{
   );
   print(res.body);
   if (res.statusCode==200){
-    var resGet = await http.get(Uri.encodeFull('https://gracetechnologie.pythonanywhere.com/api/success/' + '$user_id'), headers: {
+    var resGet = await http.get(Uri.encodeFull('https://www.mktransfert.com/api/success/' + '$user_id'), headers: {
       "Accept": "application/json",
       'Authorization': 'Bearer $token',
     });

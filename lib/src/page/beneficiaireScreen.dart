@@ -25,6 +25,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
   int amount = 10;
   double amountWaitted=10;
   double amountTotal;
+  double commission;
   int _beneficiaireID;
   int _mySelectionPointRetrait;
   String _senderCurrency="";
@@ -71,7 +72,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     int user_id = responseJson["user_id"];
     var res = await http.get(
         Uri.encodeFull(
-            'https://gracetechnologie.pythonanywhere.com/api/payment/' +
+            'https://www.mktransfert.com/api/payment/' +
                 '$user_id'),
         headers: {
           "Accept": "application/json",
@@ -153,8 +154,9 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     return items;
   }
   Future<double> _doConversionEur() async {
-    this.amountWaitted=(this.amount*this._taux)+this._conversion_eur;
+    this.amountWaitted=this.amount*this._conversion_eur;
     this.amountTotal=this.amount+this._taux;
+    this.commission=this.amount*this._taux;
   }
   Widget _buildBody() {
     return Container(
@@ -193,6 +195,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                       if (_selectedItemReceiver.name!='GNF'){
                         this.amount = int.parse(amount);
                         this.amountWaitted=this.amount.toDouble();
+                        this.commission=this.amount*this._taux;
                       }
                       if (_selectedItemReceiver.name=='GNF'){
                         this.amount = int.parse(amount);
@@ -224,6 +227,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                   if (_selectedItemReceiver.name!='GNF'){
                     this.amountWaitted=this.amount.toDouble();
                     this.amountTotal=this.amount+this._taux;
+                    this.commission=this.amount*this._taux;
                   }
                   if (_selectedItemReceiver.name=='GNF'){
                     _doConversionEur();
@@ -249,6 +253,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                       amount--;
                       this.amountTotal=this.amount+this._taux;
                       this.amountWaitted=this.amount.toDouble();
+                      this.commission=this.amount*this._taux;
                     }
                     if (_selectedItemReceiver.name=='GNF'){
                       amount--;
@@ -272,6 +277,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                       amount++;
                       this.amountWaitted=this.amount.toDouble();
                       this.amountTotal=this.amount+this._taux;
+                      this.commission=this.amount*this._taux;
                     }
                     if (_selectedItemReceiver.name=='GNF'){
                       amount++;
@@ -290,6 +296,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
               setState(() {
                 if (_selectedItemReceiver.name!='GNF'){
                   this.amountWaitted=this.amount.toDouble();
+                  this.commission=this.amount*this._taux;
                   amount = newValue.toInt();
                 }
                 if (_selectedItemReceiver.name=='GNF'){
@@ -404,7 +411,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                             style: TextStyle(
                                 color: Colors.black, fontWeight: FontWeight.w500),
                           ),
-                          trailing: Text(this._taux.toString(),
+                          trailing: Text(this.commission.toString(),
                               style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w500)),

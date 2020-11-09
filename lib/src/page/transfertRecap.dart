@@ -84,6 +84,8 @@ class _HomePageState extends State<HomePage> {
   var testCountry = List();
   List countrydata = List();
   List transactionInfoRecap = List();
+  List transactionUserRecap = List();
+
   var editReceiver_last_name = TextEditingController();
   var editReceiver_first_name = TextEditingController();
   var editReceiver_email = TextEditingController();
@@ -91,8 +93,15 @@ class _HomePageState extends State<HomePage> {
   var editReceiver_country = TextEditingController();
   var editReceiver_description = TextEditingController();
 
+  int user_id;
+  String first_name="";
+  String last_name="";
+  String country="";
+  String phone= "";
+  String email="";
+
   int _beneficiaireID;
-  int _mySelectionCountry;
+  int _mySelectionCountry=1;
   double _amount;
   String _senderCurrencySymbole="";
   double _transac_commission;
@@ -107,7 +116,7 @@ class _HomePageState extends State<HomePage> {
     int user_id = responseJson["user_id"];
     var res = await http.get(
         Uri.encodeFull(
-            'https://gracetechnologie.pythonanywhere.com/api/payment/' +
+            'https://www.mktransfert.com/api/payment/' +
                 '$user_id'),
         headers: {
           "Accept": "application/json",
@@ -156,7 +165,6 @@ class _HomePageState extends State<HomePage> {
       data = beneficiaireList;
       countrydata = countryList;
     });
-    print(beneficiaireList);
     return beneficiaireList;
   }
 
@@ -174,11 +182,9 @@ class _HomePageState extends State<HomePage> {
     var resBody = json.decode(res.body);
     var beneficiaireInfo = await storage.read(key: "beneficiaireNew");
     if (beneficiaireInfo != null) {
-      setState(() {
-        List responseJsonBeneficiaire = json.decode(beneficiaireInfo);
-        responseJsonBeneficiaire.forEach((element) {
-          beneficiaireList.add(element);
-        });
+      List responseJsonBeneficiaire = json.decode(beneficiaireInfo);
+      responseJsonBeneficiaire.forEach((element) {
+        beneficiaireList.add(element);
       });
     }
     resBody['data_beneficiaire']?.forEach((k, v) {
@@ -187,7 +193,9 @@ class _HomePageState extends State<HomePage> {
     resBody['data_country']?.forEach((k, v) {
       countryList.add(v[0]);
     });
-    data = beneficiaireList;
+     setState(() {
+       data = beneficiaireList;
+     });
     return beneficiaireList;
   }
 
@@ -282,8 +290,6 @@ class _HomePageState extends State<HomePage> {
                                                               // showLoaderDialog(context);
                                                               _mySelectionCountry =
                                                                   country;
-                                                              print(
-                                                                  _mySelectionCountry);
                                                               setState(() {
                                                                 var selectedReceiverCountry =
                                                                     countrydata
@@ -293,7 +299,7 @@ class _HomePageState extends State<HomePage> {
                                                                 selectedReceiverCountry
                                                                     .forEach(
                                                                         (f) => {
-                                                                              print(f['id']),
+
                                                                               if (f['id'] == _mySelectionCountry)
                                                                                 {
                                                                                   if (!f['country_isdisponible'])
@@ -453,11 +459,8 @@ class _HomePageState extends State<HomePage> {
                                                           setState(() =>
                                                           editReceiver_description
                                                               .text = val),
-                                                      controller:
-                                                      TextEditingController()
-                                                        ..text =
-                                                            editReceiver_description
-                                                                .text,
+                                                      controller: editReceiver_description,
+
                                                       decoration: const InputDecoration(
                                                           hintText:
                                                           "Description",
@@ -507,6 +510,7 @@ class _HomePageState extends State<HomePage> {
                     child:   RaisedButton(
                       onPressed: () {
                         //updateUserProfile();
+                        print(user_id);
                         storage.write(
                             key: "beneficiaireInfo",
                             value: json.encode([
@@ -523,11 +527,30 @@ class _HomePageState extends State<HomePage> {
                         Navigator.of(context).pop();
                         storage.write(key: "transactionBackend", value: json.encode([
                           {
+                            "user_id":user_id,
+                            //sender
+                            "first_name":first_name,
+                            "last_name":last_name,
+                            "country":country,
+                            "phone":phone,
+                            "email":email,
+
+                            //receiver
+
+                            "receiver_first_name": editReceiver_first_name.text,
+                            "receiver_last_name": editReceiver_last_name.text,
+                            "receiver_email": editReceiver_email.text,
+                            "receiver_phone": editReceiver_phone.text,
+                            "receiver_country": _mySelectionCountry,
+                            "receiver_description":  editReceiver_description.text,
+
+                            //transaction
+
                             "montant_send":this.amount*100,
                             "montant_receive":this._montant_receive*100,
                             "transac_commission":this._transac_commission,
                             "transac_total":_stripeAmount,
-                            "devise_receive":_senderCurrencySymbole,
+                            "devise_receive":_devise_receive,
                             "point_retrait":_mySelectionPointRetrait,
                           }
                         ]));
@@ -539,6 +562,7 @@ class _HomePageState extends State<HomePage> {
                             "transac_total":_stripeAmount,
                             "devise_send":_currencySend,
                             "receiver_name":editReceiver_first_name.text,
+                            "receiver_last_name": editReceiver_last_name.text,
                             "receiver_email":editReceiver_email.text,
                             "devise_receive":_devise_receive,
                             "point_retrait":_mySelectionPointRetrait,
@@ -552,7 +576,7 @@ class _HomePageState extends State<HomePage> {
                       color: kPrimaryColor,
                       textColor: Colors.white,
                       child: Text(
-                        "Continuer",
+                        "Confirmer",
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                         ),
@@ -570,6 +594,8 @@ class _HomePageState extends State<HomePage> {
         });
       },
     );
+  }
+  _displaySnackMessage (){
   }
 displayRecap() async {
   var transactionResume = await storage.read(key: "transactionResume");
@@ -594,6 +620,20 @@ displayRecap() async {
   });
 }
 
+  displayUserInfo() async {
+    var jwt = await storage.read(key: "userInfo");
+    Map<String, dynamic> responseStorageUser = json.decode(jwt);
+
+    print(responseStorageUser["user_id"]);
+    user_id=responseStorageUser["user_id"];
+    first_name = responseStorageUser["first_name"];
+    last_name = responseStorageUser["last_name"];
+    email = responseStorageUser["email"];
+    phone = responseStorageUser["phone"];
+    country = responseStorageUser["country"];
+
+  }
+
   @override
   void initState() {
     super.initState();
@@ -601,6 +641,7 @@ displayRecap() async {
     this.fetchMyBeneficiaire();
     this.displayPaymentInfo();
     this.displayRecap();
+    this.displayUserInfo();
   }
 
   @override
@@ -641,8 +682,8 @@ displayRecap() async {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(
-                      top: 48,
-                      bottom: 42,
+                     // top: 48,
+                      //bottom: 42,
                       left: 24,
                     ),
                     child: Column(
@@ -821,24 +862,12 @@ displayRecap() async {
                         //_showUserPassword();
                       },
                     )
-                    /*IconButton(
-                      color: Colors.blue,
-                      icon: Icon(Icons.person_add),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  RegisterBeneficiairePage()),
-                        );
-                      },
-                    ),*/
                    )
           ),
           Flexible(
             child: FutureBuilder<List<dynamic>>(
               future: this.getSWData(),
-              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              builder: (BuildContext context, snapshot) {
                 if (snapshot.hasData) {
                   return ListView.builder(
                       padding: EdgeInsets.all(8),
@@ -865,8 +894,25 @@ displayRecap() async {
 
                                 ),
                                 onTap: () {
-                                  _beneficiaireID = snapshot.data[index]['id'];
-                                  _showBeneficiaireInfo();
+                                  if (_mySelectionPointRetrait == null){
+                                    final snackBar = SnackBar(
+                                      content: Text('Veuillez choisir le point de retrait'),
+                                      action: SnackBarAction(
+                                        label: 'Ok',
+                                        onPressed: () {
+                                          //Navigator.pop(context,true);
+                                        },
+                                      ),
+                                    );
+
+                                    // Find the Scaffold in the widget tree and use
+                                    // it to show a SnackBar.
+                                    Scaffold.of(context).showSnackBar(snackBar);
+                                  }
+                                  else {
+                                    _beneficiaireID = snapshot.data[index]['id'];
+                                    _showBeneficiaireInfo();
+                                  }
                                 },
                               )
                             ],

@@ -41,8 +41,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:mktransfert/src/page/operations/beneficiaireOperations.dart';
-final String apiUrlRegister =  "https://gracetechnologie.pythonanywhere.com/api/register";
-final String apiUrlLogin =  "https://gracetechnologie.pythonanywhere.com/api/login";
+final String apiUrlRegister =  "https://www.mktransfert.com/api/register";
+final String apiUrlLogin =  "https://www.mktransfert.com/api/login";
 final storage = FlutterSecureStorage();
 class User {
   int id;

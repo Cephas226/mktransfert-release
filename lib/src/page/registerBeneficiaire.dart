@@ -332,8 +332,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                           child: TextFormField(
                                             onSaved: (val) => setState(() =>
                                             saveReceiver_info.text = val),
-                                            controller: TextEditingController()
-                                              ..text = saveReceiver_info.text,
+                                            controller:  saveReceiver_info,
                                             decoration: const InputDecoration(
                                               hintText: "Information complémentaire",
                                               border: OutlineInputBorder(),

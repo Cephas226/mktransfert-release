@@ -38,7 +38,7 @@ class _OperationListPageState extends State<OperationListPage> {
     print(token);
     var res = await http.get(
         Uri.encodeFull(
-            'https://gracetechnologie.pythonanywhere.com/api/transactions/' +
+            'https://www.mktransfert.com/api/transactions/' +
                 '$user_id'),
         headers: {
           "Accept": "application/json",
@@ -76,6 +76,7 @@ class _OperationListPageState extends State<OperationListPage> {
           else{
             var _dataTransaction = List();
             resBody['data_transactions']?.forEach((k, v) {
+              print(v);
               _dataTransaction.add(v[0]);
             });
             //_dataTransaction = transactionList;
@@ -96,14 +97,13 @@ class _OperationListPageState extends State<OperationListPage> {
                             headerBuilder: (BuildContext context,
                                 bool isExpanded) {
                               return ListTile(
-                                title: Text(item['transac_num'],
+                                title: Text(item['transac_num']!=null?item['transac_num']:'null',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold)),
                                 subtitle:
-                                Text(item['receiver_first_name']),
+                                Text(item['receiver_first_name']!=null?item['receiver_first_name']:'null'),
                                 trailing: Text(
-                                    item['transac_montant_send'] +
-                                        item['transac_montant_send']),
+                                    item['transac_montant_send']!=null?item['transac_montant_send']:'null'),
                               );
                             },
                             body: Column(
@@ -118,7 +118,7 @@ class _OperationListPageState extends State<OperationListPage> {
                                           style: TextStyle(
                                               fontWeight:
                                               FontWeight.bold)),
-                                      Text(item['transac_status'],
+                                      Text(item['transac_status']!=null?item['transac_status']:'null',
                                           style: TextStyle(
                                               fontWeight:
                                               FontWeight.bold,
@@ -137,7 +137,7 @@ class _OperationListPageState extends State<OperationListPage> {
                                           style: TextStyle(
                                               fontWeight:
                                               FontWeight.bold)),
-                                      Text(item['transac_date']),
+                                      Text(item['transac_date']??'null'),
                                     ]),
                                   ],
                                 ),
