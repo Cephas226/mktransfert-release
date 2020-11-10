@@ -219,7 +219,7 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
               context,
               'Confirmation',
               'Voulez vous vous déconnectez ?',
-              Colors.blue,
+              kPrimaryColor,
               icon: Icon(
                 Icons.clear,
                 color: Colors.white,

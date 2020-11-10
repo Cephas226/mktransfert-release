@@ -78,14 +78,13 @@ class _HomePageState extends State<HomePage> {
   var receiver_point_retait = List();
   int _mySelectionPointRetrait;
   var country_isdisponible;
-
+  double screenWidth = 0.0;
   List AllBeneficiaire;
   List data = List();
   var testCountry = List();
   List countrydata = List();
   List transactionInfoRecap = List();
   List transactionUserRecap = List();
-
   var editReceiver_last_name = TextEditingController();
   var editReceiver_first_name = TextEditingController();
   var editReceiver_email = TextEditingController();
@@ -171,18 +170,18 @@ class _HomePageState extends State<HomePage> {
     return beneficiaireList;
   }
 
-  Future<List<dynamic>> fetchMyBeneficiaire() async {
+  Future<List> fetchMyBeneficiaire() async {
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
     String token = responseJson["access_token"];
     int user_id = responseJson["user_id"];
-    var res = await http.get(Uri.encodeFull(apiUrl + '$user_id'), headers: {
+    http.Response response = await http.get(Uri.encodeFull(apiUrl + '$user_id'), headers: {
       "Accept": "application/json",
       'Authorization': 'Bearer $token',
     });
     var countryList = List();
     var beneficiaireList = List();
-    var resBody = json.decode(res.body);
+    var resBody = json.decode(response.body);
     var beneficiaireInfo = await storage.read(key: "beneficiaireNew");
     if (beneficiaireInfo != null) {
       List responseJsonBeneficiaire = json.decode(beneficiaireInfo);
@@ -199,7 +198,7 @@ class _HomePageState extends State<HomePage> {
      setState(() {
        data = beneficiaireList;
      });
-    return beneficiaireList;
+    return json.decode(response.body);
   }
 
   void _showBeneficiaireInfo() {
@@ -511,7 +510,7 @@ class _HomePageState extends State<HomePage> {
                     child:   RaisedButton(
                       onPressed: () {
                         //updateUserProfile();
-                        print(user_id);
+                      //  print(user_id);
                         storage.write(
                             key: "beneficiaireInfo",
                             value: json.encode([
@@ -625,8 +624,6 @@ displayRecap() async {
   displayUserInfo() async {
     var jwt = await storage.read(key: "userInfo");
     Map<String, dynamic> responseStorageUser = json.decode(jwt);
-
-    print(responseStorageUser["user_id"]);
     user_id=responseStorageUser["user_id"];
     first_name = responseStorageUser["first_name"];
     last_name = responseStorageUser["last_name"];
@@ -640,10 +637,11 @@ displayRecap() async {
   void initState() {
     super.initState();
     this.getSWData();
-    this.fetchMyBeneficiaire();
+   // this.fetchMyBeneficiaire();
     this.displayPaymentInfo();
     this.displayRecap();
     this.displayUserInfo();
+    //storage.delete(key: "beneficiaireNew");
   }
 
   @override
@@ -823,7 +821,41 @@ displayRecap() async {
     );
   }
 
+  Future<List> getRecepient() async {
+    var jwt = await storage.read(key: "jwt");
+    Map<String, dynamic> responseJson = json.decode(jwt);
+    String token = responseJson["access_token"];
+    int user_id = responseJson["user_id"];
+    var beneficiaireInfo = await storage.read(key: "beneficiaireNew");
+    http.Response response = await http.get(apiUrl + '$user_id',
+        headers: {
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        }
+    );
+    List allBeneficiaireList = List();
+    json.decode(response.body)['data_beneficiaire']?.forEach((k, v) {
+      allBeneficiaireList.add(v[0]);
+    });
+    if(beneficiaireInfo != null){
+      List responseJsonBeneficiaire = json.decode(beneficiaireInfo);
+      responseJsonBeneficiaire.forEach((element) {
+        allBeneficiaireList.add(element);
+      });
+    }
+    setState(() {
+      allBeneficiaireList;
+    });
+    return allBeneficiaireList;
+  }
+
   Widget _buildRecepientsSection() {
+    var smallItemPadding = EdgeInsets.only(
+        left: 12.0, right: 12.0, top: 12.0);
+    if (screenWidth <= 320) {
+      smallItemPadding = EdgeInsets.only(
+          left: 10.0, right: 10.0, top: 12.0);
+    }
     return Container(
       color: Colors.transparent,
       child: Column(
@@ -871,61 +903,82 @@ displayRecap() async {
           ),
           Flexible(
             child: FutureBuilder<List<dynamic>>(
-              future: this.getSWData(),
-              builder: (BuildContext context, snapshot) {
+
+              future: getRecepient(),
+              builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
                 if (snapshot.hasData) {
-                  return ListView.builder(
+                  final List<dynamic> data = snapshot.data;
+                  return
+                    ListView.builder(
                       padding: EdgeInsets.all(8),
                       itemCount: snapshot.data.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          color: kPrimaryColor,
-                          child: Column(
-                            children: <Widget>[
-                              ListTile(
-                                title: Text(snapshot.data[index]
-                                    ['receiver_first_name'],
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                        color: Colors.white
-                                    )
-                                ),
-                                leading: new CircleAvatar(
-                                    backgroundColor: Colors.white,
-                                    child: Text(
-                                        '${snapshot.data[index]['receiver_first_name'].substring(0, 1)}',
+                        return
+                         Container(
+                           child:  Card(
+                             color: kPrimaryColor,
+                             child: Column(
+                               children: <Widget>[
+                                 ListTile(
+                                   title: Text(snapshot.data[index]
+                                   ['receiver_first_name']+' '+snapshot.data[index]
+                                   ['receiver_last_name'].toString().toUpperCase(),
+                                       style: TextStyle(
+                                           fontWeight: FontWeight.w600,
+                                           color: Colors.white
+                                       )
+                                   ),
+                                   leading: new CircleAvatar(
+                                     backgroundColor: Colors.white,
+                                     child: Text(
+                                       '${snapshot.data[index]['receiver_first_name'].substring(0, 1)}',
+                                     ),
+                                   ),
+                                   trailing: MaterialButton(
+                                     color: Colors.white,
+                                     shape: CircleBorder(),
+                                     elevation: 0,
+                                     child: Icon(Icons.arrow_forward_ios,color: kPrimaryColor),
+                                     onPressed: () {
+                                       if (_mySelectionPointRetrait == null){
+                                         final snackBar = SnackBar(
+                                           content: Text('Veuillez choisir le point de retrait'),
+                                           action: SnackBarAction(
+                                             label: 'Ok',
+                                             onPressed: () {
+                                               //Navigator.pop(context,true);
+                                             },
+                                           ),
+                                         );
 
-                                    ),
+                                         // Find the Scaffold in the widget tree and use
+                                         // it to show a SnackBar.
+                                         Scaffold.of(context).showSnackBar(snackBar);
+                                       }
+                                       else {
+                                         _beneficiaireID = snapshot.data[index]['id'];
+                                         _showBeneficiaireInfo();
+                                       }
+                                     },
+                                   ),
 
-                                ),
-                                onTap: () {
-                                  if (_mySelectionPointRetrait == null){
-                                    final snackBar = SnackBar(
-                                      content: Text('Veuillez choisir le point de retrait'),
-                                      action: SnackBarAction(
-                                        label: 'Ok',
-                                        onPressed: () {
-                                          //Navigator.pop(context,true);
-                                        },
-                                      ),
-                                    );
-
-                                    // Find the Scaffold in the widget tree and use
-                                    // it to show a SnackBar.
-                                    Scaffold.of(context).showSnackBar(snackBar);
-                                  }
-                                  else {
-                                    _beneficiaireID = snapshot.data[index]['id'];
-                                    _showBeneficiaireInfo();
-                                  }
-                                },
-                              )
-                            ],
-                          ),
-                        );
-                      });
+                                 )
+                               ],
+                             ),
+                           ),
+                         );
+                      }
+                      );
                 } else {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text('En cours'),
+                          CircularProgressIndicator()
+                        ],
+                      )
+                  );
                 }
               },
             ),

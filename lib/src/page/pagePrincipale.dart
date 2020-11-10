@@ -357,7 +357,8 @@ String respresponseJwtLogin;
                   ? Center(child: CircularProgressIndicator())
                   : HeaderFooterwidget(
                       header: _buildDateHeader(DateTime.now()),
-                      body: Padding(
+                      body:
+                      Padding(
                           padding: const EdgeInsets.all(32.0),
                           child: ListView(
                             children: <Widget>[
@@ -406,9 +407,18 @@ String respresponseJwtLogin;
                                       style: TextStyle(color: Colors.blue)),
                                   Text("1 € = 11900.0 GNF",
                                       style: TextStyle(color: Colors.blue)),*/
-                                  Text(_selectedCurrency==1?"1 € = $_conversion_eur GNF":
-                                          "1 \$ = $_conversion_usd GNF",
-                                      style: TextStyle(color: kPrimaryColor)),
+                                  _conversion_eur != null?Text(_selectedCurrency==1?"1 € = $_conversion_eur GNF":
+                                  "1 \$ = $_conversion_usd GNF",
+                                      style: TextStyle(color: kPrimaryColor)):
+                                  Center(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Text('En cours'),
+                                          CircularProgressIndicator()
+                                        ],
+                                      )
+                                  ),
                                   const SizedBox(height: 20.0),
                                   Row(
                                     children: <Widget>[
@@ -779,7 +789,7 @@ class HeaderFooterwidget extends StatelessWidget {
       this.header,
       this.footer,
       this.body,
-      this.headerColor = Colors.indigo,
+      this.headerColor = kPrimaryColor,
       this.footerColor = Colors.pink,
       this.headerHeight})
       : super(key: key);

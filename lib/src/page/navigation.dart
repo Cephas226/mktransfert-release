@@ -1,138 +1,154 @@
 import 'package:flutter/material.dart';
-import 'package:mktransfert/src/page/beneficiaireScreen.dart';
-import 'package:mktransfert/src/page/AccueilBottomBar.dart';
-import 'package:mktransfert/src/page/operations.dart';
-import 'package:mktransfert/src/page/succesPage.dart';
-import 'package:mktransfert/src/page/pagePrincipale.dart';
-import 'package:mktransfert/src/page/transaction.dart';
-import 'package:mktransfert/src/page/user.dart';
-import 'package:mktransfert/src/utils/oval-right-clipper.dart';
 
-
-import 'beneficiaire.dart';
-import 'transfertRecap.dart';
-class NavigationPage extends StatefulWidget {
-  static final String path = "lib/src/pages/login/auth3.dart";
-
-  @override
-  _NavigationPageState createState() => _NavigationPageState();
+class HiddenMenuPage extends StatefulWidget {
+  static final String path = "lib/src/pages/navigation/hiddenmenu.dart";
+  _HiddenMenuPageState createState() => _HiddenMenuPageState();
 }
 
+class _HiddenMenuPageState extends State<HiddenMenuPage> with TickerProviderStateMixin {
+  bool menuShown = false;
+  double appbarHeight = 80.0;
+  double menuHeight = 0.0;
+  Animation<double> openAnimation, closeAnimation;
+  AnimationController openController, closeController;
 
+  void initState() {
+    super.initState();
+    openController = AnimationController(
+        duration: const Duration(milliseconds: 200), vsync: this);
+    closeController = AnimationController(
+        duration: const Duration(milliseconds: 200), vsync: this);
+    openAnimation = Tween(begin: 0.0, end: 1.0).animate(openController)
+      ..addListener(() {
+        setState(() {
+          menuHeight = openAnimation.value;
+        });
+      });
+    closeAnimation = Tween(begin: 1.0, end: 0.0).animate(closeController)
+      ..addListener((){
+        setState((){
+          menuHeight = closeAnimation.value;
+        });
+      });
+  }
 
-class _NavigationPageState extends State<NavigationPage> {
-  PageController _myPage = PageController(initialPage: 0);
-  final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
+  _handleMenuPress() {
+    setState(() {
+      openController.reset();
+      closeController.reset();
+      menuShown = !menuShown;
+      menuShown ? openController.forward() : closeController.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    openController.dispose();
+    closeController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        child: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [Colors.blue, Colors.deepPurple])
-          ),
-          height: 60,
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(children: <Widget>[
-                IconButton(
-                  iconSize: 30.0,
-                  padding: EdgeInsets.only(left: 28.0),
-                  icon: Icon(Icons.home),
-                  onPressed: () {
-                    setState(() {
-                      _myPage.jumpToPage(0);
-                    });
-                  },
-                ),
-              ],),
-              IconButton(
-                iconSize: 30.0,
-                padding: EdgeInsets.only(right: 28.0),
-                icon: Icon(Icons.payment),
-                onPressed: () {
-                  setState(() {
-                    _myPage.jumpToPage(1);
-                  });
-                },
+      backgroundColor: Colors.pink,
+      body: SafeArea(
+        child: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            Container(
+              color: Colors.pink,
+              height: menuHeight,
+              child: Column(
+                children: <Widget>[
+                  SizedBox(height: 10.0,),
+                  Row(
+                    children: <Widget>[
+                      IconButton(icon: Icon( menuShown ? Icons.cancel : Icons.menu), color: Colors.white,onPressed: _handleMenuPress,),
+                      Text(menuShown ? "Menu" :"Home", style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 18.0
+                      ))
+                    ],
+                  ),
+                  SizedBox(height: 40.0,),
+                  Expanded(
+                    child: ListView(
+                      children: <Widget>[
+                        Container(
+                            padding: EdgeInsets.only(bottom: 10.0),
+                            alignment: Alignment.center,
+                            child: Text("Home", style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 18.0,
+                            ))
+                        ),
+                        Container(
+                            padding: EdgeInsets.only(bottom: 10.0),
+                            alignment: Alignment.center,
+                            child: Text("Cart", style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 18.0,
+                            ))
+                        ),
+                        Container(
+                            padding: EdgeInsets.only(bottom: 10.0),
+                            alignment: Alignment.center,
+                            child: Text("Wishlist", style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 18.0,
+                            ))
+                        ),
+                        Container(
+                            padding: EdgeInsets.only(bottom: 10.0),
+                            alignment: Alignment.center,
+                            child: Text("Profile", style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 18.0,
+                            ))
+                        ),
+                      ],
+                    ),
+                  )
+                ],
               ),
-          /* IconButton(
-                iconSize: 30.0,
-                padding: EdgeInsets.only(left: 28.0),
-                icon: Icon(Icons.group),
-                onPressed: () {
-                  setState(() {
-                    _myPage.jumpToPage(2);
-                  });
-                },
-              ),*/
-              IconButton(
-                iconSize: 30.0,
-                padding: EdgeInsets.only(right: 28.0),
-                icon: Icon(Icons.person),
-                onPressed: () {
-                  setState(() {
-                    _myPage.jumpToPage(3);
-                  });
-                },
-              )
-            ],
-          ),
+            ),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                return Container(
+                  margin: EdgeInsets.only(top: menuHeight * (constraints.maxHeight - 60) + 60),
+                  color: Colors.transparent,
+                  child: Material(
+                    elevation: 16.0,
+                    shape: BeveledRectangleBorder(
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(46.0)),
+                    ),
+                    child: ListView.builder(
+                      padding: EdgeInsets.only(top: 60.0),
+                      itemBuilder: (_,int index){
+                        return ListTile(
+                          leading: CircleAvatar(
+                            child: Text(index.toString()),
+                          ),
+                          title: Text("List item $index"),
+                        );
+                      },
+                      itemCount: 100,
+                    ),
+                  ),
+                );
+              },
+            )
+
+          ],
         ),
-      ),
-      body: PageView(
-        controller: _myPage,
-        onPageChanged: (int) {
-          print('Page Changes to index $int');
-        },
-        children: <Widget>[
-          Center(
-            child: Container(
-              child: TransactionPage(),
-            ),
-          ),
-          Center(
-            child: Container(
-              child: OperationListPage(),
-            ),
-          ),
-          /*Center(
-            child: Container(
-              child: PaymentsScreen(),
-            ),
-          ),*/
-          Center(
-            child: Container(
-              child: UserProfilPage(),
-            ),
-          )
-        ],
-        physics: NeverScrollableScrollPhysics(), // Comment this if you need to use Swipe.
       ),
 
-      floatingActionButton: Container(
-        height: 40.0,
-        width: 65.0,
-        child: FittedBox(
-          child: FloatingActionButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => PagePrincipale()),);
-            },
-            child: Icon(
-              Icons.swap_horiz,
-              color: Colors.white,
-            ),
-            // elevation: 5.0,
-          ),
-        ),
-      ),
     );
   }
-
 }
-

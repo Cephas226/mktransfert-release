@@ -32,7 +32,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
   String _senderCurrencySymbole="";
   String _receiverCurrency;
   double _convertResult;
-
+  int maxSlider=9999;
   double _stripeAmount;
 
   double _taux;
@@ -64,7 +64,35 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       bottomNavigationBar: _buildButtonsSection(),
     );
   }
-
+  Future<AlertDialog> maxAlert(BuildContext context) {
+    return showDialog<AlertDialog>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Container(
+            margin: EdgeInsets.all(8.0),
+            child: Form(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                      'Pour ce montant merci de contacter MK Tranfert pour effectuer votre opération  Numéros de téléphone 0033760562143 et 0033661217174 '
+                  )
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("Ok"))
+          ],
+        );
+      },
+    );
+  }
   displayPaymentInfo() async {
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
@@ -209,7 +237,15 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
           ),
           Divider(),
           _buildAmountSection(),
-          _buildRecepientsSection(),
+          _taux != null?_buildRecepientsSection():Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('En cours'),
+                  CircularProgressIndicator()
+                ],
+              )
+          ),
         ],
       ),
     );
@@ -275,12 +311,20 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                   setState(() {
                     if (_selectedItemReceiver.name!='GNF'){
                       amount++;
+                      if (amount>9999){
+                        this.maxAlert(context);
+                        amount=9999;
+                      }
                       this.amountWaitted=this.amount.toDouble();
                       this.amountTotal=this.amount+this._taux;
                       this.commission=this.amount*this._taux;
                     }
                     if (_selectedItemReceiver.name=='GNF'){
                       amount++;
+                      if (amount>9999){
+                        this.maxAlert(context);
+                        amount=9999;
+                      }
                       _doConversionEur();
                     }
                   });
@@ -306,14 +350,15 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
               });
             },
             min: 10,
-            max: 2000,
+            max: maxSlider.toDouble(),
+
           ),
 
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Container(
-                padding: EdgeInsets.only(left: 40),
+                padding: EdgeInsets.only(left: 5),
                 child: Row(
                   children: <Widget>[
                     Text(
@@ -324,18 +369,10 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                       ),
                     ),
                     SizedBox(
-                      width: 16,
+                      width: 10,
                     ),
                     _buildDropButtonTo()
-                   /* RoundButton(
 
-                      onTap: () {
-                        setState(() {
-                          amount++;
-                        });
-                      },
-                      icon: Icons.add,
-                    )*/,
                   ],
                 ),
               )
@@ -357,7 +394,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
             margin: EdgeInsets.only(left: 10),
             decoration: const BoxDecoration(
               border: Border(
-                left: BorderSide(width: 10.0, color: Colors.indigoAccent),
+                left: BorderSide(width: 10.0, color: kPrimaryColor),
               ),
             ),
             height: 60,

@@ -23,6 +23,7 @@ String _transactionTime;
 String _receiver_Name;
 String _receiver_last_name;
 String _receiver_Email;
+String _transac_num;
 List transactionInfoBackend = List();
 //Sender
 int _user_id;
@@ -341,7 +342,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                                           ),
                                         ),
                                         Text(
-                                          _receiver_Name,
+                                          _receiver_Name+' '+_receiver_last_name,
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                           style: TextStyle(
@@ -403,6 +404,34 @@ class PaymentSuccessDialog extends StatelessWidget {
                               ],
                             ),
                           ),
+                          Expanded(
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        'Numero',
+                                        style: TextStyle(
+                                            color:
+                                            Colors.black.withOpacity(0.5)),
+                                      ),
+                                      Text(
+                                        _transac_num.toString(),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -413,6 +442,7 @@ class PaymentSuccessDialog extends StatelessWidget {
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             storage.delete(key: "transactionBackend");
+            storage.delete(key: "beneficiaireNew");
             print('ok');
             Navigator.pushAndRemoveUntil(
                 context,
@@ -496,18 +526,6 @@ class HomePageState extends State<PaymentPage> {
     }
   }
 
-  Future<http.Response> createAlbum(String title) {
-    return http.post(
-      'https://jsonplaceholder.typicode.com/albums',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'title': title,
-      }),
-    );
-  }
-
   Future<http.Response> postTransaction() async {
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
@@ -516,7 +534,7 @@ class HomePageState extends State<PaymentPage> {
    /* final Map<String, dynamic>  myBody = {"user_id": "1", "first_name": "administrateur", "last_name": "admin", "country": "France", "phone": "0639607953", "email": "admin@mktransfert.fr", "receiver_first_name": "Emmanuel", "receiver_last_name": "Emma", "receiver_email": "emma@gmail.com", "receiver_phone": "0639607953", "receiver_country": 1, "receiver_description": "scolarité", "montant_send": 100000.0, "montant_receive": 1190000000.0, "transac_commission": 0.04, "transac_total": 10.04, "devise_receive": "GNF", "point_retrait": 4,"devise_sender": "eur"};
 */
     return http.post(
-      'https://www.mktransfert.com/api/success/1',
+      'https://www.mktransfert.com/api/success/'+'$user_id',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
@@ -544,66 +562,30 @@ class HomePageState extends State<PaymentPage> {
       }
       ),
     );
-
-    /*  {
-      "user_id":user_id,
-      "first_name":_first_name,
-      "last_name":_last_name,
-      "country":_country,
-      "phone":_phone,
-      "email":_email,
-      "receiver_first_name": _receiver_first_name,
-      "receiver_last_name": _receiver_last_name,
-      "receiver_email": _receiver_Email,
-      "receiver_phone": _receiver_phone,
-      "receiver_country": _receiver_country,
-      "receiver_description":  _receiver_description,
-      "montant_send":_montant_send,
-      "montant_receive":_montant_receive,
-      "transac_commission":_transac_commission,
-      "transac_total":_transac_total,
-      "devise_receive":_devise_receive,
-      "point_retrait":_point_retrait,
-    };*/
-    //print (myBody);
-
-   /* final http.Response response =
-    await http.post(Uri.encodeFull('https://www.mktransfert.com/api/success/1'),
-        headers:<String, String> {
-          "Accept": "application/json",
+  }
+  getSuccesInfo() async {
+    var jwt = await storage.read(key: "jwt");
+    Map<String, dynamic> responseJson = json.decode(jwt);
+    String token = responseJson["access_token"];
+    int user_id = responseJson["user_id"];
+    http.Response response = await http.
+    get(
+        'https://www.mktransfert.com/api/success/'+'$user_id',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
-        },
-        body: myBody);
-print(response);*/
-    /*await post(
-     Uri.encodeFull("https://gracetechnologie.pythonanywhere.com/api/success/1"),
-      headers: {
-        "Accept": "application/json",
-        'Authorization': 'Bearer $token',
-      },
-      body:myBody,
-     *//* {"user_id": "1", "first_name": "administrateur", "last_name": "admin", "country": "France", "phone": "0639607953", "email": "admin@mktransfert.fr", "receiver_first_name": "Emmanuel", "receiver_last_name": "Emma", "receiver_email": "emma@gmail.com", "receiver_phone": "0639607953", "receiver_country": 1, "receiver_description": "scolarité", "montant_send": 100000.0, "montant_receive": 1190000000.0, "transac_commission": 0.04, "transac_total": 10.04, "devise_receive": "GNF", "point_retrait": 4,"devise_sender": "eur"}*//*
-    *//*  {
-        "user_id":_user_id,
-        "first_name":_first_name,
-        "last_name":_last_name,
-        "country":_country,
-        "phone":_phone,
-        "email":_email,
-        "receiver_first_name": _receiver_first_name,
-        "receiver_last_name": receiver_last_name,
-        "receiver_email": _receiver_Email,
-        "receiver_phone": _receiver_phone,
-        "receiver_country": _receiver_country,
-        "receiver_description":  _receiver_description,
-        "montant_send":_montant_send,
-        "montant_receive":_montant_receive,
-        "transac_commission":_transac_commission,
-        "transac_total":_transac_total,
-        "devise_receive":_devise_receive,
-        "point_retrait":_point_retrait,
-      },*//*
-    ).then((value) => print(value.body));*/
+        }
+    );
+    var resBody = json.decode(response.body);
+    resBody?.forEach((k, v) {
+        print(v['transac_num']);
+        _transac_num=v['transac_num'];
+    });
+    print(_transac_num);
+    setState(() {
+      _transac_num;
+    });
+    //return json.decode(response.body);
   }
   payViaNewCard(BuildContext context) async {
     this.displayTransactionInfo();
@@ -632,6 +614,7 @@ print(response);*/
       if(response.success){
         displayTransactionInfo();
         displayTransactionInfoBackend();
+        getSuccesInfo();
         postTransaction();
         _paymentSuccessDialog(context);
       }

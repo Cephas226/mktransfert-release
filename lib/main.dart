@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => PaymentPage(),
         '/existing-cards': (context) => ExistingCardsPage(),
         '/transaction': (context) => ExistingCardsPage(),
-        '/navigation': (context) => NavigationPage(),
+       /* '/navigation': (context) => NavigationPage(),*/
         '/login': (context) => LoginPage(),
         '/principale': (context) => PagePrincipale(),
         '/transactionNew': (context) => PaymentsScreen(),

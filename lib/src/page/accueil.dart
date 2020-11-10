@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:mktransfert/core/presentation/res/assets.dart';
 import 'package:mktransfert/network_image.dart';
+import 'package:mktransfert/src/contant/constant.dart';
 import 'package:mktransfert/src/page/loginPage.dart';
 
 
@@ -25,7 +26,7 @@ class _AccueilPageState extends State<AccueilPage> {
     "Avec des taux défiants toutes concurrences."
   ];
   final List<Color> colors = [
-    Colors.blueAccent,
+     kPrimaryColor,
     Colors.blue.shade300,
     Colors.indigo.shade300,
   ];

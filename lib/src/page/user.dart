@@ -26,7 +26,7 @@ class ProfilePageState extends State<UserProfilPage> {
   var editUser_phone = TextEditingController();
   var editUser_country = TextEditingController();
   var editUser_password = TextEditingController();
-  final TextEditingController _pass = TextEditingController();
+ /* final TextEditingController _pass = TextEditingController();*/
   final TextEditingController _confirmPass = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -60,7 +60,7 @@ class ProfilePageState extends State<UserProfilPage> {
 
   displayUserInfo() async {
     var jwt = await storage.read(key: "userInfo");
-    print(jwt);
+
     Map<String, dynamic> responseStorageUser = json.decode(jwt);
     editUser_first_name.text = responseStorageUser["first_name"];
     editUser_last_name.text = responseStorageUser["last_name"];
@@ -147,7 +147,16 @@ class ProfilePageState extends State<UserProfilPage> {
         "phone":  editUser_phone.text,
         "country": _selectedItem.name,
     },
-    ) .then((value) => print(value.body))
+    ) .then((value) => {
+      print(value.body),
+     setState(() {
+     displayUser_first_name =editUser_first_name.text;
+     displayUser_last_name =editUser_last_name.text;
+     displayUser_email=editUser_email.text;
+     displayUser_phone=editUser_phone.text;
+     displayUser_country=_selectedItem.name;
+     })
+     })
         .catchError((e)=>{print(e)});
   }
 
@@ -170,8 +179,12 @@ class ProfilePageState extends State<UserProfilPage> {
       },
     )   .then((value) => {
         editUser_old_password.text='',
-        editUser_new_password.text=''})
+        editUser_new_password.text='',
+        _confirmPass.text='',
+    }
+        )
         .catchError((e)=>{print(e)});
+
   }
 
   @override
@@ -389,10 +402,8 @@ class ProfilePageState extends State<UserProfilPage> {
                                                                 editUser_last_name
                                                                     .text = val),
                                                             controller:
-                                                            TextEditingController()
-                                                              ..text =
                                                                   editUser_last_name
-                                                                      .text,
+                                                                      ,
                                                             decoration:
                                                             const InputDecoration(
                                                               hintText:
@@ -420,10 +431,8 @@ class ProfilePageState extends State<UserProfilPage> {
                                                               editUser_first_name
                                                                   .text = val),
                                                           controller:
-                                                          TextEditingController()
-                                                            ..text =
                                                                 editUser_first_name
-                                                                    .text,
+                                                                    ,
                                                           decoration:
                                                           const InputDecoration(
                                                             hintText:
@@ -452,10 +461,7 @@ class ProfilePageState extends State<UserProfilPage> {
                                                                 editUser_email
                                                                     .text = val),
                                                             controller:
-                                                            TextEditingController()
-                                                              ..text =
-                                                                  editUser_email
-                                                                      .text,
+                                                                  editUser_email,
                                                             decoration:
                                                             const InputDecoration(
                                                               hintText:
@@ -483,10 +489,8 @@ class ProfilePageState extends State<UserProfilPage> {
                                                                 editUser_phone
                                                                     .text = val),
                                                             controller:
-                                                            TextEditingController()
-                                                              ..text =
                                                                   editUser_phone
-                                                                      .text,
+                                                                    ,
                                                             decoration: const InputDecoration(
                                                                 hintText:
                                                                 "Entre un téléphone",
@@ -599,6 +603,7 @@ class ProfilePageState extends State<UserProfilPage> {
                                     itemBuilder: (BuildContext context, int index) {
                                       return Container(
                                         child: Form(
+                                          key: _formKey,
                                           child: SingleChildScrollView(
                                             child: Column(
                                               children: <Widget>[
@@ -690,70 +695,58 @@ class ProfilePageState extends State<UserProfilPage> {
                                                     ],
                                                   ),
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    });
-                              } else {
-                                return Center(child: CircularProgressIndicator());
-                              }
-                            }))),
-                actions: <Widget>[
-                  // usually buttons at the bottom of the dialog
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        width:120 ,
-                        child: RaisedButton(
-                          onPressed: () {
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Container(
+                                                      width:120 ,
+                                                      child: RaisedButton(
+                                                        onPressed: () {
 
-                            Navigator.of(context).pop();
+                                                          Navigator.of(context).pop();
 
-                          },
-                          color: Colors.grey.shade300,
-                          textColor: Colors.grey.shade600,
-                          child: Text(
-                            "Annuler",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(
-                                8,
-                              ))),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 16,
-                      ),
-                      Container(
-                        width:120 ,
-                        child:   RaisedButton(
-                          onPressed: () {
-                            if (_formKey.currentState.validate()) {
-                              updateUserPassword();
-                            }
-                            Navigator.pop(context, true);
-                          },
-                          color: kPrimaryColor,
-                          textColor: Colors.white,
-                          child: Text(
-                            "Ok",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(
-                                8,
-                              ))),
-                        ),
-                      )
-                      /*new FlatButton(
+                                                        },
+                                                        color: Colors.grey.shade300,
+                                                        textColor: Colors.grey.shade600,
+                                                        child: Text(
+                                                          "Annuler",
+                                                          style: TextStyle(
+                                                            fontWeight: FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                        shape: RoundedRectangleBorder(
+                                                            borderRadius: BorderRadius.all(Radius.circular(
+                                                              8,
+                                                            ))),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 16,
+                                                    ),
+                                                    Container(
+                                                      width:120 ,
+                                                      child:   RaisedButton(
+                                                        onPressed: () {
+                                                          if (_formKey.currentState.validate()) {
+                                                            updateUserPassword();
+                                                            Navigator.pop(context, true);
+                                                          }
+                                                        },
+                                                        color: kPrimaryColor,
+                                                        textColor: Colors.white,
+                                                        child: Text(
+                                                          "Ok",
+                                                          style: TextStyle(
+                                                            fontWeight: FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                        shape: RoundedRectangleBorder(
+                                                            borderRadius: BorderRadius.all(Radius.circular(
+                                                              8,
+                                                            ))),
+                                                      ),
+                                                    )
+                                                    /*new FlatButton(
                     child: new Text("Annulez"),
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -764,9 +757,18 @@ class ProfilePageState extends State<UserProfilPage> {
                         Navigator.pop(context, true);
                       },
                       child: new Text("OK"))*/
-                    ],
-                  ),
-                ],
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    });
+                              } else {
+                                return Center(child: CircularProgressIndicator());
+                              }
+                            }))),
               );
             });
       },
