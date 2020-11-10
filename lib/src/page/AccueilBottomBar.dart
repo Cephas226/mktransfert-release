@@ -226,7 +226,7 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
               ),
               labelPositiveButton: 'OK',
               onTapPositiveButton: () {
-                Navigator.pop(context);
+                Navigator.of(context).pop();
                 Navigator.push(
                     context,
                     MaterialPageRoute(

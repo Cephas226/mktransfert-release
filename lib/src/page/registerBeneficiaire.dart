@@ -136,10 +136,11 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
     myGlobals.scaffoldKey;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        title: Text("Enregistrer un bénéficiaire"),
+        backgroundColor: kPrimaryColor,
         elevation: 0,
         iconTheme: IconThemeData(
-          color: Colors.black,
+          color: Colors.white,
         ),
       ),
       body: SingleChildScrollView(
@@ -166,7 +167,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                     ),*/
                               Padding(
                                   padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 2.0),
+                                      left: 25.0, right: 25.0, top: 20.0),
                                   child: new Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: <Widget>[

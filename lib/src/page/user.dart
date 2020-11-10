@@ -26,7 +26,9 @@ class ProfilePageState extends State<UserProfilPage> {
   var editUser_phone = TextEditingController();
   var editUser_country = TextEditingController();
   var editUser_password = TextEditingController();
-
+  final TextEditingController _pass = TextEditingController();
+  final TextEditingController _confirmPass = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final editUser_old_password = TextEditingController();
   var editUser_new_password = TextEditingController();
@@ -132,7 +134,7 @@ class ProfilePageState extends State<UserProfilPage> {
       _selectedItem.name,
     });
      await http.put(
-      'https://gracetechnologie.pythonanywhere.com/api/userprofile/'+ '$user_id',
+      'https://www.mktransfert.com/api/userprofile/'+ '$user_id',
       headers:{
         "Accept": "application/json",
         'Authorization': 'Bearer $token',
@@ -156,7 +158,7 @@ class ProfilePageState extends State<UserProfilPage> {
     String token = responseJson["access_token"];
     int user_id = responseJson["user_id"];
     await http.put(
-      'https://gracetechnologie.pythonanywhere.com/api/userchange/'+ '$user_id',
+      'https://www.mktransfert.com/api/userchange/'+ '$user_id',
       headers:{
         "Accept": "application/json",
         'Authorization': 'Bearer $token',
@@ -639,6 +641,7 @@ class ProfilePageState extends State<UserProfilPage> {
                                                     children: <Widget>[
                                                       new Flexible(
                                                         child: new TextFormField(
+                                                          obscureText: true,
                                                           onSaved: (val) => setState(
                                                                   () =>
                                                                   editUser_new_password
@@ -652,6 +655,37 @@ class ProfilePageState extends State<UserProfilPage> {
                                                             OutlineInputBorder(),
                                                           ),
                                                         ),
+
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 20.0),
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 25.0,
+                                                      right: 25.0,
+                                                      top: 2.0),
+                                                  child: new Row(
+                                                    mainAxisSize: MainAxisSize.max,
+                                                    children: <Widget>[
+                                                      new Flexible(
+                                                        child: new TextFormField(
+                                                          obscureText: true,
+                                                          controller: _confirmPass,
+                                                          validator: (value) {
+                                                            if (value.isEmpty)
+                                                              return 'Veuillez confirmer votre mot de passe';
+                                                            if(value != editUser_new_password.text)
+                                                              return 'mot de passe incorrecte';
+                                                            return null;
+                                                          },
+                                                          decoration: InputDecoration(
+                                                            hintText: "confirmer votre mot de passe*",
+                                                            border: OutlineInputBorder(),
+                                                          ),
+                                                        ),
+
                                                       ),
                                                     ],
                                                   ),
@@ -700,7 +734,9 @@ class ProfilePageState extends State<UserProfilPage> {
                         width:120 ,
                         child:   RaisedButton(
                           onPressed: () {
-                            updateUserPassword();
+                            if (_formKey.currentState.validate()) {
+                              updateUserPassword();
+                            }
                             Navigator.pop(context, true);
                           },
                           color: kPrimaryColor,

@@ -1152,6 +1152,35 @@ showAlertDialog(BuildContext context) {  // set up the button
     ],
   ).show();
 }
+showAlertDialogContry(BuildContext context) {  // set up the button
+  return showDialog<AlertDialog>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        content: Container(
+          margin: EdgeInsets.all(8.0),
+          child: Form(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                    'Cette distination est indisponible'
+                )
+              ],
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Ok"))
+        ],
+      );
+    },
+  );
+}
 Color _colorFromHex(String hexColor) {
   final hexCode = hexColor.replaceAll('#', '');
   return Color(int.parse('FF$hexCode', radix: 16));

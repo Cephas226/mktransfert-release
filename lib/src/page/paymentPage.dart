@@ -21,10 +21,33 @@ List transactionInfo = List();
 String _transactionDate;
 String _transactionTime;
 String _receiver_Name;
-String _receiver_Email;
 String _receiver_last_name;
-String _transac_status;
+String _receiver_Email;
 List transactionInfoBackend = List();
+//Sender
+int _user_id;
+
+String _first_name="";
+String _last_name="";
+String _country="";
+String _phone= "";
+String _email="";
+
+//receiver
+
+String _receiver_first_name="";
+String _receiver_phone ="";
+String _receiver_description ="";
+String _devise_receive="";
+
+int _point_retrait;
+int _receiver_country;
+
+double _transac_total;
+double _montant_send;
+double _montant_receive;
+double _transac_commission;
+
 class PaymentPage extends StatefulWidget {
   PaymentPage({Key key}) : super(key: key);
 
@@ -406,12 +429,12 @@ class PaymentSuccessDialog extends StatelessWidget {
 
 }
 class HomePageState extends State<PaymentPage> {
+
   displayTransactionInfo() async {
     var jwt = await storage.read(key: "transaction");
     transactionInfo=json.decode(jwt);
 
     transactionInfo.forEach((transaction) {
-      print(transaction['receiver_last_name']);
       _amount=transaction['transac_total'];
       _currency=transaction['devise_send'];
       _receiver_Name=transaction['receiver_name'];
@@ -429,19 +452,38 @@ class HomePageState extends State<PaymentPage> {
     }
   }
   displayTransactionInfoBackend() async {
-    var transactionBackend = await storage.read(key: "transactionBackend");
+    var transactionBackend  = await storage.read(key: "transactionBackend");
     transactionInfoBackend=json.decode(transactionBackend);
-    print(transactionInfoBackend);
-    if(transactionBackend == null) return   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => TransactionPage()), (Route<dynamic> route) => false);
-    else {
-      return transactionBackend;
-    }
+    transactionInfoBackend.forEach((element) {
+      _user_id=element["user_id"];
+      //sender
+      _first_name=element["first_name"];
+      _last_name=element["last_name"];
+      _country=element["country"];
+      _phone=element["phone"];
+      _email=element["email"];
+      //receiver
+      _receiver_first_name=element["receiver_first_name"];
+      _receiver_last_name=element["receiver_last_name"];
+      _receiver_Email= element["receiver_Email"];
+      _receiver_phone= element["receiver_phone"];
+      _receiver_country= element["receiver_country"];
+      _receiver_description= element[ "receiver_description"];
+      //transaction
+      _montant_send=element["montant_send"]*100;
+      _montant_receive=element["montant_receive"]*100;
+      _transac_commission=element["transac_commission"];
+      _transac_total=element["transac_total"];
+      _devise_receive=element["devise_receive"];
+      _point_retrait=element["point_retrait"];
+    });
   }
   @override
   void initState() {
     super.initState();
     StripeService.init();
-    displayTransactionInfo();
+    this.displayTransactionInfo();
+    this.displayTransactionInfoBackend();
   }
   onItemPress(BuildContext context, int index) async {
     switch(index) {
@@ -454,40 +496,114 @@ class HomePageState extends State<PaymentPage> {
     }
   }
 
+  Future<http.Response> createAlbum(String title) {
+    return http.post(
+      'https://jsonplaceholder.typicode.com/albums',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'title': title,
+      }),
+    );
+  }
 
   Future<http.Response> postTransaction() async {
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
     String token = responseJson["access_token"];
     int user_id = responseJson["user_id"];
-   /* final Response response = await post(
-      '$apiUrlRegister',
+   /* final Map<String, dynamic>  myBody = {"user_id": "1", "first_name": "administrateur", "last_name": "admin", "country": "France", "phone": "0639607953", "email": "admin@mktransfert.fr", "receiver_first_name": "Emmanuel", "receiver_last_name": "Emma", "receiver_email": "emma@gmail.com", "receiver_phone": "0639607953", "receiver_country": 1, "receiver_description": "scolarité", "montant_send": 100000.0, "montant_receive": 1190000000.0, "transac_commission": 0.04, "transac_total": 10.04, "devise_receive": "GNF", "point_retrait": 4,"devise_sender": "eur"};
+*/
+    return http.post(
+      'https://www.mktransfert.com/api/success/1',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
       },
-      body: jsonEncode(data),
-    );*/
-    final Response response= await post(
-      'https://www.mktransfert.com/api/success/' + '$user_id',
+      body: jsonEncode(<String, dynamic>
+      {
+        "user_id":user_id,
+        "first_name":_first_name,
+        "last_name":_last_name,
+        "country":_country,
+        "phone":_phone,
+        "email":_email,
+        "receiver_first_name": _receiver_first_name,
+        "receiver_last_name": _receiver_last_name,
+        "receiver_email": _receiver_Email,
+        "receiver_phone": _receiver_phone,
+        "receiver_country": _receiver_country,
+        "receiver_description":  _receiver_description,
+        "montant_send":_montant_send,
+        "montant_receive":_montant_receive,
+        "transac_commission":_transac_commission,
+        "transac_total":_transac_total,
+        "devise_receive":_devise_receive,
+        "point_retrait":_point_retrait,
+      }
+      ),
+    );
+
+    /*  {
+      "user_id":user_id,
+      "first_name":_first_name,
+      "last_name":_last_name,
+      "country":_country,
+      "phone":_phone,
+      "email":_email,
+      "receiver_first_name": _receiver_first_name,
+      "receiver_last_name": _receiver_last_name,
+      "receiver_email": _receiver_Email,
+      "receiver_phone": _receiver_phone,
+      "receiver_country": _receiver_country,
+      "receiver_description":  _receiver_description,
+      "montant_send":_montant_send,
+      "montant_receive":_montant_receive,
+      "transac_commission":_transac_commission,
+      "transac_total":_transac_total,
+      "devise_receive":_devise_receive,
+      "point_retrait":_point_retrait,
+    };*/
+    //print (myBody);
+
+   /* final http.Response response =
+    await http.post(Uri.encodeFull('https://www.mktransfert.com/api/success/1'),
+        headers:<String, String> {
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+        body: myBody);
+print(response);*/
+    /*await post(
+     Uri.encodeFull("https://gracetechnologie.pythonanywhere.com/api/success/1"),
       headers: {
         "Accept": "application/json",
         'Authorization': 'Bearer $token',
       },
-      body: transactionInfoBackend,
-    );
-    await http
-        .get(
-        Uri.encodeFull(
-            'https://www.mktransfert.com/api/transactions/' +
-                '$user_id'),
-        headers: {
-          "Accept": "application/json",
-          'Authorization': 'Bearer $token',
-        })
-        .then((value) => print(value.body))
-        .catchError((onError) {
-      print(onError);
-    });
+      body:myBody,
+     *//* {"user_id": "1", "first_name": "administrateur", "last_name": "admin", "country": "France", "phone": "0639607953", "email": "admin@mktransfert.fr", "receiver_first_name": "Emmanuel", "receiver_last_name": "Emma", "receiver_email": "emma@gmail.com", "receiver_phone": "0639607953", "receiver_country": 1, "receiver_description": "scolarité", "montant_send": 100000.0, "montant_receive": 1190000000.0, "transac_commission": 0.04, "transac_total": 10.04, "devise_receive": "GNF", "point_retrait": 4,"devise_sender": "eur"}*//*
+    *//*  {
+        "user_id":_user_id,
+        "first_name":_first_name,
+        "last_name":_last_name,
+        "country":_country,
+        "phone":_phone,
+        "email":_email,
+        "receiver_first_name": _receiver_first_name,
+        "receiver_last_name": receiver_last_name,
+        "receiver_email": _receiver_Email,
+        "receiver_phone": _receiver_phone,
+        "receiver_country": _receiver_country,
+        "receiver_description":  _receiver_description,
+        "montant_send":_montant_send,
+        "montant_receive":_montant_receive,
+        "transac_commission":_transac_commission,
+        "transac_total":_transac_total,
+        "devise_receive":_devise_receive,
+        "point_retrait":_point_retrait,
+      },*//*
+    ).then((value) => print(value.body));*/
   }
   payViaNewCard(BuildContext context) async {
     this.displayTransactionInfo();

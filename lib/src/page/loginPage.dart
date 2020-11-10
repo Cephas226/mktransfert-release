@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mktransfert/core/presentation/res/assets.dart';
+import 'package:mktransfert/src/contant/constant.dart';
 import 'package:mktransfert/src/page/navigation.dart';
 import 'package:http/http.dart';
 import 'package:mktransfert/src/page/pagePrincipale.dart';
@@ -95,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                        children: <Widget>[
                          Expanded(
                            child: RaisedButton(
-                             color: Colors.blue,
+                             color: kPrimaryColor,
                              textColor: Colors.white,
                              elevation: 0,
                              shape: RoundedRectangleBorder(
@@ -157,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
                                          ? Colors.white
                                          : Colors.black,
                                      color: _formsIndex == 1
-                                         ? Colors.blue
+                                         ? kPrimaryColor
                                          : Colors.white,
                                      child: Text("Connexion"),
                                      shape: RoundedRectangleBorder(
@@ -176,7 +177,7 @@ class _LoginPageState extends State<LoginPage> {
                                          ? Colors.white
                                          : Colors.black,
                                      color: _formsIndex == 2
-                                         ? Colors.blue
+                                         ? kPrimaryColor
                                          : Colors.white,
                                      child: Text("S'enregistrer"),
                                      shape: RoundedRectangleBorder(
@@ -296,7 +297,7 @@ class _LoginState extends State<LoginForm> {
               ),
               const SizedBox(height: 10.0),
               RaisedButton(
-                color: Colors.blue,
+                color: kPrimaryColor,
                 textColor: Colors.white,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
@@ -404,6 +405,9 @@ class _SignupFormState extends State<SignupPage> {
   final formKey = new GlobalKey<FormState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _user = User();
+  final TextEditingController _pass = TextEditingController();
+  final TextEditingController _confirmPass = TextEditingController();
+
   final elements1 = [
     "Guinée",
     "Sénégal",
@@ -564,6 +568,7 @@ class _SignupFormState extends State<SignupPage> {
                         const SizedBox(height: 10.0),
                         TextFormField(
                           obscureText: true,
+                          controller: _pass,
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Veuillez saisir un mot de passe';
@@ -573,15 +578,32 @@ class _SignupFormState extends State<SignupPage> {
                           onSaved: (val) =>
                               setState(() => _user.password = val),
                           decoration: InputDecoration(
-                            hintText: "Mot de passe *",
+                            hintText: "Mot de passe",
                             border: OutlineInputBorder(),
                           ),
                         ),
                         const SizedBox(height: 10.0),
+                        TextFormField(
+                          obscureText: true,
+                          controller: _confirmPass,
+                          validator: (value) {
+                            if (value.isEmpty)
+                              return 'Veuillez confirmer votre mot de passe';
+                            if(value != _pass.text)
+                              return 'mot de passe incorrecte';
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            hintText: "confirmer votre mot de passe*",
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+
+                        const SizedBox(height: 10.0),
                         SizedBox(
                           width: double.infinity,
                           child: RaisedButton(
-                            color: Colors.blue,
+                            color: kPrimaryColor,
                             textColor: Colors.white,
                             elevation: 0,
                             shape: RoundedRectangleBorder(
@@ -613,7 +635,8 @@ class _SignupFormState extends State<SignupPage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                LoginPage()));
+                                                LoginPage())
+                                    );
                                     _showDialog(context);
                                     /* displayDialog(context, "Success",
                                         "The user was created. Log in now.");*/

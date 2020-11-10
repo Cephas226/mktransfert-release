@@ -102,13 +102,16 @@ class _HomePageState extends State<HomePage> {
 
   int _beneficiaireID;
   int _mySelectionCountry=1;
+
   double _amount;
-  String _senderCurrencySymbole="";
   double _transac_commission;
   double _montant_receive;
   double _stripeAmount;
-  String _devise_receive;
-  String _currencySend;
+
+  String _devise_receive="";
+  String _currencySend="";
+  String _senderCurrencySymbole="";
+
   displayPaymentInfo() async {
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
@@ -238,7 +241,7 @@ class _HomePageState extends State<HomePage> {
                                     b["receiver_country"];
                                 editReceiver_phone.text = b["receiver_phone"];
                                 editReceiver_email.text = b["receiver_email"];
-                                editReceiver_description.text = b["receiver_description"];
+                                editReceiver_description.text = b["receiver_info"];
                               }
                             });
                             return ListView.builder(
@@ -304,7 +307,7 @@ class _HomePageState extends State<HomePage> {
                                                                                 {
                                                                                   if (!f['country_isdisponible'])
                                                                                     {
-                                                                                      showAlertDialog(context),
+                                                                                      showAlertDialogContry(context),
                                                                                     }
                                                                                 }
                                                                             });
@@ -366,11 +369,9 @@ class _HomePageState extends State<HomePage> {
                                                         () =>
                                                             editReceiver_first_name
                                                                 .text = val),
-                                                    controller:
-                                                        TextEditingController()
-                                                          ..text =
+                                                    controller :
                                                               editReceiver_first_name
-                                                                  .text,
+                                                                  ,
                                                     decoration:
                                                         const InputDecoration(
                                                       hintText:
@@ -551,6 +552,7 @@ class _HomePageState extends State<HomePage> {
                             "transac_commission":this._transac_commission,
                             "transac_total":_stripeAmount,
                             "devise_receive":_devise_receive,
+                            "devise_sender":_currencySend,
                             "point_retrait":_mySelectionPointRetrait,
                           }
                         ]));
@@ -690,7 +692,9 @@ displayRecap() async {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        MaterialButton(
+                      Expanded(
+                        child:   MaterialButton(
+                          minWidth:10,
                           color: Colors.white,
                           shape: CircleBorder(),
                           elevation: 0,
@@ -706,8 +710,9 @@ displayRecap() async {
                             //_showUserPassword();
                           },
                         ),
+                      ),
                         Text(
-                          "Transfert sécurisé",
+                          "Vous envoyez",
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w600,
