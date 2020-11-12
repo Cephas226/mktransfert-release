@@ -118,7 +118,7 @@ class ExistingCardsPageState extends State<ExistingCardsPage> {
       if (response.success) {
         displayTransactionInfo();
         displayTransactionInfoBackend();
-        //postTransaction();
+       // postTransaction();
         _paymentSuccessDialog(context);
       } else {
         Navigator.pop(context);
@@ -161,11 +161,11 @@ _paymentSuccessDialog(BuildContext context) {
   showDialog(
       context: context,
       builder: (BuildContext context) {
-        return PaymentSuccessDialog();
+        return PaymentSuccessDialog2();
       });
 }
 
-class PaymentSuccessDialog extends StatelessWidget {
+class PaymentSuccessDialog2 extends StatelessWidget {
   final image = images[2];
   final TextStyle subtitle = TextStyle(fontSize: 12.0, color: Colors.grey);
   final TextStyle label = TextStyle(fontSize: 14.0, color: Colors.grey);
@@ -404,30 +404,3 @@ class PaymentSuccessDialog extends StatelessWidget {
     );
   }
 }
-
-/*
-postTransaction()async{
-  var jwt = await storage.read(key: "jwt");
-  Map<String, dynamic> responseJson = json.decode(jwt);
-  String token = responseJson["access_token"];
-  int user_id = responseJson["user_id"];
-
-
-
-
-
-*/ /*  var res = await http.post(Uri.encodeFull('https://www.mktransfert.com/api/payment/' + '$user_id'),
-      headers: {
-    "Accept": "application/json",
-    'Authorization': 'Bearer $token',
-  }, body: jsonEncode(transactionInfoBackend)
-  );
-  print(res.body);
-  if (res.statusCode==200){
-    var resGet = await http.get(Uri.encodeFull('https://www.mktransfert.com/api/success/' + '$user_id'), headers: {
-      "Accept": "application/json",
-      'Authorization': 'Bearer $token',
-    });
-    print(resGet.body);
-  }*/ /*
-}*/

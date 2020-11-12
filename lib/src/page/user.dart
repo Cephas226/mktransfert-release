@@ -199,6 +199,7 @@ class ProfilePageState extends State<UserProfilPage> {
         ),
         body:
         SingleChildScrollView(
+          physics: ClampingScrollPhysics(),
           child: Column(
             children: <Widget>[
               FutureBuilder<List<dynamic>>(
@@ -218,7 +219,7 @@ class ProfilePageState extends State<UserProfilPage> {
                           ProfileHeader(
                             avatar: NetworkImage('https://firebasestorage.googleapis.com/v0/b/mktransfert-d6990.appspot.com/o/LogoMKWhite_Plan%20de%20travail%201%20copie%204.png?alt=media&token=15bd19f2-0ca8-4058-81cb-bcbdf09201f6'),
                             coverImage: NetworkImage(images[1]),
-                            title: displayUser_first_name,
+                            title: displayUser_first_name +' '+displayUser_last_name,
                             actions: <Widget>[
                               MaterialButton(
                                 color: Colors.white,
@@ -335,6 +336,7 @@ class ProfilePageState extends State<UserProfilPage> {
                   child: Text("Informations du profile"),
                 ),
                 content: SingleChildScrollView(
+                    physics: ClampingScrollPhysics(),
                     child: Container(
                         height: 400.0, // Change as per your requirement
                         width: 400.0,
@@ -351,6 +353,7 @@ class ProfilePageState extends State<UserProfilPage> {
                                       return Container(
                                         child: Form(
                                           child: SingleChildScrollView(
+                                            physics: ClampingScrollPhysics(),
                                             child: Column(
                                               children: <Widget>[
                                                 Padding(
@@ -587,166 +590,187 @@ class ProfilePageState extends State<UserProfilPage> {
                 title: Container(
                   child: Text("Changer de mot de passe"),
                 ),
-                content: SingleChildScrollView(
-                    child: Container(
-                        height: 400.0, // Change as per your requirement
-                        width: 400.0,
-                        child: FutureBuilder<List<dynamic>>(
-                            future: displayProleInfo(),
-                            builder:
-                                (BuildContext context, AsyncSnapshot snapshot) {
-                              if (snapshot.hasData) {
-                                return ListView.builder(
-                                    shrinkWrap: true,
-                                    padding: EdgeInsets.all(8),
-                                    itemCount: 1,
-                                    itemBuilder: (BuildContext context, int index) {
-                                      return Container(
-                                        child: Form(
-                                          key: _formKey,
-                                          child: SingleChildScrollView(
-                                            child: Column(
-                                              children: <Widget>[
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 25.0,
-                                                        right: 25.0,
-                                                        top: 2.0),
-                                                    child: Row(
-                                                      mainAxisSize: MainAxisSize.max,
-                                                      children: <Widget>[
-                                                        Flexible(
-                                                          child: new TextFormField(
-                                                            onSaved: (val) =>
-                                                                setState(() =>{
-                                                                  editUser_old_password.text = val,
-                                                                  print(editUser_old_password.text)
-                                                                }
+                content:
+                  Stack(
+                    children: <Widget>[
+                      SingleChildScrollView(
+                          physics: ClampingScrollPhysics(),
+                          child:
+                          Container(
+                              height: 400.0, // Change as per your requirement
+                              width: 400.0,
+                              child: FutureBuilder<List<dynamic>>(
+                                  future: displayProleInfo(),
+                                  builder:
+                                      (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (snapshot.hasData) {
+                                      return ListView.builder(
+                                          shrinkWrap: true,
+                                          padding: EdgeInsets.all(8),
+                                          itemCount: 1,
+                                          itemBuilder: (BuildContext context, int index) {
+                                            return Container(
+                                              child: Form(
+                                                key: _formKey,
+                                                child: SingleChildScrollView(
+                                                  physics: ClampingScrollPhysics(),
+                                                  child: Column(
+                                                    children: <Widget>[
+                                                      Padding(
+                                                          padding: EdgeInsets.only(
+                                                              left: 25.0,
+                                                              right: 25.0,
+                                                              top: 2.0),
+                                                          child: Row(
+                                                            mainAxisSize: MainAxisSize.max,
+                                                            children: <Widget>[
+                                                              Flexible(
+                                                                child: new TextFormField(
+                                                                  onSaved: (val) =>
+                                                                      setState(() =>{
+                                                                        editUser_old_password.text = val,
+                                                                        print(editUser_old_password.text)
+                                                                      }
+                                                                      ),
+                                                                  controller: editUser_old_password,
+                                                                  decoration:
+                                                                  const InputDecoration(
+                                                                    hintText:
+                                                                    "Ancien mot de passe",
+                                                                    border:
+                                                                    OutlineInputBorder(),
+                                                                  ),
                                                                 ),
-                                                            controller: editUser_old_password,
-                                                            decoration:
-                                                            const InputDecoration(
-                                                              hintText:
-                                                              "Ancien mot de passe",
-                                                              border:
-                                                              OutlineInputBorder(),
+                                                              ),
+                                                            ],
+                                                          )),
+                                                      const SizedBox(height: 20.0),
+                                                      Padding(
+                                                        padding: EdgeInsets.only(
+                                                            left: 25.0,
+                                                            right: 25.0,
+                                                            top: 2.0),
+                                                        child: new Row(
+                                                          mainAxisSize: MainAxisSize.max,
+                                                          children: <Widget>[
+                                                            new Flexible(
+                                                              child: new TextFormField(
+                                                                obscureText: true,
+                                                                onSaved: (val) => setState(
+                                                                        () =>
+                                                                    editUser_new_password
+                                                                        .text = val),
+                                                                controller: editUser_new_password,
+                                                                decoration:
+                                                                const InputDecoration(
+                                                                  hintText:
+                                                                  "Nouveau mot de passe",
+                                                                  border:
+                                                                  OutlineInputBorder(),
+                                                                ),
+                                                              ),
+
                                                             ),
-                                                          ),
+                                                          ],
                                                         ),
-                                                      ],
-                                                    )),
-                                                const SizedBox(height: 20.0),
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 25.0,
-                                                      right: 25.0,
-                                                      top: 2.0),
-                                                  child: new Row(
-                                                    mainAxisSize: MainAxisSize.max,
-                                                    children: <Widget>[
-                                                      new Flexible(
-                                                        child: new TextFormField(
-                                                          obscureText: true,
-                                                          onSaved: (val) => setState(
-                                                                  () =>
-                                                                  editUser_new_password
-                                                                  .text = val),
-                                                          controller: editUser_new_password,
-                                                          decoration:
-                                                          const InputDecoration(
-                                                            hintText:
-                                                            "Nouveau mot de passe",
-                                                            border:
-                                                            OutlineInputBorder(),
-                                                          ),
-                                                        ),
+                                                      ),
+                                                      const SizedBox(height: 20.0),
+                                                      Padding(
+                                                        padding: EdgeInsets.only(
+                                                            left: 25.0,
+                                                            right: 25.0,
+                                                            top: 2.0),
+                                                        child: new Row(
+                                                          mainAxisSize: MainAxisSize.max,
+                                                          children: <Widget>[
+                                                            new Flexible(
+                                                              child: new TextFormField(
+                                                                obscureText: true,
+                                                                controller: _confirmPass,
+                                                                validator: (value) {
+                                                                  if (value.isEmpty)
+                                                                    return 'Veuillez confirmer votre mot de passe';
+                                                                  if(value != editUser_new_password.text)
+                                                                    return 'mot de passe incorrecte';
+                                                                  return null;
+                                                                },
+                                                                decoration: InputDecoration(
+                                                                  hintText: "confirmer votre mot de passe*",
+                                                                  border: OutlineInputBorder(),
+                                                                ),
+                                                              ),
 
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
                                                 ),
-                                                const SizedBox(height: 20.0),
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 25.0,
-                                                      right: 25.0,
-                                                      top: 2.0),
-                                                  child: new Row(
-                                                    mainAxisSize: MainAxisSize.max,
-                                                    children: <Widget>[
-                                                      new Flexible(
-                                                        child: new TextFormField(
-                                                          obscureText: true,
-                                                          controller: _confirmPass,
-                                                          validator: (value) {
-                                                            if (value.isEmpty)
-                                                              return 'Veuillez confirmer votre mot de passe';
-                                                            if(value != editUser_new_password.text)
-                                                              return 'mot de passe incorrecte';
-                                                            return null;
-                                                          },
-                                                          decoration: InputDecoration(
-                                                            hintText: "confirmer votre mot de passe*",
-                                                            border: OutlineInputBorder(),
-                                                          ),
-                                                        ),
+                                              ),
+                                            );
+                                          });
+                                    } else {
+                                      return Center(child: CircularProgressIndicator());
+                                    }
+                                  })
+                          )
+                      ),
+                    ],
+                  ),
+                  actions: <Widget>[
+              Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    width:120 ,
+                    child: RaisedButton(
+                      onPressed: () {
 
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Container(
-                                                      width:120 ,
-                                                      child: RaisedButton(
-                                                        onPressed: () {
+                        Navigator.of(context).pop();
 
-                                                          Navigator.of(context).pop();
-
-                                                        },
-                                                        color: Colors.grey.shade300,
-                                                        textColor: Colors.grey.shade600,
-                                                        child: Text(
-                                                          "Annuler",
-                                                          style: TextStyle(
-                                                            fontWeight: FontWeight.w600,
-                                                          ),
-                                                        ),
-                                                        shape: RoundedRectangleBorder(
-                                                            borderRadius: BorderRadius.all(Radius.circular(
-                                                              8,
-                                                            ))),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 16,
-                                                    ),
-                                                    Container(
-                                                      width:120 ,
-                                                      child:   RaisedButton(
-                                                        onPressed: () {
-                                                          if (_formKey.currentState.validate()) {
-                                                            updateUserPassword();
-                                                            Navigator.pop(context, true);
-                                                          }
-                                                        },
-                                                        color: kPrimaryColor,
-                                                        textColor: Colors.white,
-                                                        child: Text(
-                                                          "Ok",
-                                                          style: TextStyle(
-                                                            fontWeight: FontWeight.w600,
-                                                          ),
-                                                        ),
-                                                        shape: RoundedRectangleBorder(
-                                                            borderRadius: BorderRadius.all(Radius.circular(
-                                                              8,
-                                                            ))),
-                                                      ),
-                                                    )
-                                                    /*new FlatButton(
+                      },
+                      color: Colors.grey.shade300,
+                      textColor: Colors.grey.shade600,
+                      child: Text(
+                        "Annuler",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(
+                            8,
+                          ))),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 16,
+                  ),
+                  Container(
+                    width:120 ,
+                    child:   RaisedButton(
+                      onPressed: () {
+                        if (_formKey.currentState.validate()) {
+                          updateUserPassword();
+                          Navigator.pop(context, true);
+                        }
+                      },
+                      color: kPrimaryColor,
+                      textColor: Colors.white,
+                      child: Text(
+                        "Ok",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(
+                            8,
+                          ))),
+                    ),
+                  )
+                  /*new FlatButton(
                     child: new Text("Annulez"),
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -757,18 +781,9 @@ class ProfilePageState extends State<UserProfilPage> {
                         Navigator.pop(context, true);
                       },
                       child: new Text("OK"))*/
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    });
-                              } else {
-                                return Center(child: CircularProgressIndicator());
-                              }
-                            }))),
+                ],
+              ),
+                ],
               );
             });
       },

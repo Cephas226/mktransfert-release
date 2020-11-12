@@ -203,6 +203,20 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
     );
   }
 */
+  checkLoginStatus() async {
+    var jwt = await storage.read(key: "jwt");
+    print(jwt);
+    if (jwt == null)
+      return Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
+          ModalRoute.withName("/login"));
+    /*else {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) => PagePrincipale()),
+          ModalRoute.withName("/principale")
+      )*/;
+      return jwt;
+    }
 
   Widget _buildBottomBar() {
 
@@ -226,12 +240,15 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
               ),
               labelPositiveButton: 'OK',
               onTapPositiveButton: () {
-                Navigator.of(context).pop();
-                Navigator.push(
+                storage.delete(key: "jwt");
+              /*  Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => LoginPage()
-                ));
+                )
+                );*/
+                Navigator.pop(context);
+                checkLoginStatus();
               },
               labelNegativeButton: 'Annulez',
               onTapNegativeButton: () {

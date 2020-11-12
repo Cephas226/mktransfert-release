@@ -35,7 +35,6 @@ class _OperationListPageState extends State<OperationListPage> {
     Map<String, dynamic> responseJson = json.decode(jwt);
     String token = responseJson["access_token"];
     int user_id = responseJson["user_id"];
-    print(token);
     var res = await http.get(
         Uri.encodeFull(
             'https://www.mktransfert.com/api/transactions/' +
@@ -46,7 +45,6 @@ class _OperationListPageState extends State<OperationListPage> {
         });
     json.decode(res.body);
     resBody = json.decode(res.body);
-    print(resBody);
     return transactionList;
   }
 
@@ -75,10 +73,23 @@ class _OperationListPageState extends State<OperationListPage> {
           }
           else{
             var _dataTransaction = List();
+            var _dataTransaction2 = List();
+            Map mapTransac={};
             resBody['data_transactions']?.forEach((k, v) {
-              print(v);
               _dataTransaction.add(v[0]);
+            //  _dataTransaction.addAll({3: 'three'});
             });
+           /* _dataTransaction.forEach((e) => {
+              mapTransac['isExpanded'] = false,
+              mapTransac['transac_num']=e['transac_num'],
+              mapTransac['receiver_first_name']=e['receiver_first_name'],
+              mapTransac['transac_montant_send']=e['transac_montant_send'],
+              mapTransac['transac_status']=e['transac_status'],
+
+            _dataTransaction2.add(mapTransac)
+            });
+            print(_dataTransaction2);*/
+           // _dataTransaction[3] = isExpanded;
             //_dataTransaction = transactionList;
             return  Row(
               children: <Widget>[
@@ -90,20 +101,26 @@ class _OperationListPageState extends State<OperationListPage> {
                         horizontal: 8.0,
                       ),
                       child: ExpansionPanelList(
+                        expansionCallback: (int index, bool isExpanded) {
+                          setState(() {
+                            _dataTransaction[index].isvalide = !isExpanded;
+                          });
+                        },
                         children: _dataTransaction
                             .map<ExpansionPanel>((item) {
                           return ExpansionPanel(
-                            isExpanded: false,
                             headerBuilder: (BuildContext context,
                                 bool isExpanded) {
-                              return ListTile(
-                                title: Text(item['transac_num']!=null?item['transac_num']:'null',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold)),
-                                subtitle:
-                                Text(item['receiver_first_name']!=null?item['receiver_first_name']:'null'),
-                                trailing: Text(
-                                    item['transac_montant_send']!=null?item['transac_montant_send']:'null'),
+                              return Container(
+                                child: ListTile(
+                                  title: Text(item['transac_num']!=null?item['transac_num']:'',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                  subtitle:
+                                  Text(item['receiver_first_name']!=null?item['receiver_first_name']+' '+item['receiver_last_name']:''),
+                                  trailing: Text(
+                                      item['transac_montant_send']!=null?item['transac_montant_send']:''),
+                                ),
                               );
                             },
                             body: Column(
@@ -118,7 +135,7 @@ class _OperationListPageState extends State<OperationListPage> {
                                           style: TextStyle(
                                               fontWeight:
                                               FontWeight.bold)),
-                                      Text(item['transac_status']!=null?item['transac_status']:'null',
+                                      Text(item['transac_status']!=null?item['transac_status']:'',
                                           style: TextStyle(
                                               fontWeight:
                                               FontWeight.bold,
@@ -157,8 +174,24 @@ class _OperationListPageState extends State<OperationListPage> {
                                   ],
                                 ),
                                 const SizedBox(height: 10.0),
+                                Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(children: <Widget>[
+                                      const SizedBox(width: 15.0),
+                                      Text('Devise d\'envoie :',
+                                          style: TextStyle(
+                                              fontWeight:
+                                              FontWeight.bold)),
+                                      Text(item['transac_devise_sender'].toString().toUpperCase()??'null'),
+                                    ]),
+                                  ],
+                                ),
+                                const SizedBox(height: 10.0),
                               ],
                             ),
+                            isExpanded: item['isvalide'],
                             //   isExpanded: item.isExpanded,
                           );
                         }).toList(),

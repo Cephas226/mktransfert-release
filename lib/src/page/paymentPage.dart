@@ -63,7 +63,32 @@ _paymentSuccessDialog(BuildContext context) {
       });
 }
 
+
 class PaymentSuccessDialog extends StatelessWidget {
+/*  getSuccesInfo() async {
+    var jwt = await storage.read(key: "jwt");
+    Map<String, dynamic> responseJson = json.decode(jwt);
+    String token = responseJson["access_token"];
+    int user_id = responseJson["user_id"];
+    http.Response response = await http.
+    get(
+        'https://www.mktransfert.com/api/success/'+'$user_id',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
+        }
+    );
+    var resBody = json.decode(response.body);
+    resBody?.forEach((k, v) {
+      print(v['transac_num']);
+      _transac_num=v['transac_num'];
+    });
+    print(_transac_num);
+   *//* setState(() {
+      _transac_num;
+    });*//*
+    //return json.decode(response.body);
+  }*/
   final image = images[2];
   final TextStyle subtitle = TextStyle(fontSize: 12.0, color: Colors.grey);
   final TextStyle label = TextStyle(fontSize: 14.0, color: Colors.grey);
@@ -230,6 +255,7 @@ class PaymentSuccessDialog extends StatelessWidget {
     'Sample data 8'
   ];
   Widget build(BuildContext context) {
+    //getSuccesInfo();
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -404,7 +430,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Expanded(
+                       Expanded(
                             child: Row(
                               children: <Widget>[
                                 Expanded(
@@ -414,14 +440,25 @@ class PaymentSuccessDialog extends StatelessWidget {
                                     crossAxisAlignment:
                                     CrossAxisAlignment.start,
                                     children: <Widget>[
+
                                       Text(
                                         'Numero',
                                         style: TextStyle(
                                             color:
                                             Colors.black.withOpacity(0.5)),
                                       ),
+
                                       Text(
                                         _transac_num.toString(),
+                                       /* Center(
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Text('En cours'),
+                                                CircularProgressIndicator()
+                                              ],
+                                            )
+                                        ),*/
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600),
                                       ),
@@ -484,6 +521,7 @@ class HomePageState extends State<PaymentPage> {
   displayTransactionInfoBackend() async {
     var transactionBackend  = await storage.read(key: "transactionBackend");
     transactionInfoBackend=json.decode(transactionBackend);
+    print(transactionInfoBackend);
     transactionInfoBackend.forEach((element) {
       _user_id=element["user_id"];
       //sender
@@ -506,7 +544,12 @@ class HomePageState extends State<PaymentPage> {
       _transac_total=element["transac_total"];
       _devise_receive=element["devise_receive"];
       _point_retrait=element["point_retrait"];
+      _transac_num=element["transac_num"];
     });
+    setState(() {
+      _transac_num;
+    });
+    print(_transac_num);
   }
   @override
   void initState() {
@@ -559,34 +602,12 @@ class HomePageState extends State<PaymentPage> {
         "transac_total":_transac_total,
         "devise_receive":_devise_receive,
         "point_retrait":_point_retrait,
+        "point_retrait":_point_retrait,
       }
       ),
     );
   }
-  getSuccesInfo() async {
-    var jwt = await storage.read(key: "jwt");
-    Map<String, dynamic> responseJson = json.decode(jwt);
-    String token = responseJson["access_token"];
-    int user_id = responseJson["user_id"];
-    http.Response response = await http.
-    get(
-        'https://www.mktransfert.com/api/success/'+'$user_id',
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Bearer $token',
-        }
-    );
-    var resBody = json.decode(response.body);
-    resBody?.forEach((k, v) {
-        print(v['transac_num']);
-        _transac_num=v['transac_num'];
-    });
-    print(_transac_num);
-    setState(() {
-      _transac_num;
-    });
-    //return json.decode(response.body);
-  }
+
   payViaNewCard(BuildContext context) async {
     this.displayTransactionInfo();
     ProgressDialog dialog = new ProgressDialog(context);
@@ -614,7 +635,7 @@ class HomePageState extends State<PaymentPage> {
       if(response.success){
         displayTransactionInfo();
         displayTransactionInfoBackend();
-        getSuccesInfo();
+       // getSuccesInfo();
         postTransaction();
         _paymentSuccessDialog(context);
       }
@@ -623,8 +644,31 @@ class HomePageState extends State<PaymentPage> {
       }
     });
   }
-
-
+/*
+  getSuccesInfo() async {
+    var jwt = await storage.read(key: "jwt");
+    Map<String, dynamic> responseJson = json.decode(jwt);
+    String token = responseJson["access_token"];
+    int user_id = responseJson["user_id"];
+    http.Response response = await http.
+    get(
+        'https://www.mktransfert.com/api/success/'+'$user_id',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
+        }
+    );
+    var resBody = json.decode(response.body);
+    resBody?.forEach((k, v) {
+      print(v['transac_num']);
+      _transac_num=v['transac_num'];
+    });
+    print(_transac_num);
+    setState(() {
+      _transac_num;
+    });
+    //return json.decode(response.body);
+  }*/
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);

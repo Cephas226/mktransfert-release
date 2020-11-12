@@ -353,6 +353,7 @@ String respresponseJwtLogin;
             }
           displayPaymentInfo();
           return (Scaffold(
+              resizeToAvoidBottomInset : false,
               body: respresponseJwtLogin == null
                   ? Center(child: CircularProgressIndicator())
                   : HeaderFooterwidget(

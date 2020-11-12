@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    checkLoginStatus();
+   // checkLoginStatus();
     formVisible = false;
     _formsIndex = 1;
   }
@@ -52,6 +52,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomPadding: true,
          body: Container(
            decoration: BoxDecoration(
              image: DecorationImage(
@@ -236,7 +237,7 @@ class _LoginState extends State<LoginForm> {
   @override
   void initState() {
     super.initState();
-    //checkLoginStatus();
+   // checkLoginStatus();
   }
   Future<String> logMe(
       String email,
@@ -467,7 +468,8 @@ class _SignupFormState extends State<SignupPage> {
   ListItem _selectedItem;
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return
+      Container(
         height: 550.0,
         margin: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
@@ -479,185 +481,188 @@ class _SignupFormState extends State<SignupPage> {
           child: Column(
             children: <Widget>[
               Expanded(
-                child: ListView(
-                  children: <Widget>[
-                    ListView(
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.all(10.0),
-                      children: <Widget>[
-                        TextFormField(
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Veuillez saisir un nom';
-                            }
-                            return null;
-                          },
-                          onSaved: (val) =>
-                              setState(() => _user.last_name = val),
-                          decoration: InputDecoration(
-                            hintText: "Entrer votre nom *",
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                        const SizedBox(height: 10.0),
-                        TextFormField(
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Veuillez saisir un prenom';
-                            }
-                            return null;
-                          },
-                          onSaved: (val) =>
-                              setState(() => _user.first_name = val),
-                          decoration: InputDecoration(
-                            hintText: "Entrer votre prenom(s) *",
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                        const SizedBox(height: 10.0),
-                        TextFormField(
-                          validator: (value) => EmailValidator.validate(value) ? null : "Veuillez saisir un e-mail valide",
-                          onSaved: (val) => setState(() => _user.email = val),
-                          decoration: InputDecoration(
-                            hintText: "example@gmail.com *",
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                        const SizedBox(height: 10.0),
-                        TextFormField(
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Veuillez saisir un telephone';
-                            }
-                            return null;
-                          },
-                          onSaved: (val) => setState(() => _user.phone = val),
-                          decoration: InputDecoration(
-                            hintText: "Entrer votre téléphone *",
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                        const SizedBox(height: 10.0),
-                        Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-                              Padding(
-                                  padding: const EdgeInsets.all(0.0),
-                                  child: Container(
-                                      padding: const EdgeInsets.only(
-                                          left: 10.0, right: 10.0),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
-                                          border: Border.all()),
-                                      child: DropdownButtonHideUnderline(
-                                        child: DropdownButton(
-                                            value: _selectedItem,
-                                            items: _dropdownMenuItems,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                _selectedItem = value;
-                                                _user.country =
-                                                    _selectedItem.name;
-                                              });
-                                            }),
-                                      )
-                                  )),
-                            ]),
-                        const SizedBox(height: 10.0),
-                        TextFormField(
-                          obscureText: true,
-                          controller: _pass,
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Veuillez saisir un mot de passe';
-                            }
-                            return null;
-                          },
-                          onSaved: (val) =>
-                              setState(() => _user.password = val),
-                          decoration: InputDecoration(
-                            hintText: "Mot de passe",
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                        const SizedBox(height: 10.0),
-                        TextFormField(
-                          obscureText: true,
-                          controller: _confirmPass,
-                          validator: (value) {
-                            if (value.isEmpty)
-                              return 'Veuillez confirmer votre mot de passe';
-                            if(value != _pass.text)
-                              return 'mot de passe incorrecte';
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                            hintText: "confirmer votre mot de passe*",
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-
-                        const SizedBox(height: 10.0),
-                        SizedBox(
-                          width: double.infinity,
-                          child: RaisedButton(
-                            color: kPrimaryColor,
-                            textColor: Colors.white,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            child: Text("S'inscrire"),
-                            onPressed: () async {
-                              final form = _formKey.currentState;
-                              _user.country = _selectedItem.name;
-                              if (_formKey.currentState.validate()) {
-                                form.save();
-                                if (_user.email.length < 4)
-                                  displayDialog(context, "Nom d'utilisateur invalide",
-                                      "Le nom d'utilisateur doit comporter au moins 4 caractères");
-                                else if (_user.password.length < 4)
-                                  displayDialog(context, "Invalid Password",
-                                      "Le mot de passe doit comporter au moins 4 caractères ");
-                                else {
-                                  var res = await _user.saveMe(
-                                    _user.last_name,
-                                    _user.first_name,
-                                    _user.email,
-                                    _user.phone,
-                                    _user.country,
-                                    _user.password,
-                                  );
-                                  if (res == 200) {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                LoginPage())
-                                    );
-                                    _showDialog(context);
-                                    /* displayDialog(context, "Success",
-                                        "The user was created. Log in now.");*/
-                                  } else if (res == 403)
-                                    displayDialog(
-                                        context,
-                                        "Ce nom d'utilisateur est déjà enregistré",
-                                        "Veuillez essayer de vous inscrire en utilisant un autre nom d'utilisateur ou vous connecter si vous avez déjà un compte.");
-                                  else {
-                                    displayDialog(context, "Erreur",
-                                        "Une erreur inconnue est survenue.");
-                                  }
-                                }
-                                //  {Navigator.push(context, MaterialPageRoute(builder: (context) => f()));};
+                child: SingleChildScrollView(
+                  physics: ClampingScrollPhysics(),
+                  child: Stack(
+                    children: <Widget>[
+                      ListView(
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.all(6.0),
+                        children: <Widget>[
+                          TextFormField(
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Veuillez saisir un nom';
                               }
+                              return null;
                             },
+                            onSaved: (val) =>
+                                setState(() => _user.last_name = val),
+                            decoration: InputDecoration(
+                              hintText: "Entrer votre nom *",
+                              border: OutlineInputBorder(),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          const SizedBox(height: 10.0),
+                          TextFormField(
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Veuillez saisir un prenom';
+                              }
+                              return null;
+                            },
+                            onSaved: (val) =>
+                                setState(() => _user.first_name = val),
+                            decoration: InputDecoration(
+                              hintText: "Entrer votre prenom(s) *",
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                          const SizedBox(height: 10.0),
+                          TextFormField(
+                            validator: (value) => EmailValidator.validate(value) ? null : "Veuillez saisir un e-mail valide",
+                            onSaved: (val) => setState(() => _user.email = val),
+                            decoration: InputDecoration(
+                              hintText: "example@gmail.com *",
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                          const SizedBox(height: 10.0),
+                          TextFormField(
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Veuillez saisir un telephone';
+                              }
+                              return null;
+                            },
+                            onSaved: (val) => setState(() => _user.phone = val),
+                            decoration: InputDecoration(
+                              hintText: "Entrer votre téléphone *",
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                          const SizedBox(height: 10.0),
+                          Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: <Widget>[
+                                Padding(
+                                    padding: const EdgeInsets.all(0.0),
+                                    child: Container(
+                                        padding: const EdgeInsets.only(
+                                            left: 10.0, right: 10.0),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                            BorderRadius.circular(5.0),
+                                            border: Border.all()),
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButton(
+                                              value: _selectedItem,
+                                              items: _dropdownMenuItems,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _selectedItem = value;
+                                                  _user.country =
+                                                      _selectedItem.name;
+                                                });
+                                              }),
+                                        )
+                                    )),
+                              ]),
+                          const SizedBox(height: 10.0),
+                          TextFormField(
+                            obscureText: true,
+                            controller: _pass,
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Veuillez saisir un mot de passe';
+                              }
+                              return null;
+                            },
+                            onSaved: (val) =>
+                                setState(() => _user.password = val),
+                            decoration: InputDecoration(
+                              hintText: "Mot de passe",
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                          const SizedBox(height: 10.0),
+                          TextFormField(
+                            obscureText: true,
+                            controller: _confirmPass,
+                            validator: (value) {
+                              if (value.isEmpty)
+                                return 'Veuillez confirmer votre mot de passe';
+                              if(value != _pass.text)
+                                return 'mot de passe incorrecte';
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              hintText: "confirmer votre mot de passe*",
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+
+                          const SizedBox(height: 10.0),
+                          SizedBox(
+                            width: double.infinity,
+                            child: RaisedButton(
+                              color: kPrimaryColor,
+                              textColor: Colors.white,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              child: Text("S'inscrire"),
+                              onPressed: () async {
+                                final form = _formKey.currentState;
+                                _user.country = _selectedItem.name;
+                                if (_formKey.currentState.validate()) {
+                                  form.save();
+                                  if (_user.email.length < 4)
+                                    displayDialog(context, "Nom d'utilisateur invalide",
+                                        "Le nom d'utilisateur doit comporter au moins 4 caractères");
+                                  else if (_user.password.length < 4)
+                                    displayDialog(context, "Invalid Password",
+                                        "Le mot de passe doit comporter au moins 4 caractères ");
+                                  else {
+                                    var res = await _user.saveMe(
+                                      _user.last_name,
+                                      _user.first_name,
+                                      _user.email,
+                                      _user.phone,
+                                      _user.country,
+                                      _user.password,
+                                    );
+                                    if (res == 200) {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LoginPage())
+                                      );
+                                      _showDialog(context);
+                                      /* displayDialog(context, "Success",
+                                        "The user was created. Log in now.");*/
+                                    } else if (res == 403)
+                                      displayDialog(
+                                          context,
+                                          "Ce nom d'utilisateur est déjà enregistré",
+                                          "Veuillez essayer de vous inscrire en utilisant un autre nom d'utilisateur ou vous connecter si vous avez déjà un compte.");
+                                    else {
+                                      displayDialog(context, "Erreur",
+                                          "Une erreur inconnue est survenue.");
+                                    }
+                                  }
+                                  //  {Navigator.push(context, MaterialPageRoute(builder: (context) => f()));};
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               )
             ],
