@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:email_validator/email_validator.dart';
@@ -12,6 +13,10 @@ import 'package:http/http.dart';
 import 'package:mktransfert/src/page/pagePrincipale.dart';
 import 'package:http/http.dart' as http;
 import 'mesclasses/user.model.dart';
+
+
+import 'package:http/io_client.dart';
+import 'dart:io';
 import 'operations/beneficiaireOperations.dart';
 
 final storage = FlutterSecureStorage();
@@ -23,6 +28,8 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
+final TextEditingController _usernameController = TextEditingController();
+final TextEditingController _passwordController = TextEditingController();
 class _LoginPageState extends State<LoginPage> {
   final String backImg = accueil;
   bool formVisible;
@@ -247,16 +254,19 @@ class _LoginState extends State<LoginForm> {
       'email': email,
       'password': password,
     };
-
-    final Response response = await post(
-      '$apiUrlLogin',
+    final ioc = new HttpClient();
+    ioc.badCertificateCallback =
+        (X509Certificate cert, String host, int port) => true;
+    final https = new IOClient(ioc);
+    final Response response = await  https.post(
+      'https://www.mktransfert.com/api/login',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(data),
     );
-    print(response.body);
-    print(response.statusCode);
+    /*print(response.body);
+    print(response.statusCode);*/
     return response.body;
   }
   @override
@@ -274,6 +284,7 @@ class _LoginState extends State<LoginForm> {
             padding: const EdgeInsets.all(16.0),
             children: <Widget>[
               TextFormField(
+                controller: _usernameController,
                 onSaved: (val) => setState(() => _user.email = val),
                 validator: (value) => EmailValidator.validate(value) ? null : "Veuillez saisir un e-mail valide",
                 decoration: InputDecoration(
@@ -283,6 +294,7 @@ class _LoginState extends State<LoginForm> {
               ),
               const SizedBox(height: 10.0),
               TextFormField(
+                controller: _passwordController,
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Veuillez saisir un mot de passe ';
@@ -317,12 +329,15 @@ class _LoginState extends State<LoginForm> {
                   });
                 },*/
                 onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    var jwt = await logMe(_user.email, _user.password);
-                    var jwtUser = await logMe(_user.email, _user.password);
-                     final form = _formKey.currentState;
-                     form.save();
-                    Map<String, dynamic> responseJwtLogin = json.decode(jwt);
+                    var username = _usernameController.text;
+                    var password = _passwordController.text;
+                    var jwtUser = await logMe(username, password);
+                    var jwt = await logMe(username, password);
+                    if (_formKey.currentState.validate()) {
+                    // final form = _formKey.currentState;
+                    // form.save();
+                     print(jwt);
+                  Map<String, dynamic> responseJwtLogin = json.decode(jwt);
                     if (responseJwtLogin['message']=='invalide'){
                       _onAlertLogin(context);
                     }
@@ -408,6 +423,7 @@ class _SignupFormState extends State<SignupPage> {
   final _user = User();
   final TextEditingController _pass = TextEditingController();
   final TextEditingController _confirmPass = TextEditingController();
+
 
   final elements1 = [
     "Guinée",
