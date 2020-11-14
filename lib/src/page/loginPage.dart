@@ -11,7 +11,7 @@ import 'package:mktransfert/src/contant/constant.dart';
 import 'package:mktransfert/src/page/navigation.dart';
 import 'package:http/http.dart';
 import 'package:mktransfert/src/page/pagePrincipale.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as https;
 import 'mesclasses/user.model.dart';
 
 
@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-   // checkLoginStatus();
+    checkLoginStatus();
     formVisible = false;
     _formsIndex = 1;
   }
@@ -244,7 +244,7 @@ class _LoginState extends State<LoginForm> {
   @override
   void initState() {
     super.initState();
-   // checkLoginStatus();
+    checkLoginStatus();
   }
   Future<String> logMe(
       String email,
@@ -254,10 +254,10 @@ class _LoginState extends State<LoginForm> {
       'email': email,
       'password': password,
     };
-    final ioc = new HttpClient();
-    ioc.badCertificateCallback =
-        (X509Certificate cert, String host, int port) => true;
-    final https = new IOClient(ioc);
+     final ioc = new HttpClient();
+     ioc.badCertificateCallback =
+   (X509Certificate cert, String host, int port) => true;
+     final https = new IOClient(ioc);
     final Response response = await  https.post(
       'https://www.mktransfert.com/api/login',
       headers: <String, String>{

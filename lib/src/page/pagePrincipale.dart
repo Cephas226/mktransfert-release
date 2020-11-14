@@ -42,7 +42,7 @@ class _MainPageState extends State<PagePrincipale> {
 
   double _conversion_eur;
   double _conversion_usd;
-String respresponseJwtLogin;
+  String respresponseJwtLogin;
   List<String> currencies;
   String fromCurrency = "USD";
   String toCurrency = "GBP";
@@ -104,8 +104,8 @@ String respresponseJwtLogin;
                 value: curr.id,
                 child: Row(
                   children: <Widget>[
-                    Text(curr.currencyCode),
-                    Image.asset(curr.name, width: 30)
+                    Image.asset(curr.name, width: 20),
+                    Text(curr.currencyCode,style: TextStyle(fontSize: 10)),
                   ],
                 ),
               );
@@ -114,19 +114,17 @@ String respresponseJwtLogin;
               setState(() {
                 _selectedCurrency = val;
                 print(_selectedCurrency);
-                if (_selectedCurrency==2){
-                  if (fromTextControllerSender.text == null){
+                if (_selectedCurrency == 2) {
+                  if (fromTextControllerSender.text == null) {
                     _displaySnackMessage();
-                  }
-                  else {
+                  } else {
                     _doConversionDollard();
                   }
                 }
-                if (_selectedCurrency==1){
-                  if (fromTextControllerSender.text == null){
+                if (_selectedCurrency == 1) {
+                  if (fromTextControllerSender.text == null) {
                     _displaySnackMessage();
-                  }
-                  else {
+                  } else {
                     _doConversionEur();
                   }
                 }
@@ -138,17 +136,17 @@ String respresponseJwtLogin;
       ],
     );
   }
+
   checkLoginStatus() async {
     var jwt = await storage.read(key: "jwt");
     print(jwt);
     Map<String, dynamic> responseJwtLogin = json.decode(jwt);
     print(responseJwtLogin['access_token']);
-    respresponseJwtLogin=responseJwtLogin['access_token'];
-    if (responseJwtLogin['access_token']==null){
-          MaterialPageRoute(builder: (BuildContext context) => LoginPage());
-          print('je suis null');
-    }
-    else {
+    respresponseJwtLogin = responseJwtLogin['access_token'];
+    if (responseJwtLogin['access_token'] == null) {
+      MaterialPageRoute(builder: (BuildContext context) => LoginPage());
+      print('je suis null');
+    } else {
       print('je suis jwt');
       return jwt;
     }
@@ -160,9 +158,7 @@ String respresponseJwtLogin;
     String token = responseJson["access_token"];
     int user_id = responseJson["user_id"];
     var res = await http.get(
-        Uri.encodeFull(
-            'https://www.mktransfert.com/api/payment/' +
-                '$user_id'),
+        Uri.encodeFull('https://www.mktransfert.com/api/payment/' + '$user_id'),
         headers: {
           "Accept": "application/json",
           'Authorization': 'Bearer $token',
@@ -179,9 +175,8 @@ String respresponseJwtLogin;
   }
 
   Future<double> _doConversionEur() async {
-
     // fromTextControllerSender.text=double.parse(valeurSaisie).toString();
-    if (fromTextControllerSender.text!=''){
+    if (fromTextControllerSender.text != '') {
       fromTextControllergnf.text =
           (double.parse(fromTextControllerSender.text) * _conversion_eur)
               .toString();
@@ -192,7 +187,7 @@ String respresponseJwtLogin;
 
   Future<double> _doConversionDollard() async {
     print(_conversion_usd);
-    if(fromTextControllerSender.text!=''){
+    if (fromTextControllerSender.text != '') {
       fromTextControllergnf.text =
           (double.parse(fromTextControllerSender.text) * _conversion_usd)
               .toString();
@@ -203,7 +198,7 @@ String respresponseJwtLogin;
   }
 
   @override
-  Future<void> initState()  {
+  Future<void> initState() {
     super.initState();
     this.displayPaymentInfo();
     storage.delete(key: "beneficiaire");
@@ -211,7 +206,7 @@ String respresponseJwtLogin;
     _loadCurrencies();
     _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
     _selectedItem = _dropdownMenuItems[0].value;
-    _selectedCurrency= 1;
+    _selectedCurrency = 1;
     _dropdownMenuItemsGnf = buildDropDownMenuItemsGnf(_dropdownItemsGnf);
     _selectedItemGnf = _dropdownMenuItemsGnf[0].value;
   }
@@ -254,7 +249,8 @@ String respresponseJwtLogin;
       toCurrency = value;
     });
   }
-  _displaySnackMessage (){
+
+  _displaySnackMessage() {
     final snackBar = SnackBar(
       content: Text('Veuillez entrer un montant'),
       action: SnackBarAction(
@@ -269,6 +265,7 @@ String respresponseJwtLogin;
     // it to show a SnackBar.
     Scaffold.of(context).showSnackBar(snackBar);
   }
+
   List<DropdownMenuItem<ListItem>> buildDropDownMenuItems(List listItems) {
     List<DropdownMenuItem<ListItem>> items = List();
     for (ListItem listItem in listItems) {
@@ -298,7 +295,7 @@ String respresponseJwtLogin;
   //-----------
 
   List<ListItemReceiver> _dropdownItemsGnf = [
-    ListItemReceiver("assets/Image/gnf.png", "GNF",1),
+    ListItemReceiver("assets/Image/gnf.png", "GNF", 1),
   ];
 
   List<DropdownMenuItem<ListItemReceiver>> _dropdownMenuItemsGnf;
@@ -312,8 +309,8 @@ String respresponseJwtLogin;
         DropdownMenuItem(
           child: Row(
             children: <Widget>[
-              Text(listItem.name),
-              Image.asset(listItem.imageReceiver, width: 30),
+              Image.asset(listItem.imageReceiver, width: 20),
+              Text(listItem.name,style: TextStyle(fontSize: 10)),
             ],
           ),
           value: listItem,
@@ -329,20 +326,19 @@ String respresponseJwtLogin;
       home: FutureBuilder(
         future: jwtOrEmpty,
         builder: (context, snapshot) {
-
-            if(snapshot.data == "") {
-              return Container(
-                child: Row(
-                  children: <Widget>[
-                    Text('Patientez s\'il vous plait'),
-                    CircularProgressIndicator(),
-                  ],
-                ),
-              );
-             /* if(jwt.length !=3) {
+          if (snapshot.data == "") {
+            return Container(
+              child: Row(
+                children: <Widget>[
+                  Text('Patientez s\'il vous plait'),
+                  CircularProgressIndicator(),
+                ],
+              ),
+            );
+            /* if(jwt.length !=3) {
                 return CircularProgressIndicator();
               }*/
-             /* else{
+            /* else{
                 var payload = json.decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
                 if(DateTime.fromMillisecondsSinceEpoch(payload["exp"]*1000).isAfter(DateTime.now())) {
                   return PagePrincipale();
@@ -350,23 +346,22 @@ String respresponseJwtLogin;
                   return LoginPage();
                 }
               }*/
-            }
+          }
           displayPaymentInfo();
           return (Scaffold(
-              resizeToAvoidBottomInset : false,
+              resizeToAvoidBottomInset: false,
               body: respresponseJwtLogin == null
                   ? Center(child: CircularProgressIndicator())
                   : HeaderFooterwidget(
                       header: _buildDateHeader(DateTime.now()),
-                      body:
-                      Padding(
-                          padding: const EdgeInsets.all(32.0),
+                      body: Padding(
+                          padding: const EdgeInsets.only(left: 32,right: 32,bottom: 30,top: 8),
                           child: ListView(
                             children: <Widget>[
                               Column(
                                 // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
-                                  Container(
+                                  /*Container(
                                     child: Row(
                                       children: <Widget>[
                                         Expanded(
@@ -399,29 +394,210 @@ String respresponseJwtLogin;
                                         )
                                       ],
                                     ),
+                                  ),*/
+                                  Card(
+                                    elevation: 1,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(16.0))),
+                                    child: SizedBox(
+                                      width: 450.0,
+                                      height: 120.0,
+                                      child: Column(
+                                        children: <Widget>[
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                              BorderRadius.vertical(
+                                                  top: new Radius.circular(
+                                                      16.0)),
+                                              color: kPrimaryColor
+                                                  .withOpacity(0.95),
+                                            ),
+                                           // width: double.infinity,
+                                            height: 60.0,
+                                            child: Center(
+                                              child: Text(_selectedCurrency == 1?'Montant à Envoyer en EUR':
+                                              'Montant à Envoyer en USD'
+                                                  ,style: TextStyle(color:Colors.white)),
+                                            ),
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Center(
+                                                  child: Row(
+                                                    children: <Widget>[
+                                                      Center(
+                                                        child:  Container(
+                                                          width: 200,
+                                                          margin: EdgeInsets.only(left: 10),
+                                                          child: TextFormField(
+                                                            controller:
+                                                            fromTextControllerSender,
+                                                            decoration: InputDecoration(
+                                                              border: InputBorder.none,
+                                                              hintText:
+                                                              "1000€",
+
+                                                              //OutlineInputBorder(),
+                                                            ),
+                                                            keyboardType: TextInputType
+                                                                .numberWithOptions(
+                                                                decimal: true),
+                                                            onChanged: (val) =>
+                                                            {_doConversionEur()},
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        child:
+                                                        _buildDropButtonFromCurrency(),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                          /*  Expanded(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8.0),
+                                              child: Center(
+                                                child: TextFormField(
+                                                  controller:
+                                                  fromTextControllergnf,
+                                                  readOnly: true,
+                                                  decoration: InputDecoration(
+                                                    hintText: "1000€",
+                                                    labelText:
+                                                    'Montant à Recevoir en GNF',
+                                                   // border: OutlineInputBorder(),
+                                                  ),
+                                                  keyboardType: TextInputType
+                                                      .numberWithOptions(
+                                                      decimal: true),
+                                                ),
+                                              ),
+                                            ),
+                                          )*/
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                   const SizedBox(
-                                    height: 20.0,
+                                    height:5.0,
                                   ),
                                   /*Text(_selectedCurrency==2?
                                   "1 \$ = 10000.0 GNF":'',
                                       style: TextStyle(color: Colors.blue)),
                                   Text("1 € = 11900.0 GNF",
                                       style: TextStyle(color: Colors.blue)),*/
-                                  _conversion_eur != null?Text(_selectedCurrency==1?"1 € = $_conversion_eur GNF":
-                                  "1 \$ = $_conversion_usd GNF",
-                                      style: TextStyle(color: kPrimaryColor)):
-                                  Center(
+                                  _conversion_eur != null
+                                      ? Text(
+                                          _selectedCurrency == 1
+                                              ? "1 € = $_conversion_eur GNF"
+                                              : "1 \$ = $_conversion_usd GNF",
+                                          style:
+                                              TextStyle(color: kPrimaryColor))
+                                      : Center(
+                                          child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text('En cours'),
+                                            CircularProgressIndicator()
+                                          ],
+                                        )),
+                                  const SizedBox(height: 5.0),
+                                  Card(
+                                    elevation: 1.5,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(16.0))),
+                                    child: SizedBox(
+                                      width: 450.0,
+                                      height: 120.0,
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: <Widget>[
-                                          Text('En cours'),
-                                          CircularProgressIndicator()
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                      top: new Radius.circular(
+                                                          16.0)),
+                                              color: kPrimaryColor
+                                                  .withOpacity(0.95),
+                                            ),
+                                           // width: double.infinity,
+                                            height: 60.0,
+                                            child: Center(
+                                              child: Text('Montant Réçu en GNF',style: TextStyle(color:Colors.white)),
+                                            ),
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Container(
+                                                      margin: EdgeInsets.only(left: 10),
+                                                      width: 200,
+                                                      child: TextFormField(
+                                                        controller:
+                                                        fromTextControllergnf,
+                                                        readOnly: true,
+                                                        decoration: InputDecoration(
+                                                          border: InputBorder.none,
+                                                          hintText: "1000€",
+                                                          //border: OutlineInputBorder(),
+                                                        ),
+                                                        keyboardType: TextInputType
+                                                            .numberWithOptions(
+                                                            decimal: true),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Container(
+                                                        width: 10,
+                                                        child: _buildDropButtonTo(),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                        /*  Expanded(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8.0),
+                                              child: Center(
+                                                child: TextFormField(
+                                                  controller:
+                                                  fromTextControllergnf,
+                                                  readOnly: true,
+                                                  decoration: InputDecoration(
+                                                    hintText: "1000€",
+                                                    labelText:
+                                                    'Montant à Recevoir en GNF',
+                                                   // border: OutlineInputBorder(),
+                                                  ),
+                                                  keyboardType: TextInputType
+                                                      .numberWithOptions(
+                                                      decimal: true),
+                                                ),
+                                              ),
+                                            ),
+                                          )*/
                                         ],
-                                      )
+                                      ),
+                                    ),
                                   ),
-                                  const SizedBox(height: 20.0),
-                                  Row(
+                                  /* Row(
                                     children: <Widget>[
                                       Expanded(
                                         child: Row(
@@ -454,40 +630,133 @@ String respresponseJwtLogin;
                                         ),
                                       )
                                     ],
-                                  ),
-                                  const SizedBox(height: 50.0),
-                                  Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Row(
-                                          children: <Widget>[
-                                            Container(
-                                            //  margin: EdgeInsets.only(left: 10),
-                                              width: 220,
-                                              child: TextFormField(
-                                                readOnly: true,
-                                                controller:
-                                                    fromTextControllerReceive,
-                                                decoration: InputDecoration(
-                                                  labelText:
-                                                      'Montant à Recevoir en USD',
-                                                  hintText: "1000€",
-                                                  border: OutlineInputBorder(),
+                                  ),*/
+                                  const SizedBox(height: 5.0),
+                                  // Row(
+                                  //   children: <Widget>[
+                                  //     Expanded(
+                                  //       child: Row(
+                                  //         children: <Widget>[
+                                  //           Container(
+                                  //             //  margin: EdgeInsets.only(left: 10),
+                                  //             width: 220,
+                                  //             child: TextFormField(
+                                  //               readOnly: true,
+                                  //               controller:
+                                  //                   fromTextControllerReceive,
+                                  //               decoration: InputDecoration(
+                                  //                 labelText:
+                                  //                     'Montant à Recevoir en USD',
+                                  //                 hintText: "1000€",
+                                  //                 border: OutlineInputBorder(),
+                                  //               ),
+                                  //               keyboardType: TextInputType
+                                  //                   .numberWithOptions(
+                                  //                       decimal: true),
+                                  //             ),
+                                  //           ),
+                                  //           Expanded(
+                                  //             child: Container(
+                                  //               child:
+                                  //                   _buildDropButtonFromCurrency(),
+                                  //             ),
+                                  //           )
+                                  //         ],
+                                  //       ),
+                                  //     )
+                                  //   ],
+                                  // ),
+                                  Card(
+                                    elevation: 1.5,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(16.0))),
+                                    child: SizedBox(
+                                      width: 450.0,
+                                      height: 120.0,
+                                      child: Column(
+                                        children: <Widget>[
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                              BorderRadius.vertical(
+                                                  top: new Radius.circular(
+                                                      16.0)),
+                                              color: kPrimaryColor
+                                                  .withOpacity(0.95),
+                                            ),
+                                            // width: double.infinity,
+                                            height: 60.0,
+                                            child: Center(
+                                              child: Text(_selectedCurrency == 1?'Montant à Envoyer en EUR':
+                                              'Montant à Envoyer en USD',
+                                                  style: TextStyle(color:Colors.white)),
+                                            ),
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Center(
+                                                  child: Row(
+                                                    children: <Widget>[
+                                                      Center(
+                                                        child:  Container(
+                                                          width: 200,
+                                                          margin: EdgeInsets.only(left: 10),
+                                                          child: TextFormField(
+                                                            controller:
+                                                            fromTextControllerSender,
+                                                            decoration: InputDecoration(
+                                                              border: InputBorder.none,
+                                                              hintText:
+                                                              "1000€",
+
+                                                              //OutlineInputBorder(),
+                                                            ),
+                                                            keyboardType: TextInputType
+                                                                .numberWithOptions(
+                                                                decimal: true),
+                                                            onChanged: (val) =>
+                                                            {_doConversionEur()},
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        child:
+                                                        _buildDropButtonFromCurrency(),
+                                                      )
+                                                    ],
+                                                  ),
                                                 ),
-                                                keyboardType: TextInputType
-                                                    .numberWithOptions(
-                                                        decimal: true),
+                                              )
+                                            ],
+                                          )
+                                          /*  Expanded(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8.0),
+                                              child: Center(
+                                                child: TextFormField(
+                                                  controller:
+                                                  fromTextControllergnf,
+                                                  readOnly: true,
+                                                  decoration: InputDecoration(
+                                                    hintText: "1000€",
+                                                    labelText:
+                                                    'Montant à Recevoir en GNF',
+                                                   // border: OutlineInputBorder(),
+                                                  ),
+                                                  keyboardType: TextInputType
+                                                      .numberWithOptions(
+                                                      decimal: true),
+                                                ),
                                               ),
                                             ),
-                                              Expanded(
-                                              child: Container(
-                                                child: _buildDropButtonFromCurrency(),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
+                                          )*/
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                   const SizedBox(height: 50),
                                   /* SizedBox(
@@ -573,18 +842,19 @@ String respresponseJwtLogin;
   Container _buildBottomBar() {
     return Container(
       padding: const EdgeInsets.symmetric(
-        vertical: 2.0,
+        vertical: 5.0,
         horizontal: 100.0,
       ),
       child: Row(
         children: <Widget>[
-          SizedBox(width: 5.0),
+         // SizedBox(width: 5.0),
           Expanded(
               child: InkWell(
             onTap: () => {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AccueilBootomBarPage(),
+                MaterialPageRoute(
+                  builder: (context) => AccueilBootomBarPage(),
                 ),
               ),
             }, //
@@ -601,7 +871,8 @@ String respresponseJwtLogin;
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AccueilBootomBarPage(),
+                MaterialPageRoute(
+                  builder: (context) => AccueilBootomBarPage(),
                 ),
               );
             },
@@ -653,7 +924,7 @@ class ListItemReceiver {
   String imageReceiver;
   String name;
   int id;
-  ListItemReceiver(this.imageReceiver, this.name,this.id);
+  ListItemReceiver(this.imageReceiver, this.name, this.id);
 }
 
 class ListItemFrom {
