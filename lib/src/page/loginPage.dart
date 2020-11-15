@@ -12,6 +12,7 @@ import 'package:mktransfert/src/page/navigation.dart';
 import 'package:http/http.dart';
 import 'package:mktransfert/src/page/pagePrincipale.dart';
 import 'package:http/http.dart' as https;
+import 'accueil.dart';
 import 'mesclasses/user.model.dart';
 
 
@@ -46,9 +47,8 @@ class _LoginPageState extends State<LoginPage> {
     var jwt = await storage.read(key: "jwt");
     print(jwt);
     if (jwt == null)
-      return Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
-          ModalRoute.withName("/login"));
+      return Navigator.of(context).push(
+          MaterialPageRoute(builder: (BuildContext context) => AccueilPage()));
     else {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (BuildContext context) => PagePrincipale()),
@@ -394,11 +394,10 @@ class _LoginState extends State<LoginForm> {
     var jwt = await storage.read(key: "jwt");
     print(jwt);
     if (jwt == null)
-      return Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
-          ModalRoute.withName("/login"));
+      return Navigator.of(context).push(
+          MaterialPageRoute(builder: (BuildContext context) => AccueilPage()));
     else {
-     Navigator.of(context).pushAndRemoveUntil(
+      Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (BuildContext context) => PagePrincipale()),
           ModalRoute.withName("/principale"));
       return jwt;

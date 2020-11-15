@@ -16,7 +16,7 @@ import 'package:mktransfert/src/page/paymentPage.dart';
 import 'package:mktransfert/src/page/registerBeneficiaire.dart';
 import 'package:mktransfert/src/utils/oval-right-clipper.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:stripe_payment/stripe_payment.dart';
+//import 'package:stripe_payment/stripe_payment.dart';
 
 import 'AccueilBottomBar.dart';
 
@@ -129,7 +129,7 @@ class _TransactionState extends State<TransactionPage> {
     }
   }
 
-  PaymentMethod _paymentMethod;
+  //PaymentMethod _paymentMethod;
   String _error;
   List<String> currencies;
   String fromCurrency = "USD";

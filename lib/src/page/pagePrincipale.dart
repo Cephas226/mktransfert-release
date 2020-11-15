@@ -355,46 +355,12 @@ class _MainPageState extends State<PagePrincipale> {
                   : HeaderFooterwidget(
                       header: _buildDateHeader(DateTime.now()),
                       body: Padding(
-                          padding: const EdgeInsets.only(left: 32,right: 32,bottom: 30,top: 8),
+                          padding: const EdgeInsets.only(left: 32,right: 32,bottom: 30,top: 1),
                           child: ListView(
                             children: <Widget>[
                               Column(
                                 // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
-                                  /*Container(
-                                    child: Row(
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: Row(
-                                            children: <Widget>[
-                                              Container(
-                                                width: 220,
-                                                child: TextFormField(
-                                                  controller:
-                                                      fromTextControllerSender,
-                                                  decoration: InputDecoration(
-                                                    hintText:
-                                                        "Saisir le montant à envoyer",
-                                                    border:
-                                                        OutlineInputBorder(),
-                                                  ),
-                                                  keyboardType: TextInputType
-                                                      .numberWithOptions(
-                                                          decimal: true),
-                                                  onChanged: (val) =>
-                                                      {_doConversionEur()},
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child:
-                                                    _buildDropButtonFromCurrency(),
-                                              )
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),*/
                                   Card(
                                     elevation: 1,
                                     shape: RoundedRectangleBorder(
@@ -415,11 +381,13 @@ class _MainPageState extends State<PagePrincipale> {
                                                   .withOpacity(0.95),
                                             ),
                                            // width: double.infinity,
-                                            height: 60.0,
+                                            height: 40.0,
                                             child: Center(
-                                              child: Text(_selectedCurrency == 1?'Montant à Envoyer en EUR':
+                                              child: Text(_selectedCurrency == 1?'Montant à Envoyer en EUROS':
                                               'Montant à Envoyer en USD'
-                                                  ,style: TextStyle(color:Colors.white)),
+                                                  ,style: TextStyle(color:Colors.white),
+
+                                              ),
                                             ),
                                           ),
                                           Row(
@@ -439,7 +407,6 @@ class _MainPageState extends State<PagePrincipale> {
                                                               border: InputBorder.none,
                                                               hintText:
                                                               "1000€",
-
                                                               //OutlineInputBorder(),
                                                             ),
                                                             keyboardType: TextInputType
@@ -532,7 +499,7 @@ class _MainPageState extends State<PagePrincipale> {
                                                   .withOpacity(0.95),
                                             ),
                                            // width: double.infinity,
-                                            height: 60.0,
+                                            height: 40.0,
                                             child: Center(
                                               child: Text('Montant Réçu en GNF',style: TextStyle(color:Colors.white)),
                                             ),
@@ -686,9 +653,9 @@ class _MainPageState extends State<PagePrincipale> {
                                                   .withOpacity(0.95),
                                             ),
                                             // width: double.infinity,
-                                            height: 60.0,
+                                            height: 40.0,
                                             child: Center(
-                                              child: Text(_selectedCurrency == 1?'Montant à Envoyer en EUR':
+                                              child: Text(_selectedCurrency == 1?'Montant Réçu en EUROS':
                                               'Montant à Envoyer en USD',
                                                   style: TextStyle(color:Colors.white)),
                                             ),
@@ -758,7 +725,11 @@ class _MainPageState extends State<PagePrincipale> {
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(height: 50),
+                                  const SizedBox(height: 5),
+                                  Text('En cliquant sur Continuer, j\'accepte les CGU',
+                                      style: TextStyle(color:Colors.blue)
+                                     ),
+                                // ,
                                   /* SizedBox(
                       width: 360,
                       height: 50.0,
@@ -841,14 +812,17 @@ class _MainPageState extends State<PagePrincipale> {
 
   Container _buildBottomBar() {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        vertical: 5.0,
-        horizontal: 100.0,
+     padding: const EdgeInsets.symmetric(
+        vertical: 2.0,
+        horizontal: 50.0,
       ),
+    // width: double.infinity,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-         // SizedBox(width: 5.0),
-          Expanded(
+
+   Expanded(
               child: InkWell(
             onTap: () => {
               Navigator.push(

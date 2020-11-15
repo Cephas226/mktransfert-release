@@ -9,7 +9,7 @@ import 'package:mktransfert/src/page/navigation.dart';
 import 'package:mktransfert/src/page/succesPage.dart';
 import 'package:mktransfert/src/page/transaction.dart';
 import 'package:mktransfert/src/services/payment-service.dart';
-import 'package:stripe_payment/stripe_payment.dart';
+//import 'package:stripe_payment/stripe_payment.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:ticket_pass_package/ticket_pass.dart';
 
@@ -93,7 +93,7 @@ class ExistingCardsPageState extends State<ExistingCardsPage> {
   }
 
   payViaExistingCard(BuildContext context, card) async {
-    this.displayTransactionInfo();
+    /*this.displayTransactionInfo();
     ProgressDialog dialog = new ProgressDialog(context);
     dialog.style(message: "S'il vous plaît, attendez...");
     await dialog.show();
@@ -123,7 +123,7 @@ class ExistingCardsPageState extends State<ExistingCardsPage> {
       } else {
         Navigator.pop(context);
       }
-    });
+    });*/
   }
 
   @override

@@ -124,7 +124,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                      child: Row(
                        children: <Widget>[
                          Text('EUR'),
-                         Image.asset("assets/Image/eu.png", width: 30),
+                         Image.asset("assets/Image/eu.png", width: 20),
                        ],
                      ),
                      value:  ListItemReceiver("assets/Image/eu.png", "EUR",2),
@@ -171,8 +171,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
         DropdownMenuItem(
           child: Row(
             children: <Widget>[
-              Text(listItem.name),
-              Image.asset(listItem.imageReceiver, width: 30),
+              Text(listItem.name,style: TextStyle(fontSize: 10)),
+              Image.asset(listItem.imageReceiver, width: 20),
             ],
           ),
           value: listItem,
@@ -183,8 +183,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
   }
   Future<double> _doConversionEur() async {
     this.amountWaitted=this.amount*this._conversion_eur;
-    this.amountTotal=this.amount+this._taux;
     this.commission=this.amount*this._taux;
+    this.amountTotal=this.amount+this.commission;
   }
   Widget _buildBody() {
     return Container(
@@ -262,8 +262,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                   _selectedItemReceiver = value;
                   if (_selectedItemReceiver.name!='GNF'){
                     this.amountWaitted=this.amount.toDouble();
-                    this.amountTotal=this.amount+this._taux;
                     this.commission=this.amount*this._taux;
+                    this.amountTotal=this.amount+this.commission;
                   }
                   if (_selectedItemReceiver.name=='GNF'){
                     _doConversionEur();
@@ -287,9 +287,9 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                   setState(() {
                     if (_selectedItemReceiver.name!='GNF'){
                       amount--;
-                      this.amountTotal=this.amount+this._taux;
                       this.amountWaitted=this.amount.toDouble();
                       this.commission=this.amount*this._taux;
+                      this.amountTotal=this.amount+this.commission;
                     }
                     if (_selectedItemReceiver.name=='GNF'){
                       amount--;
@@ -303,7 +303,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                 this._senderCurrencySymbole+" "+"$amount",
                 style: TextStyle(
                   color: kPrimaryColor,
-                  fontSize: 42,
+                  fontSize: 40,
                 ),
               ),
               RoundButton(
@@ -316,8 +316,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                         amount=9999;
                       }
                       this.amountWaitted=this.amount.toDouble();
-                      this.amountTotal=this.amount+this._taux;
                       this.commission=this.amount*this._taux;
+                      this.amountTotal=this.amount+this.commission;
                     }
                     if (_selectedItemReceiver.name=='GNF'){
                       amount++;
@@ -351,28 +351,25 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
             },
             min: 10,
             max: maxSlider.toDouble(),
-
           ),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Container(
-                padding: EdgeInsets.only(left: 5),
+                padding: EdgeInsets.only(left: 2),
                 child: Row(
                   children: <Widget>[
                     Text(
                       "$amountWaitted",
                       style: TextStyle(
                         color: kPrimaryColor,
-                        fontSize: 42,
+                        fontSize: 35,
                       ),
                     ),
                     SizedBox(
                       width: 10,
                     ),
                     _buildDropButtonTo()
-
                   ],
                 ),
               )

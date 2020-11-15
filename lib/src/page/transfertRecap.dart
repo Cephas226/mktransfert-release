@@ -675,7 +675,7 @@ displayRecap() async {
     super.initState();
     this.getSuccesInfo();
     this.getSWData();
-   // this.fetchMyBeneficiaire();
+    this.getRecepient();
     this.displayPaymentInfo();
     this.displayRecap();
     this.displayUserInfo();
@@ -881,9 +881,9 @@ displayRecap() async {
         allBeneficiaireList.add(element);
       });
     }
-    setState(() {
+    /*setState(() {
       allBeneficiaireList;
-    });
+    });*/
     return allBeneficiaireList;
   }
 
