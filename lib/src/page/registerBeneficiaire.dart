@@ -152,19 +152,27 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              /* const SizedBox(height: 20.0),
-                    Stack(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(left: 32.0),
-                          child: Text(
-                            "Particulier",
-                            style:
-                            TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),*/
+                              Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 25.0, right: 25.0, top: 25.0),
+                                  child: new Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: <Widget>[
+                                      new Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          new Text(
+                                            'Pays',
+                                            style: TextStyle(
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                              ),
                               Padding(
                                   padding: EdgeInsets.only(
                                       left: 25.0, right: 25.0, top: 20.0),
@@ -225,10 +233,31 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                       ))
                                     ],
                                   )),
-                              const SizedBox(height: 20.0),
                               Padding(
                                   padding: EdgeInsets.only(
                                       left: 25.0, right: 25.0, top: 25.0),
+                                  child: new Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: <Widget>[
+                                      new Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          new Text(
+                                            'Entrez un nom*',
+                                            style: TextStyle(
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                              ),
+                            //  const SizedBox(height: 5.0),
+                              Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 25.0, right: 25.0, top: 5.0),
                                   child: Row(
                                     children: <Widget>[
                                       Flexible(
@@ -247,13 +276,34 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                           hintText: "Entrez un nom",
                                           border: OutlineInputBorder(),
                                         ),
-                                      )),
+                                      )
+                                      ),
                                     ],
                                   )),
-                              const SizedBox(height: 20.0),
                               Padding(
                                   padding: EdgeInsets.only(
                                       left: 25.0, right: 25.0, top: 25.0),
+                                  child: new Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: <Widget>[
+                                      new Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          new Text(
+                                            'Entrez un prenom*',
+                                            style: TextStyle(
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 25.0, right: 25.0, top: 5.0),
                                   child: Row(
                                     children: <Widget>[
                                       Flexible(
@@ -274,11 +324,32 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                         ),
                                       )),
                                     ],
-                                  )),
-                              const SizedBox(height: 20.0),
+                                  )
+                              ),
                               Padding(
                                   padding: EdgeInsets.only(
                                       left: 25.0, right: 25.0, top: 25.0),
+                                  child: new Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: <Widget>[
+                                      new Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          new Text(
+                                            'Entrez un e-mail',
+                                            style: TextStyle(
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 25.0, right: 25.0, top: 5.0),
                                   child: Row(
                                     children: <Widget>[
                                       Flexible(
@@ -298,10 +369,30 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                       )),
                                     ],
                                   )),
-                              const SizedBox(height: 20.0),
                               Padding(
                                   padding: EdgeInsets.only(
                                       left: 25.0, right: 25.0, top: 25.0),
+                                  child: new Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: <Widget>[
+                                      new Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          new Text(
+                                            'Téléphone du Bénéficiaire *',
+                                            style: TextStyle(
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 25.0, right: 25.0, top: 5.0),
                                   child: Row(
                                     children: <Widget>[
                                       Flexible(
@@ -323,10 +414,30 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                           )),
                                     ],
                                   )),
-                              const SizedBox(height: 20.0),
                               Padding(
                                   padding: EdgeInsets.only(
                                       left: 25.0, right: 25.0, top: 25.0),
+                                  child: new Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: <Widget>[
+                                      new Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          new Text(
+                                            'Informations complémentaire',
+                                            style: TextStyle(
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 25.0, right: 25.0, top: 5.0),
                                   child: Row(
                                     children: <Widget>[
                                       Flexible(
@@ -362,53 +473,51 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  RaisedButton(
-                                    elevation: 0,
-                                    padding: const EdgeInsets.only(
-                                        left: 170, right: 170),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
+                                  Flexible(
+                                    child: Container(
+                                      width: double.infinity,
+                                      child: RaisedButton(
+                                        elevation: 0,
+                                        /*padding: const EdgeInsets.only(
+                                          left: 170, right: 170),*/
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
                                             BorderRadius.circular(10.0)),
-                                    child: Text("Enregistrer"),
-                                    color: kPrimaryColor,
-                                    textColor: Colors.white,
-                                    onPressed: () {
-                                      final form = _formKey.currentState;
-                                      if (_formKey.currentState.validate()) {
-                                        form.save();
-                                        Random random = new Random();
-                                        int randomId = random.nextInt(100);
-                                        storage.write(
-                                            key: "beneficiaireNew",
-                                            value: json.encode([
-                                              {
-                                                "id": randomId,
-                                                "country_id":
+                                        child: Text("Valider"),
+                                        color: kPrimaryColor,
+                                        textColor: Colors.white,
+                                        onPressed: () {
+                                          final form = _formKey.currentState;
+                                          if (_formKey.currentState.validate()) {
+                                            form.save();
+                                            Random random = new Random();
+                                            int randomId = random.nextInt(100);
+                                            storage.write(
+                                                key: "beneficiaireNew",
+                                                value: json.encode([
+                                                  {
+                                                    "id": randomId,
+                                                    "country_id":
                                                     _mySelectionCountry,
-                                                "receiver_first_name":
+                                                    "receiver_first_name":
                                                     saveReceiver_first_name
                                                         .text,
-                                                "receiver_last_name":
+                                                    "receiver_last_name":
                                                     saveReceiver_last_name.text,
-                                                "receiver_phone":
+                                                    "receiver_phone":
                                                     saveReceiver_phone.text,
-                                                "receiver_email":
+                                                    "receiver_email":
                                                     saveReceiver_email.text,
-                                                "receiver_info":
-                                                saveReceiver_info.text,
-                                              }
-                                            ]));
-                                        //_showDialog(context);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ExpenseTrackerApp()),
-                                        );
-                                      }
-                                    },
-                                    /* onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationPage()),);},*/
-                                  ),
+                                                    "receiver_info":
+                                                    saveReceiver_info.text,
+                                                  }
+                                                ]));
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ExpenseTrackerApp()),);
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  )
                                 ],
                               )
                             ],
