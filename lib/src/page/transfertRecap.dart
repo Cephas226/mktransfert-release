@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> {
     Icons.person_outline
   ];
 
-  double amount = 10;
+  double amount;
   int currentTabSelected = 0;
   var receiver_point_retait = List();
   int _mySelectionPointRetrait;
@@ -104,6 +104,7 @@ class _HomePageState extends State<HomePage> {
   int _mySelectionCountry=1;
 
   double _amount;
+  int _montant_send;
   double _transac_commission;
   double _montant_receive;
   double _stripeAmount;
@@ -582,9 +583,9 @@ class _HomePageState extends State<HomePage> {
 
                             //transaction
 
-                            "montant_send":this.amount*100,
-                            "montant_receive":this._montant_receive*100,
-                            "transac_commission":this._transac_commission,
+                            "montant_send":_montant_send*100,
+                            "montant_receive":_montant_receive*100,
+                            "transac_commission":_transac_commission,
                             "transac_total":_stripeAmount,
                             "devise_receive":_devise_receive,
                             "devise_sender":_currencySend,
@@ -594,7 +595,7 @@ class _HomePageState extends State<HomePage> {
                         ]));
                         storage.write(key: "transaction", value: json.encode([
                             {
-                            "montant_send":this.amount*100,
+                            "montant_send":this._montant_send*100,
                             "montant_receive":this._montant_receive*100,
                             "transac_commission":this._transac_commission,
                             "transac_total":_stripeAmount,
@@ -640,6 +641,7 @@ displayRecap() async {
   transactionInfoRecap=json.decode(transactionResume);
   transactionInfoRecap.forEach((transaction) {
     _amount=transaction['transac_total'];
+    _montant_send=transaction['montant_send'];
     _senderCurrencySymbole=transaction['devise_send_symbol'];
     _transac_commission=transaction['transac_commission'];
     _montant_receive=transaction['montant_receive'];
@@ -649,6 +651,7 @@ displayRecap() async {
 
    setState(() {
      _amount;
+     _montant_send;
      _senderCurrencySymbole;
      _transac_commission;
      _montant_receive;
@@ -759,7 +762,7 @@ displayRecap() async {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              _amount.toString()+'•'+_senderCurrencySymbole,
+                              _amount.toString()+' '+_senderCurrencySymbole,
                               style: TextStyle(
                                 fontSize: 42,
                                 fontWeight: FontWeight.bold,
@@ -772,13 +775,13 @@ displayRecap() async {
                             ListTile(
                               title: Text('Commission',
                                 style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w600,
                                     color: Colors.white
                                 ),
                               ),
-                              trailing: Text(_transac_commission.toString(),
+                              subtitle: Text(_transac_commission.toString()+' '+_senderCurrencySymbole,
                                   style: TextStyle(
-                                      fontSize: 15, fontWeight: FontWeight.w600,
+                                     fontWeight: FontWeight.w600,
                                       color: Colors.white
                                   )
                               ),

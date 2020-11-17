@@ -39,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-   // checkLoginStatus();
+   checkLoginStatus();
     formVisible = false;
     _formsIndex = 1;
   }
@@ -244,7 +244,7 @@ class _LoginState extends State<LoginForm> {
   @override
   void initState() {
     super.initState();
-   // checkLoginStatus();
+    checkLoginStatus();
   }
   Future<String> logMe(
       String email,

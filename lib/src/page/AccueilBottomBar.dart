@@ -48,7 +48,7 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
   @override
   void initState() {
     super.initState();
-    this.displayUserInfo();
+  //  this.displayUserInfo();
   }
 
   changePage(int index) {
@@ -60,12 +60,20 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(// Add this for disable that sliding functionality
-      drawerEnableOpenDragGesture: false, // Prevent user sliding open
+    return Scaffold(
+      drawer:  _buildDrawer(),
       appBar: new AppBar(
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: new Icon(Icons.menu),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
+      ),
+     /* appBar: new AppBar(
         title: const Text(''),
       ),
-      drawer:   _buildDrawer(),
+      drawer:   _buildDrawer(),*/
       backgroundColor: Theme.of(context).primaryColor,
       body: Scaffold(
         body: Stack(
@@ -81,7 +89,7 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
     );
   }
   _buildDrawer() {
-    this.displayUserInfo();
+   // this.displayUserInfo();
     return ClipPath(
       clipper: OvalRightBorderClipper(),
       child: Drawer(
@@ -118,7 +126,7 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
                     ),
                   ),
                   SizedBox(height: 5.0),
-                  displayUser_first_name != null?
+                 /* displayUser_first_name != null?
                   Text(
                     displayUser_first_name+' '+displayUser_last_name,
                     style: TextStyle(
@@ -134,8 +142,8 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
                         style: TextStyle(color: active, fontSize: 16.0)):
                   Center(
                     child: CircularProgressIndicator(),
-                  ),
-                  SizedBox(height: 30.0),
+                  ),*/
+                 // SizedBox(height: 30.0),
                   _buildRow(Icons.home, "Accueil",
                       '/accueilBottom'
                   ),

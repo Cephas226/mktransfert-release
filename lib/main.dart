@@ -19,12 +19,8 @@ import 'package:mktransfert/src/page/user.dart';
 
 
 void main() => runApp(
-   DevicePreview(
-       enabled:kReleaseMode,
-       builder:(context)=>MyApp()
-   )
+ MyApp());
 
-);
 
 class MyApp extends StatelessWidget {
   @override
@@ -43,6 +39,7 @@ class MyApp extends StatelessWidget {
       title: 'Welcome to Flutter',
       home: AccueilPage(),
       debugShowCheckedModeBanner: false,
+
       routes: {
         '/home': (context) => PaymentPage(),
         '/existing-cards': (context) => ExistingCardsPage(),

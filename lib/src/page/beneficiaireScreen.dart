@@ -50,6 +50,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawerEnableOpenDragGesture: false,
+      drawer:   _buildDrawer(),
       appBar: AppBar(
         leading:
         IconButton(
@@ -61,6 +63,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
         title: Text(
           "Envoyer de l'argent",
         ),
+
         elevation: 0,
         centerTitle: true,
       ),
@@ -714,7 +717,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                     {
                       "montant_send":this.amount,
                       "montant_receive":this.amountWaitted,
-                      "transac_commission":this._taux,
+                      "transac_commission":this.commission,
                       "transac_total":this.amountTotal,
                       "devise_send":_senderCurrency,
                       "devise_send_symbol":_senderCurrencySymbole,

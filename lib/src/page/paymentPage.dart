@@ -40,12 +40,13 @@ String _receiver_first_name="";
 String _receiver_phone ="";
 String _receiver_description ="";
 String _devise_receive="";
+String _devise_sender="";
 
 int _point_retrait;
 int _receiver_country;
 
 double _transac_total;
-double _montant_send;
+int _montant_send;
 double _montant_receive;
 double _transac_commission;
 
@@ -543,6 +544,7 @@ class HomePageState extends State<PaymentPage> {
       _transac_commission=element["transac_commission"];
       _transac_total=element["transac_total"];
       _devise_receive=element["devise_receive"];
+      _devise_sender=element["devise_sender"];
       _point_retrait=element["point_retrait"];
       _transac_num=element["transac_num"];
     });
@@ -576,6 +578,8 @@ class HomePageState extends State<PaymentPage> {
     int user_id = responseJson["user_id"];
    /* final Map<String, dynamic>  myBody = {"user_id": "1", "first_name": "administrateur", "last_name": "admin", "country": "France", "phone": "0639607953", "email": "admin@mktransfert.fr", "receiver_first_name": "Emmanuel", "receiver_last_name": "Emma", "receiver_email": "emma@gmail.com", "receiver_phone": "0639607953", "receiver_country": 1, "receiver_description": "scolarité", "montant_send": 100000.0, "montant_receive": 1190000000.0, "transac_commission": 0.04, "transac_total": 10.04, "devise_receive": "GNF", "point_retrait": 4,"devise_sender": "eur"};
 */
+    print(_devise_receive);
+    print(_montant_send);
     return http.post(
       'https://www.mktransfert.com/api/success/'+'$user_id',
       headers: <String, String>{
@@ -601,11 +605,12 @@ class HomePageState extends State<PaymentPage> {
         "transac_commission":_transac_commission,
         "transac_total":_transac_total,
         "devise_receive":_devise_receive,
-        "point_retrait":_point_retrait,
+        "devise_sender":_devise_sender,
         "point_retrait":_point_retrait,
       }
       ),
     );
+
   }
 
   payViaNewCard(BuildContext context) async {
