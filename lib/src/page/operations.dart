@@ -56,7 +56,7 @@ class _OperationListPageState extends State<OperationListPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Mes transactions"),
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
       ),
       backgroundColor: Colors.grey.shade300,
       body: SingleChildScrollView(

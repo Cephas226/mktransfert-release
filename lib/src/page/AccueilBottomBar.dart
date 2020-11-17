@@ -125,7 +125,7 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
                       backgroundImage: NetworkImage('https://firebasestorage.googleapis.com/v0/b/mktransfert-d6990.appspot.com/o/LogoMKWhite_Plan%20de%20travail%201%20copie%204.png?alt=media&token=15bd19f2-0ca8-4058-81cb-bcbdf09201f6'),
                     ),
                   ),
-                  SizedBox(height: 5.0),
+                  SizedBox(height: 20.0),
                  /* displayUser_first_name != null?
                   Text(
                     displayUser_first_name+' '+displayUser_last_name,
@@ -150,6 +150,14 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
                   _buildDivider(),
                   _buildRow(Icons.person_pin, "Mon profil",
                       '/profil'
+                  ),
+                  _buildDivider(),
+                  _buildRow(Icons.monetization_on, "Mes transactions",
+                      '/transaction'
+                  ),
+                  _buildDivider(),
+                  _buildRow(Icons.clean_hands, "Transferer",
+                      '/accueilBottom'
                   ),
                   _buildDivider(),
                   _buildRow(Icons.email, "Nous contacter",

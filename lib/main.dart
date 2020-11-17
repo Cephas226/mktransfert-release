@@ -11,6 +11,7 @@ import 'package:mktransfert/src/page/beneficiaireScreen.dart';
 import 'package:mktransfert/src/page/contactUs.dart';
 import 'package:mktransfert/src/page/loginPage.dart';
 import 'package:mktransfert/src/page/navigation.dart';
+import 'package:mktransfert/src/page/operations.dart';
 import 'package:mktransfert/src/page/pagePrincipale.dart';
 import 'package:mktransfert/src/page/payement.dart';
 import 'package:mktransfert/src/page/paymentPage.dart';
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/home': (context) => PaymentPage(),
         '/existing-cards': (context) => ExistingCardsPage(),
-        '/transaction': (context) => ExistingCardsPage(),
+        '/transaction': (context) => OperationListPage(),
        /* '/navigation': (context) => NavigationPage(),*/
         '/login': (context) => LoginPage(),
         '/principale': (context) => PagePrincipale(),
