@@ -8,6 +8,7 @@ import 'package:mktransfert/src/contant/constant.dart';
 import 'package:mktransfert/src/page/navigation.dart';
 import 'package:mktransfert/src/page/pagePrincipale.dart';
 import 'package:mktransfert/src/page/transaction.dart';
+import 'package:mktransfert/src/utils/oval-right-clipper.dart';
 import 'package:mktransfert/src/widget/round_button.dart';
 import 'package:mktransfert/src/widget/round_corner_button.dart';
 import 'package:mktransfert/src/widget/round_corner_image.dart';
@@ -22,6 +23,9 @@ class PaymentsScreen extends StatefulWidget {
 }
 
 class _PaymentsScreenState extends State<PaymentsScreen> {
+  String displayUser_last_name;
+  String displayUser_first_name;
+  String displayUser_email;
   int amount = 10;
   double amountWaitted=10;
   double amountTotal;
@@ -47,7 +51,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
+        leading:
+        IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PagePrincipale()))
         ),
@@ -61,9 +66,134 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       ),
       backgroundColor: kPrimaryColor,
       body: _buildBody(),
+
       bottomNavigationBar: _buildButtonsSection(),
     );
   }
+  displayUserInfo() async {
+    var jwt = await storage.read(key: "userInfo");
+
+    Map<String, dynamic> responseStorageUser = json.decode(jwt);
+    /*editUser_first_name.text = responseStorageUser["first_name"];
+    editUser_last_name.text = responseStorageUser["last_name"];
+    editUser_email.text = responseStorageUser["email"];
+    editUser_phone.text = responseStorageUser["phone"];
+    editUser_country.text = responseStorageUser["country"];
+
+    user_id_profil=responseStorageUser["user_id_profil"];*/
+
+    displayUser_first_name = responseStorageUser["first_name"];
+    displayUser_last_name = responseStorageUser["last_name"];
+    displayUser_email = responseStorageUser["email"];
+    print(displayUser_first_name);
+/*    displayUser_phone = responseStorageUser["phone"];
+    displayUser_country = responseStorageUser["country"];*/
+  }
+  _buildDrawer() {
+
+    return ClipPath(
+      clipper: OvalRightBorderClipper(),
+      child: Drawer(
+        child: Container(
+          padding: const EdgeInsets.only(left: 16.0, right: 40),
+          decoration: BoxDecoration(
+              color: primary, boxShadow: [BoxShadow(color: Colors.black45)]),
+          width: 300,
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.power_settings_new,
+                        color: active,
+                      ),
+                      onPressed: () {},
+                    ),
+                  ),
+                  Container(
+                    height: 90,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                            colors: [Colors.blue, Colors.deepOrange])
+                    ),
+                    child: CircleAvatar(
+                      radius: 40,
+                      backgroundImage: NetworkImage('https://firebasestorage.googleapis.com/v0/b/mktransfert-d6990.appspot.com/o/Me.png?alt=media&token=044e199c-908b-4d22-9a2c-a720e4a6c6f3'),
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    "Cephas ZOUBGA",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  Text(
+                    "cephaszoubga@gmail.com",
+                    style: TextStyle(color: active, fontSize: 16.0),
+                  ),
+                  SizedBox(height: 30.0),
+                  // _buildRow(Icons.home, "Accueil"),
+                  _buildDivider(),
+                  _buildRow(Icons.person_pin, "Mon profil",
+                    '/existing-cards'
+                  ),
+                  _buildDivider(),
+                  // _buildRow(Icons.message, "Messages", showBadge: true),*/
+                  // _buildDivider(),
+                  _buildRow(Icons.settings, "Reglages",'/existing-cards'),
+                  _buildDivider(),
+                  _buildRow(Icons.email, "Nous contacter",'/existing-cards'),
+                  //  _buildDivider(),
+                  //  _buildRow(Icons.info_outline, "Aide"),
+                  _buildDivider(),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  Divider _buildDivider() {
+    final Color divider = Colors.grey.shade600;
+    return Divider(
+      color: divider,
+    );
+  }
+
+  Widget _buildRow(IconData icon,
+      String route ,
+      String title, {bool showBadge = false}) {
+    final TextStyle tStyle = TextStyle(color: active, fontSize: 16.0);
+    return Container(
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
+        child:GestureDetector(
+          onTap:()=> {
+          Navigator.pushNamed(context, route),
+          },
+          child: Row(children: [
+            Icon(
+              icon,
+              color: active,
+            ),
+            SizedBox(width: 10.0),
+            Text(
+              title,
+              style: tStyle,
+            ),
+            Spacer(),
+          ]),
+        )
+    );
+  }
+
   Future<AlertDialog> maxAlert(BuildContext context) {
     return showDialog<AlertDialog>(
       context: context,
@@ -153,6 +283,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     this.displayPaymentInfo();
     _dropdownMenuItemsReceiver = buildDropDownMenuItemsReceiver(_dropdownItemsReceiver);
     _selectedItemReceiver = _dropdownMenuItemsReceiver[0].value;
+    displayUserInfo();
   }
   List<ListItemReceiver> _dropdownItemsReceiver = [
     ListItemReceiver("assets/Image/gnf.png", "GNF",1),

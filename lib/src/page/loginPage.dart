@@ -39,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    checkLoginStatus();
+   // checkLoginStatus();
     formVisible = false;
     _formsIndex = 1;
   }
@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
     print(jwt);
     if (jwt == null)
       return Navigator.of(context).push(
-          MaterialPageRoute(builder: (BuildContext context) => AccueilPage()));
+          MaterialPageRoute(builder: (BuildContext context) => LoginPage()));
     else {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (BuildContext context) => PagePrincipale()),
@@ -244,7 +244,7 @@ class _LoginState extends State<LoginForm> {
   @override
   void initState() {
     super.initState();
-    checkLoginStatus();
+   // checkLoginStatus();
   }
   Future<String> logMe(
       String email,

@@ -6,6 +6,7 @@ import 'package:fancy_alert_dialog/fancy_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mktransfert/src/contant/constant.dart';
+import 'package:mktransfert/src/page/AccueilBottomBar.dart';
 import 'package:mktransfert/src/page/beneficiaire.dart';
 import 'package:mktransfert/src/page/navigation.dart';
 import 'package:mktransfert/src/page/transaction.dart';
@@ -134,22 +135,44 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
   Widget build(BuildContext context) {
     key:
     myGlobals.scaffoldKey;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Enregistrer un bénéficiaire"),
-        backgroundColor: kPrimaryColor,
-        elevation: 0,
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Builder(
-            builder: (context) => Form(
-                  key: _formKey,
-                  child: Container(
-                    child: (_futureBeneficiaire == null)
-                        ? Column(
+    return
+      MaterialApp(
+        home: DefaultTabController(
+          length: 2,
+          child: Scaffold(
+            appBar: AppBar(
+              leading: IconButton(icon:Icon(Icons.arrow_back),color: Colors.white,
+                onPressed:() => {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AccueilBootomBarPage()),
+                  )
+                },
+              ),
+              title: Text("Contacts"),
+              backgroundColor: kPrimaryColor,
+              elevation: 0,
+              iconTheme: IconThemeData(
+                color: Colors.white,
+              ),
+              bottom: TabBar(
+                tabs: [
+                  Tab(icon: Icon(Icons.directions_car)),
+                  Tab(icon: Icon(Icons.directions_transit)),
+
+                ],
+              ),
+            ),
+            body: TabBarView(
+              children: [
+                Builder(
+                    builder: (context) => Form(
+                      key: _formKey,
+                      child: SingleChildScrollView(
+                        child: Container(
+                          child: (_futureBeneficiaire == null)
+                              ?
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Padding(
@@ -181,56 +204,56 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                     children: <Widget>[
                                       new Flexible(
                                           child: Container(
-                                        padding: const EdgeInsets.only(
-                                            left: 10.0, right: 10.0),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
+                                            padding: const EdgeInsets.only(
+                                                left: 10.0, right: 10.0),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
                                                 BorderRadius.circular(5.0),
-                                            border: Border.all()),
-                                        child: DropdownButtonHideUnderline(
-                                          child: DropdownButton(
-                                            hint: Text("Choisir un pays"),
-                                            items: countrydata?.map((item) {
+                                                border: Border.all()),
+                                            child: DropdownButtonHideUnderline(
+                                              child: DropdownButton(
+                                                hint: Text("Choisir un pays"),
+                                                items: countrydata?.map((item) {
                                                   return DropdownMenuItem(
                                                     child: Text(
                                                         item['country_name']),
                                                     value: item['id'],
                                                   );
                                                 })?.toList() ??
-                                                [],
-                                            onChanged: (country) {
-                                              setState(() {
-                                                // showLoaderDialog(context);
-                                                _mySelectionCountry = country;
-                                                setState(() {
-                                                  var selectedReceiverCountry =
+                                                    [],
+                                                onChanged: (country) {
+                                                  setState(() {
+                                                    // showLoaderDialog(context);
+                                                    _mySelectionCountry = country;
+                                                    setState(() {
+                                                      var selectedReceiverCountry =
                                                       countrydata
                                                           .map((item) => item)
                                                           .toList();
-                                                  selectedReceiverCountry
-                                                      .forEach((f) => {
-                                                            if (f['id'] ==
-                                                                country)
+                                                      selectedReceiverCountry
+                                                          .forEach((f) => {
+                                                        if (f['id'] ==
+                                                            country)
+                                                          {
+                                                            if (!f[
+                                                            'country_isdisponible'])
                                                               {
-                                                                if (!f[
-                                                                    'country_isdisponible'])
-                                                                  {
-                                                                    print(f),
-                                                                    _mySelectionCountry =
-                                                                        1,
-                                                                    showAlertDialog(
-                                                                        context),
-                                                                  }
+                                                                print(f),
+                                                                _mySelectionCountry =
+                                                                1,
+                                                                showAlertDialog(
+                                                                    context),
                                                               }
-                                                          });
-                                                  _mySelectionCountry = country;
-                                                });
-                                              });
-                                            },
-                                            value: 1,
-                                          ),
-                                        ),
-                                      ))
+                                                          }
+                                                      });
+                                                      _mySelectionCountry = country;
+                                                    });
+                                                  });
+                                                },
+                                                value: 1,
+                                              ),
+                                            ),
+                                          ))
                                     ],
                                   )),
                               Padding(
@@ -254,7 +277,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                     ],
                                   )
                               ),
-                            //  const SizedBox(height: 5.0),
+                              //  const SizedBox(height: 5.0),
                               Padding(
                                   padding: EdgeInsets.only(
                                       left: 25.0, right: 25.0, top: 5.0),
@@ -262,21 +285,21 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                     children: <Widget>[
                                       Flexible(
                                           child: TextFormField(
-                                        validator: (value) {
-                                          if (value.isEmpty) {
-                                            return 'Veuillez saisir un nom';
-                                          }
-                                          return null;
-                                        },
-                                        onSaved: (val) => setState(() =>
+                                            validator: (value) {
+                                              if (value.isEmpty) {
+                                                return 'Veuillez saisir un nom';
+                                              }
+                                              return null;
+                                            },
+                                            onSaved: (val) => setState(() =>
                                             saveReceiver_last_name.text = val),
-                                        controller: TextEditingController()
-                                          ..text = saveReceiver_last_name.text,
-                                        decoration: const InputDecoration(
-                                          hintText: "Entrez un nom",
-                                          border: OutlineInputBorder(),
-                                        ),
-                                      )
+                                            controller: TextEditingController()
+                                              ..text = saveReceiver_last_name.text,
+                                            decoration: const InputDecoration(
+                                              hintText: "Entrez un nom",
+                                              border: OutlineInputBorder(),
+                                            ),
+                                          )
                                       ),
                                     ],
                                   )),
@@ -308,21 +331,21 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                     children: <Widget>[
                                       Flexible(
                                           child: TextFormField(
-                                        validator: (value) {
-                                          if (value.isEmpty) {
-                                            return 'Veuillez saisir un prenom';
-                                          }
-                                          return null;
-                                        },
-                                        onSaved: (val) => setState(() =>
+                                            validator: (value) {
+                                              if (value.isEmpty) {
+                                                return 'Veuillez saisir un prenom';
+                                              }
+                                              return null;
+                                            },
+                                            onSaved: (val) => setState(() =>
                                             saveReceiver_first_name.text = val),
-                                        controller: TextEditingController()
-                                          ..text = saveReceiver_first_name.text,
-                                        decoration: const InputDecoration(
-                                          hintText: "Entrez un prenom",
-                                          border: OutlineInputBorder(),
-                                        ),
-                                      )),
+                                            controller: TextEditingController()
+                                              ..text = saveReceiver_first_name.text,
+                                            decoration: const InputDecoration(
+                                              hintText: "Entrez un prenom",
+                                              border: OutlineInputBorder(),
+                                            ),
+                                          )),
                                     ],
                                   )
                               ),
@@ -354,19 +377,19 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                     children: <Widget>[
                                       Flexible(
                                           child: TextFormField(
-                                        onSaved: (val) => setState(() =>
+                                            onSaved: (val) => setState(() =>
                                             saveReceiver_email.text = val),
-                                        validator: (value) => EmailValidator
+                                            validator: (value) => EmailValidator
                                                 .validate(value)
-                                            ? null
-                                            : "Veuillez saisir un e-mail valide",
-                                        controller: TextEditingController()
-                                          ..text = saveReceiver_email.text,
-                                        decoration: const InputDecoration(
-                                          hintText: "example@gmail.com",
-                                          border: OutlineInputBorder(),
-                                        ),
-                                      )),
+                                                ? null
+                                                : "Veuillez saisir un e-mail valide",
+                                            controller: TextEditingController()
+                                              ..text = saveReceiver_email.text,
+                                            decoration: const InputDecoration(
+                                              hintText: "example@gmail.com",
+                                              border: OutlineInputBorder(),
+                                            ),
+                                          )),
                                     ],
                                   )),
                               Padding(
@@ -459,7 +482,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                   TextSpan(children: [
                                     TextSpan(
                                         text:
-                                            "En cliquant sur Continuer, vous acceptez ce qui suit"),
+                                        "En cliquant sur Continuer, vous acceptez ce qui suit"),
                                     TextSpan(
                                         text: " Termes and Conditions ",
                                         style: TextStyle(
@@ -522,7 +545,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                               )
                             ],
                           )
-                        : FutureBuilder<Beneficiaire>(
+                              : FutureBuilder<Beneficiaire>(
                             future: _futureBeneficiaire,
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
@@ -533,10 +556,16 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                               return CircularProgressIndicator();
                             },
                           ),
-                  ),
-                )),
-      ),
-    );
+                        ),
+                      ),
+                    )),
+                Icon(Icons.directions_car),
+
+              ],
+            ),
+          ),
+        ),
+      );
   }
 }
 

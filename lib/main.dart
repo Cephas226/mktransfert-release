@@ -8,11 +8,14 @@ import 'package:mktransfert/src/contant/constant.dart';
 import 'package:mktransfert/src/page/AccueilBottomBar.dart';
 import 'package:mktransfert/src/page/accueil.dart';
 import 'package:mktransfert/src/page/beneficiaireScreen.dart';
+import 'package:mktransfert/src/page/contactUs.dart';
 import 'package:mktransfert/src/page/loginPage.dart';
 import 'package:mktransfert/src/page/navigation.dart';
 import 'package:mktransfert/src/page/pagePrincipale.dart';
 import 'package:mktransfert/src/page/payement.dart';
 import 'package:mktransfert/src/page/paymentPage.dart';
+import 'package:mktransfert/src/page/user.dart';
+
 
 
 void main() => runApp(
@@ -48,7 +51,9 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/principale': (context) => PagePrincipale(),
         '/transactionNew': (context) => PaymentsScreen(),
-        '/accueilBottom': (context) => AccueilBootomBarPage()
+        '/accueilBottom': (context) => AccueilBootomBarPage(),
+        '/profil': (context) => UserProfilPage(),
+        '/contactUsPage': (context) => ContactUsPage(),
       },
     );
   }

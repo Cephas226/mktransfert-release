@@ -591,11 +591,6 @@ class _TransactionState extends State<TransactionPage> {
     return Container(
         padding: const EdgeInsets.symmetric(vertical: 5.0),
         child:GestureDetector(
-       /*   onTap: () {
-            print(
-                Navigator.push(context, MaterialPageRoute(builder: (context) => routeMenu),)
-            );
-          },*/
           child: Row(children: [
             Icon(
               icon,
@@ -606,31 +601,7 @@ class _TransactionState extends State<TransactionPage> {
               title,
               style: tStyle,
             ),
-
             Spacer(),
-            /*   if (showBadge)
-          Material(
-            color: Colors.deepOrange,
-            elevation: 5.0,
-            shadowColor: Colors.red,
-            borderRadius: BorderRadius.circular(5.0),
-            child: Container(
-              width: 25,
-              height: 25,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.deepOrange,
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-              child: Text(
-                "10+",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),*/
           ]),
         )
     );
@@ -711,7 +682,6 @@ class _TransactionState extends State<TransactionPage> {
       appBar: AppBar(
         title: Text("Effectuer votre transfert"),
       ),
-      //drawer: _buildDrawer(),
       body: currencies == null
           ? Center(child: CircularProgressIndicator())
           : Container(

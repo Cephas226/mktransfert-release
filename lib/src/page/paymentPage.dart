@@ -305,7 +305,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                   ),
                 ),
                 ticketTitle: Text(
-                  'Voir plus',
+                  '',
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -317,7 +317,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                 height: 220,
                 shadowColor: Colors.blue.withOpacity(0.5),
                 elevation: 8,
-                shouldExpand: true,
+                shouldExpand: false,
                 child: Padding(
                   padding:
                   const EdgeInsets.symmetric(horizontal: 30.0, vertical: 5),
@@ -686,7 +686,7 @@ class HomePageState extends State<PaymentPage> {
               switch(index) {
                 case 0:
                   icon = Icon(Icons.add_circle, color: theme.primaryColor);
-                  text = Text('Payer avec une nouvelle carte');
+                  text = Text('Payer avec une carte');
                   break;
                /* case 1:
                   icon = Icon(Icons.credit_card, color: theme.primaryColor);
