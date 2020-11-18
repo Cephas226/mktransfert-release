@@ -951,7 +951,7 @@ displayRecap() async {
                   final List<dynamic> data = snapshot.data;
                   return
                     ListView.builder(
-                      padding: EdgeInsets.all(8),
+                      padding: EdgeInsets.all(10),
                       itemCount: snapshot.data.length,
                       itemBuilder: (BuildContext context, int index) {
                         return

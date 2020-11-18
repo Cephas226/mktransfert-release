@@ -189,11 +189,22 @@ class _OperationListPageState extends State<OperationListPage> {
                                                                     null
                                                                     ? snapshot.data[
                                                                 index][
-                                                                'transac_montant_send']
+                                                                'transac_montant_send']+' '+(snapshot.data[
+                                                                index][
+                                                                'transac_devise_sender']!=
+                                                                    null?snapshot.data[
+                                                                index][
+                                                                'transac_devise_sender'].toString().toUpperCase():'')
                                                                     : '',
                                                               )))),
                                                   // more widgets
                                                 ],
+                                              ),
+                                              const Divider(
+                                                color: Colors.blue,
+                                                thickness: 1,
+                                                indent: 0,
+                                                endIndent: 20,
                                               ),
                                               Row(
                                                 mainAxisAlignment:
@@ -202,8 +213,14 @@ class _OperationListPageState extends State<OperationListPage> {
                                                   Row(children: <Widget>[
                                                     const SizedBox(
                                                         width: 15.0, height: 30),
+
+                                                    Icon(Icons.account_circle_outlined ),
+                                                    const SizedBox(width: 5),
                                                     Text(
                                                       'Nom & Prenom(s):',
+                                                       style: TextStyle(
+                                                           fontWeight:
+                                                           FontWeight.bold),
                                                     ),
                                                     Text(
                                                         snapshot.data[index][
@@ -216,9 +233,7 @@ class _OperationListPageState extends State<OperationListPage> {
                                                             [
                                                             'receiver_last_name']
                                                             : '',
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                            FontWeight.bold)),
+                                                        ),
                                                   ]),
                                                 ],
                                               ),
@@ -229,7 +244,14 @@ class _OperationListPageState extends State<OperationListPage> {
                                                   Row(children: <Widget>[
                                                     const SizedBox(
                                                         width: 15.0, height: 30),
-                                                    Text('Status:'),
+
+                                                    Icon(Icons.watch_later),
+                                                    const SizedBox(width: 5),
+                                                    Text('Status:',style: TextStyle(
+                                                        fontWeight:
+                                                        FontWeight.bold
+                                                    ),),
+                                                    const SizedBox(width: 5),
                                                     Text(
                                                         snapshot.data[index][
                                                         'transac_status'] !=
@@ -238,8 +260,6 @@ class _OperationListPageState extends State<OperationListPage> {
                                                         ['transac_status']
                                                             : '',
                                                         style: TextStyle(
-                                                            fontWeight:
-                                                            FontWeight.bold,
                                                             color: Colors.green)),
                                                   ]),
                                                 ],
@@ -251,7 +271,12 @@ class _OperationListPageState extends State<OperationListPage> {
                                                   Row(children: <Widget>[
                                                     const SizedBox(
                                                         width: 15.0, height: 30),
-                                                    Text('Date:'),
+                                                    Icon(Icons.date_range),
+                                                    const SizedBox(width: 5),
+                                                    Text('Date:',style: TextStyle(
+                                                        fontWeight:
+                                                        FontWeight.bold
+                                                    )),
                                                     Text(
                                                       snapshot.data[index][
                                                       'transac_date'] !=
@@ -260,6 +285,7 @@ class _OperationListPageState extends State<OperationListPage> {
                                                       ['transac_date']
                                                           : '',
                                                     ),
+                                                    const SizedBox(height: 5),
                                                   ]),
                                                 ],
                                               ),
@@ -336,7 +362,7 @@ class _OperationListPageState extends State<OperationListPage> {
                                                             'transac_devise_sender']!=
                                                                     null?snapshot.data[
                                                                 index][
-                                                                'transac_devise_sender'].toString().toUpperCase():'cooly')
+                                                                'transac_devise_sender'].toString().toUpperCase():'')
                                                                 : '',
                                                           )))),
                                               // more widgets

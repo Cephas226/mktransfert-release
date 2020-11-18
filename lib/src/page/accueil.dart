@@ -60,29 +60,52 @@ class _AccueilPageState extends State<AccueilPage> {
               );
             },
           ),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: FlatButton(
-              child: Text("Accueil"),
-              onPressed: () {
-
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => LoginPage())
-                );
-              },
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: IconButton(
-              icon:
-              Icon(_currentIndex == 2 ? Icons.check : Icons.arrow_forward),
-              onPressed: () {
-                if (_currentIndex != 2) _controller.next();
-                else    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()),);
-              },
-            ),
-          )
+         Container(
+           margin: EdgeInsets.only(top: 30),
+           child: Column(
+             mainAxisAlignment:
+             MainAxisAlignment.spaceBetween,
+             crossAxisAlignment: CrossAxisAlignment.stretch,
+             children: [
+               Align(
+                 alignment: Alignment.topRight,
+                 child: RaisedButton(
+                   shape: RoundedRectangleBorder(
+                     borderRadius: BorderRadius.circular(20.0),
+                   ),
+                   child: SizedBox(
+                      width: 50,
+                      child: Row(
+                        children: [
+                          Text("Accueil", style: TextStyle(
+                              color: Colors.white))
+                        ],
+                      ),
+                   ),
+                   onPressed: () {
+                     Navigator.push(context, MaterialPageRoute(
+                         builder: (context) => LoginPage())
+                     );
+                   },
+                   color: Colors.white70,
+                 ),
+               ),
+               Align(
+                 alignment: Alignment.topRight,
+                 child: Container(
+                   child: IconButton(
+                     icon:
+                     Icon(_currentIndex == 2 ? Icons.check : Icons.arrow_forward),
+                     onPressed: () {
+                       if (_currentIndex != 2) _controller.next();
+                       else    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()),);
+                     },
+                   ),
+                 ),
+               )
+             ],
+           ),
+         )
         ],
       ),
     );
