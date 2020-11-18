@@ -34,7 +34,6 @@ dependencies:
   dropdown_formfield: ^0.1.2
   fancy_dialog: ^1.0.4
   http: any
-  hexcolor: ^1.0.6
   device_preview: ^0.4.1
   stripe_payment: ^1.0.8
   expandable: ^4.1.4
