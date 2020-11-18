@@ -18,9 +18,11 @@ import 'AccueilBottomBar.dart';
 import 'beneficiaireScreen.dart';
 
 final storage = FlutterSecureStorage();
-
+var _dataTransaction = List();
+var transactionList = List();
 class PagePrincipale extends StatefulWidget {
   static final String path = "lib/src/pages/login/auth3.dart";
+
   final storage = FlutterSecureStorage();
   @override
   _MainPageState createState() => _MainPageState();
@@ -38,6 +40,47 @@ class _MainPageState extends State<PagePrincipale> {
     var jwt = await storage.read(key: "jwt");
     if (jwt == null) return "";
     return jwt;
+  }
+  var resBody;
+  Future<List<dynamic>> fetchMyTransaction() async {
+    var jwt = await storage.read(key: "jwt");
+    Map<String, dynamic> responseJson = json.decode(jwt);
+    String token = responseJson["access_token"];
+    int user_id = responseJson["user_id"];
+    var res = await http.get(
+        Uri.encodeFull(
+            'https://www.mktransfert.com/api/transactions/' +
+                '$user_id'),
+        headers: {
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        }) .catchError((e) {
+      print("Got error: ${e.error}");
+    });
+    json.decode(res.body);
+
+    resBody = json.decode(res.body);
+
+    resBody['data_transactions']?.forEach((k, v) {
+      _dataTransaction.add(v[0]);
+    });
+    storage.write(key: "alltransactionInfo", value: json.encode(_dataTransaction));
+
+    /*_dataTransaction.forEach((element) {
+      storage.write(key: "alltransactionInfo", value: json.encode([
+        {
+          "receiver_first_name": element['receiver_first_name'],
+          "receiver_last_name": element['receiver_last_name'],
+          "transac_status": element['transac_status'],
+          "transac_num":element['transac_num'],
+          "transac_date": element['transac_date'],
+          "transac_montant_send": element['transac_montant_send'],
+          "transac_devise_sender":  element['transac_devise_sender'],
+          "isvalide": element['isvalide'],
+        }
+      ]));*/
+    //});
+    return transactionList;
   }
 
   double _conversion_eur;
@@ -204,6 +247,7 @@ class _MainPageState extends State<PagePrincipale> {
     storage.delete(key: "beneficiaire");
     this.checkLoginStatus();
     _loadCurrencies();
+    this.fetchMyTransaction();
     _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
     _selectedItem = _dropdownMenuItems[0].value;
     _selectedCurrency = 1;

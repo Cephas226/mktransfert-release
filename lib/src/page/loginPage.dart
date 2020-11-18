@@ -43,12 +43,21 @@ class _LoginPageState extends State<LoginPage> {
     formVisible = false;
     _formsIndex = 1;
   }
+
   checkLoginStatus() async {
     var jwt = await storage.read(key: "jwt");
     print(jwt);
-    if (jwt == null)
-      return Navigator.of(context).push(
-          MaterialPageRoute(builder: (BuildContext context) => LoginPage()));
+    if (jwt == null){
+      setState(() {
+        formVisible = false;
+        _formsIndex = 1;
+      });
+      return 'null';
+    }
+
+
+    /*Navigator.of(context).push(
+          MaterialPageRoute(builder: (BuildContext context) => AccueilPage()));*/
     else {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (BuildContext context) => PagePrincipale()),
@@ -244,8 +253,28 @@ class _LoginState extends State<LoginForm> {
   @override
   void initState() {
     super.initState();
-    checkLoginStatus();
+    //checkLoginStatus();
   }
+/*  checkLoginStatus() async {
+    var jwt = await storage.read(key: "jwt");
+    print(jwt);
+    if (jwt == null)
+
+      return {
+        setState(() {
+          formVisible = false;
+          _formsIndex = 1;
+        })
+      };
+    *//*Navigator.of(context).push(
+          MaterialPageRoute(builder: (BuildContext context) => AccueilPage()));*//*
+    else {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) => PagePrincipale()),
+          ModalRoute.withName("/principale"));
+      return jwt;
+    }
+  }*/
   Future<String> logMe(
       String email,
       String password,
@@ -269,6 +298,8 @@ class _LoginState extends State<LoginForm> {
     print(response.statusCode);*/
     return response.body;
   }
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -390,19 +421,6 @@ class _LoginState extends State<LoginForm> {
   }
 */
 
-  checkLoginStatus() async {
-    var jwt = await storage.read(key: "jwt");
-    print(jwt);
-    if (jwt == null)
-      return Navigator.of(context).push(
-          MaterialPageRoute(builder: (BuildContext context) => AccueilPage()));
-    else {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (BuildContext context) => PagePrincipale()),
-          ModalRoute.withName("/principale"));
-      return jwt;
-    }
-  }
 }
 
 class SignupPage extends StatefulWidget {

@@ -194,8 +194,12 @@ class ProfilePageState extends State<UserProfilPage> {
         extendBodyBehindAppBar: true,
         extendBody: true,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          automaticallyImplyLeading: true,
+          backgroundColor: kPrimaryColor,
           elevation: 0,
+          title: Text(
+              "Profil"
+          ),
         ),
         body:
         SingleChildScrollView(
@@ -216,6 +220,7 @@ class ProfilePageState extends State<UserProfilPage> {
                     else {
                       return  Column(
                         children: <Widget>[
+                          const SizedBox(height: 50.0),
                           ProfileHeader(
                             avatar: NetworkImage('https://firebasestorage.googleapis.com/v0/b/mktransfert-d6990.appspot.com/o/LogoMKWhite_Plan%20de%20travail%201%20copie%204.png?alt=media&token=15bd19f2-0ca8-4058-81cb-bcbdf09201f6'),
                             coverImage: NetworkImage(images[1]),
@@ -358,12 +363,34 @@ class ProfilePageState extends State<UserProfilPage> {
                                               children: <Widget>[
                                                 Padding(
                                                     padding: EdgeInsets.only(
+                                                        left: 5.0, right: 5.0, top: 5.0),
+                                                    child: new Row(
+                                                      mainAxisSize: MainAxisSize.max,
+                                                      children: <Widget>[
+                                                        new Column(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          children: <Widget>[
+                                                            new Text(
+                                                              'Pays',
+                                                              style: TextStyle(
+                                                                  fontSize: 16.0,
+                                                                  fontWeight: FontWeight.bold),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    )
+                                                ),
+                                                Padding(
+                                                    padding: EdgeInsets.only(
                                                         left: 25.0,
                                                         right: 25.0,
                                                         top: 2.0),
                                                     child: new Row(
                                                       mainAxisSize: MainAxisSize.max,
                                                       children: <Widget>[
+
                                                         new Flexible(
                                                             child: Container(
                                                               padding:
@@ -390,6 +417,27 @@ class ProfilePageState extends State<UserProfilPage> {
                                                       ],
                                                     )),
                                                 const SizedBox(height: 20.0),
+                                                Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 5.0, right: 5.0, top: 5.0),
+                                                    child: new Row(
+                                                      mainAxisSize: MainAxisSize.max,
+                                                      children: <Widget>[
+                                                        new Column(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          children: <Widget>[
+                                                            new Text(
+                                                              'Nom',
+                                                              style: TextStyle(
+                                                                  fontSize: 16.0,
+                                                                  fontWeight: FontWeight.bold),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    )
+                                                ),
                                                 Padding(
                                                     padding: EdgeInsets.only(
                                                         left: 25.0,
@@ -419,6 +467,27 @@ class ProfilePageState extends State<UserProfilPage> {
                                                       ],
                                                     )),
                                                 const SizedBox(height: 20.0),
+                                                Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 5.0, right: 5.0, top: 5.0),
+                                                    child: new Row(
+                                                      mainAxisSize: MainAxisSize.max,
+                                                      children: <Widget>[
+                                                        new Column(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          children: <Widget>[
+                                                            new Text(
+                                                              'Prenom',
+                                                              style: TextStyle(
+                                                                  fontSize: 16.0,
+                                                                  fontWeight: FontWeight.bold),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    )
+                                                ),
                                                 Padding(
                                                   padding: EdgeInsets.only(
                                                       left: 25.0,
@@ -597,8 +666,8 @@ class ProfilePageState extends State<UserProfilPage> {
                           physics: ClampingScrollPhysics(),
                           child:
                           Container(
-                              height: 400.0, // Change as per your requirement
-                              width: 400.0,
+                             /* height: 300.0, // Change as per your requirement
+                              width: 300.0,*/
                               child: FutureBuilder<List<dynamic>>(
                                   future: displayProleInfo(),
                                   builder:
@@ -606,7 +675,7 @@ class ProfilePageState extends State<UserProfilPage> {
                                     if (snapshot.hasData) {
                                       return ListView.builder(
                                           shrinkWrap: true,
-                                          padding: EdgeInsets.all(8),
+                                          padding: EdgeInsets.all(1),
                                           itemCount: 1,
                                           itemBuilder: (BuildContext context, int index) {
                                             return Container(
@@ -618,8 +687,29 @@ class ProfilePageState extends State<UserProfilPage> {
                                                     children: <Widget>[
                                                       Padding(
                                                           padding: EdgeInsets.only(
-                                                              left: 25.0,
-                                                              right: 25.0,
+                                                              left: 5.0, right: 25.0, top: 5.0),
+                                                          child: new Row(
+                                                            mainAxisSize: MainAxisSize.max,
+                                                            children: <Widget>[
+                                                              new Column(
+                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                mainAxisSize: MainAxisSize.min,
+                                                                children: <Widget>[
+                                                                  new Text(
+                                                                    'Ancien mot de passe',
+                                                                    style: TextStyle(
+                                                                        fontSize: 16.0,
+                                                                        fontWeight: FontWeight.bold),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          )
+                                                      ),
+                                                      Padding(
+                                                          padding: EdgeInsets.only(
+                                                              left: 5.0,
+                                                              right: 5.0,
                                                               top: 2.0),
                                                           child: Row(
                                                             mainAxisSize: MainAxisSize.max,
@@ -646,9 +736,30 @@ class ProfilePageState extends State<UserProfilPage> {
                                                           )),
                                                       const SizedBox(height: 20.0),
                                                       Padding(
+                                                          padding: EdgeInsets.only(
+                                                              left: 5.0, right: 25.0, top: 5.0),
+                                                          child: new Row(
+                                                            mainAxisSize: MainAxisSize.max,
+                                                            children: <Widget>[
+                                                              new Column(
+                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                mainAxisSize: MainAxisSize.min,
+                                                                children: <Widget>[
+                                                                  new Text(
+                                                                    'Nouveau mot de passe',
+                                                                    style: TextStyle(
+                                                                        fontSize: 16.0,
+                                                                        fontWeight: FontWeight.bold),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          )
+                                                      ),
+                                                      Padding(
                                                         padding: EdgeInsets.only(
-                                                            left: 25.0,
-                                                            right: 25.0,
+                                                            left: 5.0,
+                                                            right: 5.0,
                                                             top: 2.0),
                                                         child: new Row(
                                                           mainAxisSize: MainAxisSize.max,
@@ -676,9 +787,30 @@ class ProfilePageState extends State<UserProfilPage> {
                                                       ),
                                                       const SizedBox(height: 20.0),
                                                       Padding(
+                                                          padding: EdgeInsets.only(
+                                                              left: 5.0, right: 5.0, top: 5.0),
+                                                          child: new Row(
+                                                            mainAxisSize: MainAxisSize.max,
+                                                            children: <Widget>[
+                                                              new Column(
+                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                mainAxisSize: MainAxisSize.min,
+                                                                children: <Widget>[
+                                                                  new Text(
+                                                                    'Confirmer le mot de passe',
+                                                                    style: TextStyle(
+                                                                        fontSize: 16.0,
+                                                                        fontWeight: FontWeight.bold),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          )
+                                                      ),
+                                                      Padding(
                                                         padding: EdgeInsets.only(
-                                                            left: 25.0,
-                                                            right: 25.0,
+                                                            left: 5.0,
+                                                            right: 5.0,
                                                             top: 2.0),
                                                         child: new Row(
                                                           mainAxisSize: MainAxisSize.max,
