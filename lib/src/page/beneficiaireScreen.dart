@@ -73,6 +73,16 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       bottomNavigationBar: _buildButtonsSection(),
     );
   }
+  displayMontantSend() async {
+    var montantSend = await storage.read(key: "montantSend");
+    print(montantSend);
+    if (montantSend==''){
+      this.amount=10;
+    }
+    else{
+      this.amount=int.parse(montantSend);
+    }
+  }
   displayUserInfo() async {
     var jwt = await storage.read(key: "userInfo");
 
@@ -182,6 +192,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     _dropdownMenuItemsReceiver = buildDropDownMenuItemsReceiver(_dropdownItemsReceiver);
     _selectedItemReceiver = _dropdownMenuItemsReceiver[0].value;
     displayUserInfo();
+    displayMontantSend();
   }
   List<ListItemReceiver> _dropdownItemsReceiver = [
     ListItemReceiver("assets/Image/gnf.png", "GNF",1),
@@ -328,13 +339,25 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                 },
                 icon: Icons.remove,
               ),
-              Text(
-                this._senderCurrencySymbole+" "+"$amount",
+              _senderCurrency == "eur"? Flexible(child: Text(
+                "$amount"+' '+ 'Euros',
                 style: TextStyle(
+
                   color: kPrimaryColor,
-                  fontSize: 40,
+                  fontSize: 30,
                 ),
-              ),
+              )
+              ):
+              Flexible(child: Text(
+                "$amount"+' '+ this._senderCurrencySymbole,
+                style: TextStyle(
+
+                  color: kPrimaryColor,
+                  fontSize: 30,
+                ),
+              )
+              )
+              ,
               RoundButton(
                 onTap: () {
                   setState(() {
@@ -462,7 +485,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                             style: TextStyle(
                                 color: Colors.white, fontWeight: FontWeight.w500),
                           ),
-                          trailing: Text(this.amountWaitted.toString()+'•'+_selectedItemReceiver.name,
+                          trailing: Text(this.amountWaitted.toString()+' '+_selectedItemReceiver.name,
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w500)),
@@ -497,7 +520,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                             style: TextStyle(
                                 color: Colors.black, fontWeight: FontWeight.w500),
                           ),
-                          trailing: Text(this.commission.toString(),
+                          trailing: Text(this.commission.toStringAsFixed(2),
                               style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w500)),
@@ -532,10 +555,12 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                             style: TextStyle(
                                 color: Colors.black, fontWeight: FontWeight.w500),
                           ),
-                          trailing: Text(this.amountTotal.toString()+'•'+_senderCurrencySymbole,
+                          trailing:
+                          Text(this.amountTotal.toString()+' '+_senderCurrencySymbole,
                               style: TextStyle(
                                   color: Colors.black,
-                                  fontWeight: FontWeight.w500)),
+                                  fontWeight: FontWeight.w500)
+                          ),
                         )),
                   )
                 ],

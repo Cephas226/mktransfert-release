@@ -875,6 +875,7 @@ class _MainPageState extends State<PagePrincipale> {
                   builder: (context) => AccueilBootomBarPage(),
                 ),
               ),
+            storage.write(key: "montantSend", value: this.fromTextControllerSender.text)
             }, //
             child: Text(
               "Effectuer un transfert",
@@ -887,6 +888,7 @@ class _MainPageState extends State<PagePrincipale> {
             color: Colors.white70,
             icon: Icon(Icons.send),
             onPressed: () {
+              storage.write(key: "montantSend", value: this.fromTextControllerSender.text);
               Navigator.push(
                 context,
                 MaterialPageRoute(

@@ -54,6 +54,7 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
   Future<String> displayTransactionInfo() async {
     var alltransactionInfo = await storage.read(key: "alltransactionInfo");
   }
+
   changePage(int index) {
     setState(() {
       currentIndex = index;
