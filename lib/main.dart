@@ -13,8 +13,8 @@ import 'package:mktransfert/src/page/loginPage.dart';
 import 'package:mktransfert/src/page/navigation.dart';
 import 'package:mktransfert/src/page/operations.dart';
 import 'package:mktransfert/src/page/pagePrincipale.dart';
-import 'package:mktransfert/src/page/payement.dart';
-import 'package:mktransfert/src/page/paymentPage.dart';
+import 'package:mktransfert/src/page/payement-NoTouch.dart';
+import 'package:mktransfert/src/page/paymentPageXXX.dart';
 import 'package:mktransfert/src/page/user.dart';
 
 
@@ -37,13 +37,13 @@ class MyApp extends StatelessWidget {
           inactiveTrackColor: Colors.grey.shade200,
         ),
       ),
-      title: 'Welcome to Flutter',
+      title: 'Bienvenu sur MK TRANSFERT',
       home: AccueilPage(),
       debugShowCheckedModeBanner: false,
 
       routes: {
         '/home': (context) => PaymentPage(),
-        '/existing-cards': (context) => ExistingCardsPage(),
+        //'/existing-cards': (context) => ExistingCardsPage(),
         '/transaction': (context) => OperationListPage(),
        /* '/navigation': (context) => NavigationPage(),*/
         '/login': (context) => LoginPage(),

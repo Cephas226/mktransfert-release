@@ -37,13 +37,23 @@ class RegisterBeneficiairePage extends StatefulWidget {
 class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
   static final String path = "lib/src/pages/login/signup2.dart";
   Future<Beneficiaire> _futureBeneficiaire;
-  int _mySelectionCountry;
+  int _mySelectionCountry=1;
+  int saveReceiver_countryEntreprise=1;
   var saveReceiver_last_name = TextEditingController();
   var saveReceiver_first_name = TextEditingController();
   var saveReceiver_email = TextEditingController();
   var saveReceiver_phone = TextEditingController();
   var saveReceiver_country = TextEditingController();
   var saveReceiver_info = TextEditingController();
+
+  var saveReceiver_last_nameEntreprise = TextEditingController();
+  var saveReceiver_first_nameEntreprise = TextEditingController();
+  var saveReceiver_raisonEntreprise = TextEditingController();
+  var saveReceiver_nameEntreprise = TextEditingController();
+  var saveReceiver_sitewebEntreprise = TextEditingController();
+  var saveReceiver_emailEntreprise = TextEditingController();
+  var saveReceiver_phoneEntreprise = TextEditingController();
+  var saveReceiver_infoEntreprise = TextEditingController();
 
   final _beneficiaire = Beneficiaire();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -135,352 +145,407 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
   Widget build(BuildContext context) {
     key:
     myGlobals.scaffoldKey;
-    return
-      MaterialApp(
-        home: DefaultTabController(
-          length: 2,
-          child: Scaffold(
-            appBar: AppBar(
-              leading: IconButton(icon:Icon(Icons.arrow_back),color: Colors.white,
-                onPressed:() => {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AccueilBootomBarPage()),
-                  )
-                },
-              ),
-              title: Text("Enregistrer un beneficiaire"),
-              backgroundColor: kPrimaryColor,
-              elevation: 0,
-              iconTheme: IconThemeData(
-                color: Colors.white,
-              ),
-              bottom: TabBar(
-                tabs: [
-                  Tab(text: "Particulier",icon: Icon(Icons.person)),
-                  Tab(text: "Entreprise",icon: Icon(Icons.account_balance)),
-
-                ],
-              ),
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              color: Colors.white,
+              onPressed: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AccueilBootomBarPage()),
+                )
+              },
             ),
-            body: TabBarView(
-              children: [
-                Builder(
-                    builder: (context) => Form(
-                      key: _formKey,
-                      child: SingleChildScrollView(
-                        child: Container(
-                          child: (_futureBeneficiaire == null)
-                              ?
-                          Column(
-                            //crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 25.0),
-                                  child: new Row(
-                                    mainAxisSize: MainAxisSize.max,
+            title: Text("Enregistrer un beneficiaire"),
+            backgroundColor: kPrimaryColor,
+            elevation: 0,
+            iconTheme: IconThemeData(
+              color: Colors.white,
+            ),
+            bottom: TabBar(
+              tabs: [
+                Tab(text: "Particulier", icon: Icon(Icons.person)),
+                Tab(text: "Entreprise", icon: Icon(Icons.account_balance)),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              Builder(
+                  builder: (context) => Form(
+                        key: _formKey,
+                        child: SingleChildScrollView(
+                          child: Container(
+                            child: (_futureBeneficiaire == null)
+                                ? Column(
+                                    //crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      Flexible(
-                                        child: Container(
-                                          child: new Column(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            mainAxisSize: MainAxisSize.min,
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 25.0),
+                                          child: new Row(
+                                            mainAxisSize: MainAxisSize.max,
                                             children: <Widget>[
-                                              new Text(
-                                                'Pays',
-                                                style: TextStyle(
-                                                    fontSize: 16.0,
-                                                    fontWeight: FontWeight.bold),
+                                              Flexible(
+                                                  child: Container(
+                                                child: new Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: <Widget>[
+                                                    new Text(
+                                                      'Pays',
+                                                      style: TextStyle(
+                                                          fontSize: 16.0,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ))
+                                            ],
+                                          )),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 20.0),
+                                          child: new Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: <Widget>[
+                                              new Flexible(
+                                                  child: Container(
+                                                padding: const EdgeInsets.only(
+                                                    left: 10.0, right: 10.0),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5.0),
+                                                    border: Border.all()),
+                                                child:
+                                                    DropdownButtonHideUnderline(
+                                                  child: DropdownButton(
+                                                    hint:
+                                                        Text("Choisir un pays"),
+                                                    items: countrydata
+                                                            ?.map((item) {
+                                                          return DropdownMenuItem(
+                                                            child: Text(item[
+                                                                'country_name']),
+                                                            value: item['id'],
+                                                          );
+                                                        })?.toList() ??
+                                                        [],
+                                                    onChanged: (country) {
+                                                      setState(() {
+                                                        // showLoaderDialog(context);
+                                                        _mySelectionCountry =
+                                                            country;
+                                                        setState(() {
+                                                          var selectedReceiverCountry =
+                                                              countrydata
+                                                                  .map((item) =>
+                                                                      item)
+                                                                  .toList();
+                                                          selectedReceiverCountry
+                                                              .forEach((f) => {
+                                                                    if (f['id'] ==
+                                                                        country)
+                                                                      {
+                                                                        if (!f[
+                                                                            'country_isdisponible'])
+                                                                          {
+                                                                            print(f),
+                                                                            _mySelectionCountry =
+                                                                                1,
+                                                                            showAlertDialog(context),
+                                                                          }
+                                                                      }
+                                                                  });
+                                                          _mySelectionCountry =
+                                                              country;
+                                                        });
+                                                      });
+                                                    },
+                                                    value: 1,
+                                                  ),
+                                                ),
+                                              ))
+                                            ],
+                                          )),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 25.0),
+                                          child: new Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: <Widget>[
+                                              new Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  new Text(
+                                                    'Entrez un nom*',
+                                                    style: TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
                                               ),
                                             ],
-                                          ),
-                                        )
-                                      )
-                                    ],
-                                  )
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 20.0),
-                                  child: new Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      new Flexible(
-                                          child: Container(
-                                            padding: const EdgeInsets.only(
-                                                left: 10.0, right: 10.0),
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                BorderRadius.circular(5.0),
-                                                border: Border.all()),
-                                            child: DropdownButtonHideUnderline(
-                                              child: DropdownButton(
-                                                hint: Text("Choisir un pays"),
-                                                items: countrydata?.map((item) {
-                                                  return DropdownMenuItem(
-                                                    child: Text(
-                                                        item['country_name']),
-                                                    value: item['id'],
-                                                  );
-                                                })?.toList() ??
-                                                    [],
-                                                onChanged: (country) {
-                                                  setState(() {
-                                                    // showLoaderDialog(context);
-                                                    _mySelectionCountry = country;
-                                                    setState(() {
-                                                      var selectedReceiverCountry =
-                                                      countrydata
-                                                          .map((item) => item)
-                                                          .toList();
-                                                      selectedReceiverCountry
-                                                          .forEach((f) => {
-                                                        if (f['id'] ==
-                                                            country)
-                                                          {
-                                                            if (!f[
-                                                            'country_isdisponible'])
-                                                              {
-                                                                print(f),
-                                                                _mySelectionCountry =
-                                                                1,
-                                                                showAlertDialog(
-                                                                    context),
-                                                              }
-                                                          }
-                                                      });
-                                                      _mySelectionCountry = country;
-                                                    });
-                                                  });
-                                                },
-                                                value: 1,
-                                              ),
-                                            ),
-                                          ))
-                                    ],
-                                  )),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 25.0),
-                                  child: new Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      new Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          new Text(
-                                            'Entrez un nom*',
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                              ),
-                              //  const SizedBox(height: 5.0),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 5.0),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Flexible(
-                                          child: TextFormField(
-                                            validator: (value) {
-                                              if (value.isEmpty) {
-                                                return 'Veuillez saisir un nom';
-                                              }
-                                              return null;
-                                            },
-                                            onSaved: (val) => setState(() =>
-                                            saveReceiver_last_name.text = val),
-                                            controller: TextEditingController()
-                                              ..text = saveReceiver_last_name.text,
-                                            decoration: const InputDecoration(
-                                              hintText: "Entrez un nom",
-                                              border: OutlineInputBorder(),
-                                            ),
-                                          )
-                                      ),
-                                    ],
-                                  )),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 25.0),
-                                  child: new Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      new Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          new Text(
-                                            'Entrez un prenom*',
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 5.0),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Flexible(
-                                          child: TextFormField(
-                                            validator: (value) {
-                                              if (value.isEmpty) {
-                                                return 'Veuillez saisir un prenom';
-                                              }
-                                              return null;
-                                            },
-                                            onSaved: (val) => setState(() =>
-                                            saveReceiver_first_name.text = val),
-                                            controller: TextEditingController()
-                                              ..text = saveReceiver_first_name.text,
-                                            decoration: const InputDecoration(
-                                              hintText: "Entrez un prenom",
-                                              border: OutlineInputBorder(),
-                                            ),
                                           )),
-                                    ],
-                                  )
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 25.0),
-                                  child: new Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      new Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          new Text(
-                                            'Entrez un e-mail',
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 5.0),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Flexible(
-                                          child: TextFormField(
-                                            onSaved: (val) => setState(() =>
-                                            saveReceiver_email.text = val),
-                                            validator: (value) => EmailValidator
+                                      //  const SizedBox(height: 5.0),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 5.0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Flexible(
+                                                  child: TextFormField(
+                                                validator: (value) {
+                                                  if (value.isEmpty) {
+                                                    return 'Veuillez saisir un nom';
+                                                  }
+                                                  return null;
+                                                },
+                                                onSaved: (val) => setState(() =>
+                                                    saveReceiver_last_name
+                                                        .text = val),
+                                                controller:
+                                                    TextEditingController()
+                                                      ..text =
+                                                          saveReceiver_last_name
+                                                              .text,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  hintText: "Entrez un nom",
+                                                  border: OutlineInputBorder(),
+                                                ),
+                                              )),
+                                            ],
+                                          )),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 25.0),
+                                          child: new Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: <Widget>[
+                                              new Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  new Text(
+                                                    'Entrez un prenom*',
+                                                    style: TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          )),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 5.0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Flexible(
+                                                  child: TextFormField(
+                                                validator: (value) {
+                                                  if (value.isEmpty) {
+                                                    return 'Veuillez saisir un prenom';
+                                                  }
+                                                  return null;
+                                                },
+                                                onSaved: (val) => setState(() =>
+                                                    saveReceiver_first_name
+                                                        .text = val),
+                                                controller:
+                                                    TextEditingController()
+                                                      ..text =
+                                                          saveReceiver_first_name
+                                                              .text,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  hintText: "Entrez un prenom",
+                                                  border: OutlineInputBorder(),
+                                                ),
+                                              )),
+                                            ],
+                                          )),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 25.0),
+                                          child: new Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: <Widget>[
+                                              new Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  new Text(
+                                                    'Entrez un e-mail*',
+                                                    style: TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          )),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 5.0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Flexible(
+                                                  child: TextFormField(
+                                                onSaved: (val) => setState(() =>
+                                                    saveReceiver_email.text = val),
+                                                /*  validator: (value) => EmailValidator
                                                 .validate(value)
                                                 ? null
-                                                : "Veuillez saisir un e-mail valide",
-                                            controller: TextEditingController()
-                                              ..text = saveReceiver_email.text,
-                                            decoration: const InputDecoration(
-                                              hintText: "example@gmail.com",
-                                              border: OutlineInputBorder(),
-                                            ),
+                                                : "Veuillez saisir un e-mail valide",*/
+                                                controller:
+                                                    TextEditingController()
+                                                      ..text = saveReceiver_email.text,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  hintText: "example@gmail.com",
+                                                  border: OutlineInputBorder(),
+                                                ),
+                                              )),
+                                            ],
                                           )),
-                                    ],
-                                  )),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 25.0),
-                                  child: new Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      new Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          new Text(
-                                            'Téléphone du Bénéficiaire *',
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 5.0),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Flexible(
-                                          child: TextFormField(
-                                            validator: (value) {
-                                              if (value.isEmpty) {
-                                                return 'Veuillez saisir un telephone';
-                                              }
-                                              return null;
-                                            },
-                                            onSaved: (val) => setState(() =>
-                                            saveReceiver_phone.text = val),
-                                            controller: TextEditingController()
-                                              ..text = saveReceiver_phone.text,
-                                            decoration: const InputDecoration(
-                                              hintText: "Entre un telephone",
-                                              border: OutlineInputBorder(),
-                                            ),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 25.0),
+                                          child: new Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: <Widget>[
+                                              new Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  new Text(
+                                                    'Téléphone du Bénéficiaire *',
+                                                    style: TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
                                           )),
-                                    ],
-                                  )),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 25.0),
-                                  child: new Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      new Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          new Text(
-                                            'Informations complémentaire',
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 5.0),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Flexible(
-                                          child: TextFormField(
-                                            onSaved: (val) => setState(() =>
-                                            saveReceiver_info.text = val),
-                                            controller:  saveReceiver_info,
-                                            maxLines: 10,
-                                            decoration: const InputDecoration(
-                                              hintText: "Information complémentaire",
-                                              border: OutlineInputBorder(),
-                                            ),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 5.0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Flexible(
+                                                  child: TextFormField(
+                                                validator: (value) {
+                                                  if (value.isEmpty) {
+                                                    return 'Veuillez saisir un telephone';
+                                                  }
+                                                  return null;
+                                                },
+                                                onSaved: (val) => setState(() =>
+                                                    saveReceiver_phone.text =
+                                                        val),
+                                                controller:
+                                                    TextEditingController()
+                                                      ..text =
+                                                          saveReceiver_phone
+                                                              .text,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  hintText:
+                                                      "Entre un telephone",
+                                                  border: OutlineInputBorder(),
+                                                ),
+                                              )),
+                                            ],
                                           )),
-                                    ],
-                                  )),
-                              /*Padding(
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 25.0),
+                                          child: new Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: <Widget>[
+                                              new Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  new Text(
+                                                    'Informations complémentaire(optionnel)',
+                                                    style: TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          )),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 5.0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Flexible(
+                                                  child: TextFormField(
+                                                onSaved: (val) => setState(() =>
+                                                    saveReceiver_info.text =
+                                                        val),
+                                                controller: saveReceiver_info,
+                                                maxLines: 10,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  hintText:
+                                                      "Information complémentaire",
+                                                  border: OutlineInputBorder(),
+                                                ),
+                                              )),
+                                            ],
+                                          )),
+                                      /*Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 40, vertical: 20),
                                 child: Text.rich(
@@ -497,443 +562,590 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                   ]),
                                 ),
                               ),*/
-                              const SizedBox(height: 20.0),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Flexible(
-                                    child: Container(
-                                      width: double.infinity,
-                                      child: RaisedButton(
-                                        elevation: 0,
-                                        /*padding: const EdgeInsets.only(
-                                          left: 170, right: 170),*/
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                            BorderRadius.circular(10.0)),
-                                        child: Text("Valider"),
-                                        color: kPrimaryColor,
-                                        textColor: Colors.white,
-                                        onPressed: () {
-                                          final form = _formKey.currentState;
-                                          if (_formKey.currentState.validate()) {
-                                            form.save();
-                                            Random random = new Random();
-                                            int randomId = random.nextInt(100);
-                                            storage.write(
-                                                key: "beneficiaireNew",
-                                                value: json.encode([
-                                                  {
-                                                    "id": randomId,
-                                                    "country_id":
-                                                    _mySelectionCountry,
-                                                    "receiver_first_name":
-                                                    saveReceiver_first_name
-                                                        .text,
-                                                    "receiver_last_name":
-                                                    saveReceiver_last_name.text,
-                                                    "receiver_phone":
-                                                    saveReceiver_phone.text,
-                                                    "receiver_email":
-                                                    saveReceiver_email.text,
-                                                    "receiver_info":
-                                                    saveReceiver_info.text,
-                                                  }
-                                                ]));
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ExpenseTrackerApp()),);
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              )
-                            ],
-                          )
-                              : FutureBuilder<Beneficiaire>(
-                            future: _futureBeneficiaire,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return Text(snapshot.data.receiver_first_name);
-                              } else if (snapshot.hasError) {
-                                return Text("${snapshot.error}");
-                              }
-                              return CircularProgressIndicator();
-                            },
-                          ),
-                        ),
-                      ),
-                    )),
-                Builder(
-                    builder: (context) => Form(
-                      key: _formKey,
-                      child: SingleChildScrollView(
-                        child: Container(
-                          child: (_futureBeneficiaire == null)
-                              ?
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 25.0),
-                                  child: new Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      new Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
+                                      const SizedBox(height: 20.0),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: <Widget>[
-                                          new Text(
-                                            'Pays',
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 20.0),
-                                  child: new Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      new Flexible(
-                                          child: Container(
-                                            padding: const EdgeInsets.only(
-                                                left: 10.0, right: 10.0),
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                BorderRadius.circular(5.0),
-                                                border: Border.all()),
-                                            child: DropdownButtonHideUnderline(
-                                              child: DropdownButton(
-                                                hint: Text("Choisir un pays"),
-                                                items: countrydata?.map((item) {
-                                                  return DropdownMenuItem(
-                                                    child: Text(
-                                                        item['country_name']),
-                                                    value: item['id'],
-                                                  );
-                                                })?.toList() ??
-                                                    [],
-                                                onChanged: (country) {
-                                                  setState(() {
-                                                    // showLoaderDialog(context);
-                                                    _mySelectionCountry = country;
-                                                    setState(() {
-                                                      var selectedReceiverCountry =
-                                                      countrydata
-                                                          .map((item) => item)
-                                                          .toList();
-                                                      selectedReceiverCountry
-                                                          .forEach((f) => {
-                                                        if (f['id'] ==
-                                                            country)
+                                          Flexible(
+                                            child: Container(
+                                              width: double.infinity,
+                                              child: RaisedButton(
+                                                elevation: 0,
+                                                /*padding: const EdgeInsets.only(
+                                          left: 170, right: 170),*/
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0)),
+                                                child: Text("Valider"),
+                                                color: kPrimaryColor,
+                                                textColor: Colors.white,
+                                                onPressed: () {
+                                                  print(_mySelectionCountry);
+                                                  final form =
+                                                      _formKey.currentState;
+                                                  if (_formKey.currentState
+                                                      .validate()) {
+                                                    form.save();
+                                                    Random random =
+                                                        new Random();
+                                                    int randomId =
+                                                        random.nextInt(100);
+                                                    storage.write(
+                                                        key: "beneficiaireNew",
+                                                        value: json.encode([
                                                           {
-                                                            if (!f[
-                                                            'country_isdisponible'])
-                                                              {
-                                                                print(f),
-                                                                _mySelectionCountry =
-                                                                1,
-                                                                showAlertDialog(
-                                                                    context),
-                                                              }
+                                                            "id": randomId,
+                                                            "country_id":
+                                                                _mySelectionCountry,
+                                                            "receiver_first_name":
+                                                                saveReceiver_first_name
+                                                                    .text,
+                                                            "receiver_last_name":
+                                                                saveReceiver_last_name
+                                                                    .text,
+                                                            "receiver_phone":
+                                                                saveReceiver_phone
+                                                                    .text,
+                                                            "receiver_email":
+                                                                saveReceiver_email
+                                                                    .text,
+                                                            "receiver_info":
+                                                                saveReceiver_info
+                                                                    .text,
                                                           }
-                                                      });
-                                                      _mySelectionCountry = country;
-                                                    });
-                                                  });
+                                                        ]));
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ExpenseTrackerApp()),
+                                                    );
+                                                  }
                                                 },
-                                                value: 1,
                                               ),
                                             ),
-                                          ))
-                                    ],
-                                  )),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 25.0),
-                                  child: new Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      new Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          new Text(
-                                            'Raison Sociale',
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                              ),
-                              //  const SizedBox(height: 5.0),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 5.0),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Flexible(
-                                          child: TextFormField(
-                                            onSaved: (val) => setState(() =>
-                                            saveReceiver_last_name.text = val),
-                                            controller: TextEditingController()
-                                              ..text = saveReceiver_last_name.text,
-                                            decoration: const InputDecoration(
-                                              hintText: "Entrez la raison sociale",
-                                              border: OutlineInputBorder(),
-                                            ),
                                           )
-                                      ),
-                                    ],
-                                  )
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 25.0),
-                                  child: new Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      new Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          new Text(
-                                            'Site Web',
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold),
-                                          ),
                                         ],
-                                      ),
+                                      )
                                     ],
                                   )
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 5.0),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Flexible(
-                                          child: TextFormField(
-                                            onSaved: (val) => setState(() =>
-                                            saveReceiver_first_name.text = val),
-                                            controller: TextEditingController()
-                                              ..text = saveReceiver_first_name.text,
-                                            decoration: const InputDecoration(
-                                              hintText: "Entrez le site Web",
-                                              border: OutlineInputBorder(),
-                                            ),
-                                          )),
-                                    ],
-                                  )
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 25.0),
-                                  child: new Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      new Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          new Text(
-                                            'Nom',
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                              ),
-                              //  const SizedBox(height: 5.0),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 5.0),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Flexible(
-                                          child: TextFormField(
-                                            onSaved: (val) => setState(() =>
-                                            saveReceiver_last_name.text = val),
-                                            controller: TextEditingController()
-                                              ..text = saveReceiver_last_name.text,
-                                            decoration: const InputDecoration(
-                                              hintText: "Entrez le Nom",
-                                              border: OutlineInputBorder(),
-                                            ),
-                                          )
-                                      ),
-                                    ],
-                                  )
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 25.0),
-                                  child: new Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      new Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          new Text(
-                                            'Email',
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 5.0),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Flexible(
-                                          child: TextFormField(
-                                            onSaved: (val) => setState(() =>
-                                            saveReceiver_email.text = val),
-                                            validator: (value) => EmailValidator
-                                                .validate(value)
-                                                ? null
-                                                : "Veuillez saisir un e-mail valide",
-                                            controller: TextEditingController()
-                                              ..text = saveReceiver_email.text,
-                                            decoration: const InputDecoration(
-                                              hintText: "example@gmail.com",
-                                              border: OutlineInputBorder(),
-                                            ),
-                                          )),
-                                    ],
-                                  )),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 25.0),
-                                  child: new Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      new Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          new Text(
-                                            'Informations complémentaire',
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 5.0),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Flexible(
-                                          child: TextFormField(
-                                            maxLines: 10,
-                                            onSaved: (val) => setState(() =>
-                                            saveReceiver_info.text = val),
-                                            controller:  saveReceiver_info,
-                                            decoration: const InputDecoration(
-                                              hintText: "Information complémentaire",
-                                              border: OutlineInputBorder(),
-                                            ),
-                                          )),
-                                    ],
-                                  )),
-                              const SizedBox(height: 20.0),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Flexible(
-                                    child: Container(
-                                      width: double.infinity,
-                                      child: RaisedButton(
-                                        elevation: 0,
-                                        /*padding: const EdgeInsets.only(
-                                          left: 170, right: 170),*/
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                            BorderRadius.circular(10.0)),
-                                        child: Text("Valider"),
-                                        color: kPrimaryColor,
-                                        textColor: Colors.white,
-                                        onPressed: () {
-                                         /* final form = _formKey.currentState;
-                                          if (_formKey.currentState.validate()) {
-                                            form.save();
-                                            Random random = new Random();
-                                            int randomId = random.nextInt(100);
-                                            storage.write(
-                                                key: "beneficiaireNew",
-                                                value: json.encode([
-                                                  {
-                                                    "id": randomId,
-                                                    "country_id":
-                                                    _mySelectionCountry,
-                                                    "receiver_first_name":
-                                                    saveReceiver_first_name
-                                                        .text,
-                                                    "receiver_last_name":
-                                                    saveReceiver_last_name.text,
-                                                    "receiver_phone":
-                                                    saveReceiver_phone.text,
-                                                    "receiver_email":
-                                                    saveReceiver_email.text,
-                                                    "receiver_info":
-                                                    saveReceiver_info.text,
-                                                  }
-                                                ]));
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ExpenseTrackerApp()),);
-                                          }*/
-                                        },
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              )
-                            ],
-                          )
-                              : FutureBuilder<Beneficiaire>(
-                            future: _futureBeneficiaire,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return Text(snapshot.data.receiver_first_name);
-                              } else if (snapshot.hasError) {
-                                return Text("${snapshot.error}");
-                              }
-                              return CircularProgressIndicator();
-                            },
+                                : FutureBuilder<Beneficiaire>(
+                                    future: _futureBeneficiaire,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return Text(
+                                            snapshot.data.receiver_first_name);
+                                      } else if (snapshot.hasError) {
+                                        return Text("${snapshot.error}");
+                                      }
+                                      return CircularProgressIndicator();
+                                    },
+                                  ),
                           ),
                         ),
-                      ),
-                    )),
+                      )),
+              Builder(
+                  builder: (context) => Form(
+                        key: _formKey,
+                        child: SingleChildScrollView(
+                          child: Container(
+                            child: (_futureBeneficiaire == null)
+                                ? Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 25.0),
+                                          child: new Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: <Widget>[
+                                              new Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  new Text(
+                                                    'Pays',
+                                                    style: TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          )),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 20.0),
+                                          child: new Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: <Widget>[
+                                              new Flexible(
+                                                  child: Container(
+                                                padding: const EdgeInsets.only(
+                                                    left: 10.0, right: 10.0),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5.0),
+                                                    border: Border.all()),
+                                                child:
+                                                    DropdownButtonHideUnderline(
+                                                  child: DropdownButton(
+                                                    hint:
+                                                        Text("Choisir un pays"),
+                                                    items: countrydata
+                                                            ?.map((item) {
+                                                          return DropdownMenuItem(
+                                                            child: Text(item[
+                                                                'country_name']),
+                                                            value: item['id'],
+                                                          );
+                                                        })?.toList() ??
+                                                        [],
+                                                    onChanged: (country) {
+                                                      setState(() {
+                                                        // showLoaderDialog(context);
+                                                        saveReceiver_countryEntreprise =
+                                                            country;
+                                                        setState(() {
+                                                          var selectedReceiverCountry =
+                                                              countrydata
+                                                                  .map((item) =>
+                                                                      item)
+                                                                  .toList();
+                                                          selectedReceiverCountry
+                                                              .forEach((f) => {
+                                                                    if (f['id'] ==
+                                                                        country)
+                                                                      {
+                                                                        if (!f[
+                                                                            'country_isdisponible'])
+                                                                          {
+                                                                            print(f),
+                                                                            saveReceiver_countryEntreprise =
+                                                                                1,
+                                                                            showAlertDialog(context),
+                                                                          }
+                                                                      }
+                                                                  });
+                                                          saveReceiver_countryEntreprise =
+                                                              country;
+                                                        });
+                                                      });
+                                                    },
+                                                    value: 1,
+                                                  ),
+                                                ),
+                                              ))
+                                            ],
+                                          )),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 25.0),
+                                          child: new Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: <Widget>[
+                                              new Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  new Text(
+                                                    'Raison Sociale',
+                                                    style: TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          )),
+                                      //  const SizedBox(height: 5.0),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 5.0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Flexible(
+                                                  child: TextFormField(
+                                                onSaved: (val) => setState(() =>
+                                                    saveReceiver_raisonEntreprise
+                                                        .text = val),
+                                                controller: TextEditingController()
+                                                  ..text =
+                                                      saveReceiver_raisonEntreprise
+                                                          .text,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  hintText:
+                                                      "Entrez la raison sociale",
+                                                  border: OutlineInputBorder(),
+                                                ),
+                                              )),
+                                            ],
+                                          )),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 25.0),
+                                          child: new Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: <Widget>[
+                                              new Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  new Text(
+                                                    'Site Web(optionnel)',
+                                                    style: TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          )),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 5.0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Flexible(
+                                                  child: TextFormField(
+                                                onSaved: (val) => setState(() =>
+                                                    saveReceiver_sitewebEntreprise
+                                                        .text = val),
+                                                controller: TextEditingController()
+                                                  ..text =
+                                                      saveReceiver_sitewebEntreprise
+                                                          .text,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  hintText:
+                                                      "Entrez le site Web",
+                                                  border: OutlineInputBorder(),
+                                                ),
+                                              )),
+                                            ],
+                                          )),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 25.0),
+                                          child: new Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: <Widget>[
+                                              new Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  new Text(
+                                                    'Nom*',
+                                                    style: TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          )),
+                                      //  const SizedBox(height: 5.0),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 5.0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Flexible(
+                                                  child: TextFormField(
+                                                onSaved: (val) => setState(() =>
+                                                    saveReceiver_last_name
+                                                        .text = val),
+                                                controller:
+                                                    TextEditingController()
+                                                      ..text =
+                                                          saveReceiver_last_name
+                                                              .text,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  hintText: "Entrez le Nom",
+                                                  border: OutlineInputBorder(),
+                                                ),
+                                              )),
+                                            ],
+                                          )),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 25.0),
+                                          child: new Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: <Widget>[
+                                              new Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  new Text(
+                                                    'Email(optionnel)',
+                                                    style: TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          )),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 5.0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Flexible(
+                                                  child: TextFormField(
+                                                onSaved: (val) => setState(() =>
+                                                    saveReceiver_emailEntreprise.text = val),
+                                                /*validator: (value) => EmailValidator
+                                                .validate(value)
+                                                ? null
+                                                : "Veuillez saisir un e-mail valide",*/
+                                                controller: TextEditingController()
+                                                  ..text = saveReceiver_emailEntreprise.text,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  hintText:
+                                                      "Entre un email",
+                                                  border: OutlineInputBorder(),
+                                                ),
+                                              )),
+                                            ],
+                                          )),
 
-              ],
-            ),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 25.0),
+                                          child: new Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: <Widget>[
+                                              new Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  new Text(
+                                                    'Telephone*',
+                                                    style: TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          )),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 5.0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Flexible(
+                                                  child: TextFormField(
+                                                onSaved: (val) => setState(() =>
+                                                saveReceiver_phoneEntreprise
+                                                        .text = val),
+                                                    validator: (value) {
+                                                      if (value.isEmpty) {
+                                                        return 'Veuillez saisir un telephone';
+                                                      }
+                                                      return null;
+                                                    },
+                                                controller: TextEditingController()
+                                                  ..text =
+                                                      saveReceiver_phoneEntreprise
+                                                          .text,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  hintText:
+                                                      "Entre un telephone",
+                                                  border: OutlineInputBorder(),
+                                                ),
+                                              )),
+                                            ],
+                                          )),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 25.0),
+                                          child: new Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: <Widget>[
+                                              new Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  new Text(
+                                                    'Informations complémentaire(optionnel)',
+                                                    style: TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          )),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 25.0,
+                                              right: 25.0,
+                                              top: 5.0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Flexible(
+                                                  child: TextFormField(
+                                                maxLines: 10,
+                                                onSaved: (val) => setState(() =>
+                                                    saveReceiver_infoEntreprise
+                                                        .text = val),
+                                                controller:
+                                                saveReceiver_infoEntreprise,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  hintText:
+                                                      "Information complémentaire",
+                                                  border: OutlineInputBorder(),
+                                                ),
+                                              )),
+                                            ],
+                                          )),
+                                      const SizedBox(height: 20.0),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Flexible(
+                                            child: Container(
+                                              width: double.infinity,
+                                              child: RaisedButton(
+                                                elevation: 0,
+                                                /*padding: const EdgeInsets.only(
+                                          left: 170, right: 170),*/
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0)),
+                                                child: Text("Valider"),
+                                                color: kPrimaryColor,
+                                                textColor: Colors.white,
+                                                onPressed: () {
+                                                  print(saveReceiver_countryEntreprise);
+                                                  final form =
+                                                      _formKey.currentState;
+                                                  if (_formKey.currentState
+                                                      .validate()) {
+
+                                                    form.save();
+                                                    Random random =
+                                                        new Random();
+                                                    int randomId =
+                                                        random.nextInt(100);
+                                                    storage.write(
+                                                        key: "beneficiaireNew",
+                                                        value: json.encode([
+                                                          {
+                                                            "id": randomId,
+                                                            "receiver_last_name":
+                                                                '',
+                                                            "receiver_first_name":
+                                                                '',
+                                                            "receiver_company":
+                                                                saveReceiver_raisonEntreprise
+                                                                    .text,
+                                                            "receiver_phone":
+                                                                saveReceiver_phoneEntreprise
+                                                                    .text,
+                                                            "receiver_country":
+                                                                saveReceiver_countryEntreprise,
+                                                            "receiver_email":
+                                                                saveReceiver_emailEntreprise
+                                                                    .text,
+                                                            "receiver_siteweb":
+                                                                saveReceiver_sitewebEntreprise
+                                                                    .text,
+                                                            "receiver_description":
+                                                                saveReceiver_infoEntreprise
+                                                                    .text,
+                                                            "is_company": true,
+                                                          }
+                                                        ]));
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ExpenseTrackerApp()),
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  )
+                                : FutureBuilder<Beneficiaire>(
+                                    future: _futureBeneficiaire,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return Text(
+                                            snapshot.data.receiver_first_name);
+                                      } else if (snapshot.hasError) {
+                                        return Text("${snapshot.error}");
+                                      }
+                                      return CircularProgressIndicator();
+                                    },
+                                  ),
+                          ),
+                        ),
+                      )),
+            ],
           ),
         ),
-      );
+      ),
+    );
   }
 }
 

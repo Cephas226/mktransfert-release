@@ -216,7 +216,7 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
     final TextStyle tStyle = TextStyle(color: active, fontSize: 16.0);
     return Container(
         padding: const EdgeInsets.symmetric(vertical: 5.0),
-        child:GestureDetector(
+        child:InkWell(
           onTap: () {
             Navigator.pushNamed(context, route);
           },

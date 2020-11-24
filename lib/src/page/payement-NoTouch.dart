@@ -1,3 +1,4 @@
+/*
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -72,7 +73,7 @@ class ExistingCardsPageState extends State<ExistingCardsPage> {
       return Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
               builder: (BuildContext context) => TransactionPage()),
-          (Route<dynamic> route) => false);
+              (Route<dynamic> route) => false);
     else {
       return jwt;
     }
@@ -86,14 +87,14 @@ class ExistingCardsPageState extends State<ExistingCardsPage> {
       return Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
               builder: (BuildContext context) => TransactionPage()),
-          (Route<dynamic> route) => false);
+              (Route<dynamic> route) => false);
     else {
       return transactionBackend;
     }
   }
 
   payViaExistingCard(BuildContext context, card) async {
-    /*this.displayTransactionInfo();
+this.displayTransactionInfo();
     ProgressDialog dialog = new ProgressDialog(context);
     dialog.style(message: "S'il vous plaît, attendez...");
     await dialog.show();
@@ -123,7 +124,8 @@ class ExistingCardsPageState extends State<ExistingCardsPage> {
       } else {
         Navigator.pop(context);
       }
-    });*/
+    });
+
   }
 
   @override
@@ -187,10 +189,11 @@ class PaymentSuccessDialog2 extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: kPrimaryColor,
-          leading: IconButton(
+ leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () => Navigator.of(context).pop(),
           ),
+
           title: Text("Succès"),
           centerTitle: true,
         ),
@@ -247,7 +250,7 @@ class PaymentSuccessDialog2 extends StatelessWidget {
                 shouldExpand: true,
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 30.0, vertical: 5),
+                  const EdgeInsets.symmetric(horizontal: 30.0, vertical: 5),
                   child: Container(
                     height: 140,
                     child: Padding(
@@ -262,9 +265,9 @@ class PaymentSuccessDialog2 extends StatelessWidget {
                                   Expanded(
                                     child: Column(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
+                                      MainAxisAlignment.spaceAround,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: <Widget>[
                                         Text(
                                           'Heure',
@@ -283,25 +286,18 @@ class PaymentSuccessDialog2 extends StatelessWidget {
                                   Expanded(
                                     child: Column(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
+                                      MainAxisAlignment.spaceAround,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: <Widget>[
                                         Text(
                                           'Nom & Prenom',
                                           style: TextStyle(
                                             color:
-                                                Colors.black.withOpacity(0.5),
+                                            Colors.black.withOpacity(0.5),
                                           ),
                                         ),
-                                        Text(
-                                          _receiver_Name+''+receiver_last_name,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
+
                                       ],
                                     ),
                                   ),
@@ -340,15 +336,15 @@ class PaymentSuccessDialog2 extends StatelessWidget {
                                 Expanded(
                                   child: Column(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
+                                    MainAxisAlignment.spaceAround,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
                                         'Date',
                                         style: TextStyle(
                                             color:
-                                                Colors.black.withOpacity(0.5)),
+                                            Colors.black.withOpacity(0.5)),
                                       ),
                                       Text(
                                         _transactionDate,
@@ -361,15 +357,15 @@ class PaymentSuccessDialog2 extends StatelessWidget {
                                 Expanded(
                                   child: Column(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
+                                    MainAxisAlignment.spaceAround,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
                                         'PRIX',
                                         style: TextStyle(
                                             color:
-                                                Colors.black.withOpacity(0.5)),
+                                            Colors.black.withOpacity(0.5)),
                                       ),
                                       Text(
                                         _currency + '•' + _amount.toString(),
@@ -404,3 +400,4 @@ class PaymentSuccessDialog2 extends StatelessWidget {
     );
   }
 }
+*/

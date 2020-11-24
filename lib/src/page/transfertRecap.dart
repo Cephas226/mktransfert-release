@@ -4,7 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mktransfert/src/contant/constant.dart';
-import 'package:mktransfert/src/page/paymentPage.dart';
+import 'package:mktransfert/src/page/paymentPageXXX.dart';
 import 'package:mktransfert/src/page/registerBeneficiaire.dart';
 import 'package:mktransfert/src/page/transaction.dart';
 import 'package:mktransfert/src/widget/round_corner_image.dart';
@@ -32,6 +32,7 @@ class ExpenseTrackerApp extends StatelessWidget {
     );
   }
 }
+
 Future<AlertDialog> showAlertDialogPointRetrait(BuildContext context) {
   return showDialog<AlertDialog>(
     context: context,
@@ -42,11 +43,7 @@ Future<AlertDialog> showAlertDialogPointRetrait(BuildContext context) {
           child: Form(
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(
-                  ' Montant Reçu en dévise locale'
-                )
-              ],
+              children: <Widget>[Text(' Montant Reçu en dévise locale')],
             ),
           ),
         ),
@@ -61,6 +58,7 @@ Future<AlertDialog> showAlertDialogPointRetrait(BuildContext context) {
     },
   );
 }
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -93,15 +91,27 @@ class _HomePageState extends State<HomePage> {
   var editReceiver_country = TextEditingController();
   var editReceiver_description = TextEditingController();
 
+  var saveReceiver_last_nameEntreprise = TextEditingController();
+  var saveReceiver_first_nameEntreprise = TextEditingController();
+  var saveReceiver_raisonEntreprise = TextEditingController();
+  var saveReceiver_nameEntreprise = TextEditingController();
+  var saveReceiver_sitewebEntreprise = TextEditingController();
+  var saveReceiver_emailEntreprise = TextEditingController();
+  var saveReceiver_phoneEntreprise = TextEditingController();
+  var saveReceiver_countryEntreprise = TextEditingController();
+  var saveReceiver_infoEntreprise = TextEditingController();
+
+  var editReceiver_Is_company;
+
   int user_id;
-  String first_name="";
-  String last_name="";
-  String country="";
-  String phone= "";
-  String email="";
+  String first_name = "";
+  String last_name = "";
+  String country = "";
+  String phone = "";
+  String email = "";
 
   int _beneficiaireID;
-  int _mySelectionCountry=1;
+  int _mySelectionCountry = 1;
 
   double _amount;
   int _montant_send;
@@ -109,9 +119,9 @@ class _HomePageState extends State<HomePage> {
   double _montant_receive;
   double _stripeAmount;
 
-  String _devise_receive="";
-  String _currencySend="";
-  String _senderCurrencySymbole="";
+  String _devise_receive = "";
+  String _currencySend = "";
+  String _senderCurrencySymbole = "";
 
   displayPaymentInfo() async {
     var jwt = await storage.read(key: "jwt");
@@ -119,9 +129,7 @@ class _HomePageState extends State<HomePage> {
     String token = responseJson["access_token"];
     int user_id = responseJson["user_id"];
     var res = await http.get(
-        Uri.encodeFull(
-            'https://www.mktransfert.com/api/payment/' +
-                '$user_id'),
+        Uri.encodeFull('https://www.mktransfert.com/api/payment/' + '$user_id'),
         headers: {
           "Accept": "application/json",
           'Authorization': 'Bearer $token',
@@ -136,6 +144,7 @@ class _HomePageState extends State<HomePage> {
       receiver_point_retait;
     });
   }
+
   Future<List<dynamic>> getSWData() async {
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
@@ -151,7 +160,7 @@ class _HomePageState extends State<HomePage> {
     var resBody = json.decode(res.body);
     var beneficiaireInfo = await storage.read(key: "beneficiaireNew");
 
-    if(beneficiaireInfo != null){
+    if (beneficiaireInfo != null) {
       List responseJsonBeneficiaire = json.decode(beneficiaireInfo);
       responseJsonBeneficiaire.forEach((element) {
         beneficiaireList.add(element);
@@ -169,6 +178,7 @@ class _HomePageState extends State<HomePage> {
       data = beneficiaireList;
       countrydata = countryList;
     });
+    print(beneficiaireList);
     return beneficiaireList;
   }
 
@@ -177,7 +187,8 @@ class _HomePageState extends State<HomePage> {
     Map<String, dynamic> responseJson = json.decode(jwt);
     String token = responseJson["access_token"];
     int user_id = responseJson["user_id"];
-    http.Response response = await http.get(Uri.encodeFull(apiUrl + '$user_id'), headers: {
+    http.Response response =
+        await http.get(Uri.encodeFull(apiUrl + '$user_id'), headers: {
       "Accept": "application/json",
       'Authorization': 'Bearer $token',
     });
@@ -197,30 +208,28 @@ class _HomePageState extends State<HomePage> {
     resBody['data_country']?.forEach((k, v) {
       countryList.add(v[0]);
     });
-     setState(() {
-       data = beneficiaireList;
-     });
+    setState(() {
+      data = beneficiaireList;
+    });
     return json.decode(response.body);
   }
 
-   getSuccesInfo()async {
+  getSuccesInfo() async {
     print('hello');
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
     String token = responseJson["access_token"];
     int user_id = responseJson["user_id"];
-    http.Response response = await http.
-    get(
-        'https://www.mktransfert.com/api/success/'+'$user_id',
+    http.Response response = await http.get(
+        'https://www.mktransfert.com/api/success/' + '$user_id',
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
-        }
-    );
+        });
     var resBody = json.decode(response.body);
     print(resBody["API_transac_data"]);
-    _transac_num=resBody["API_transac_data"];
-  /* resBody?.forEach((k, v) {
+    _transac_num = resBody["API_transac_data"];
+    /* resBody?.forEach((k, v) {
       print(v['transac_num']);
       _transac_num=v['transac_num'];
     });
@@ -245,9 +254,8 @@ class _HomePageState extends State<HomePage> {
             ),
             content: SingleChildScrollView(
                 physics: ClampingScrollPhysics(),
-                child:Stack(
+                child: Stack(
                   children: <Widget>[
-
                     Container(
                         height: 400.0, // Change as per your requirement
                         width: 400.0,
@@ -261,270 +269,563 @@ class _HomePageState extends State<HomePage> {
                                   testCountry.add(element);
                                 });
                                 var selectedBeneficiaire =
-                                data.map((item) => item).toList();
+                                    data.map((item) => item).toList();
                                 selectedBeneficiaire
                                     .where((f) => f["id"] == _beneficiaireID);
                                 selectedBeneficiaire.forEach((b) {
                                   if (b['id'] == _beneficiaireID) {
                                     editReceiver_first_name.text =
-                                    b["receiver_first_name"];
+                                        b["receiver_first_name"];
                                     editReceiver_last_name.text =
-                                    b["receiver_last_name"];
+                                        b["receiver_last_name"];
                                     editReceiver_country.text =
-                                    b["receiver_country"];
-                                    editReceiver_phone.text = b["receiver_phone"];
-                                    editReceiver_email.text = b["receiver_email"];
-                                    editReceiver_description.text = b["receiver_info"];
+                                        b["receiver_country"];
+                                    editReceiver_phone.text =
+                                        b["receiver_phone"];
+                                    editReceiver_email.text =
+                                        b["receiver_email"];
+                                    editReceiver_description.text =
+                                        b["receiver_info"];
+                                    editReceiver_Is_company = b["is_company"];
+
+                                    /*     saveReceiver_last_nameEntreprise.text=b["receiver_first_name"];
+                                    saveReceiver_first_nameEntreprise.text=b["receiver_first_name"];*/
+
+                                    saveReceiver_raisonEntreprise.text =
+                                        b["receiver_company"];
+                                    saveReceiver_sitewebEntreprise.text =
+                                        b["receiver_siteweb"];
+                                    saveReceiver_emailEntreprise.text =
+                                        b["receiver_email"];
+                                    saveReceiver_phoneEntreprise.text =
+                                        b["receiver_phone"];
+                                    saveReceiver_countryEntreprise.text =
+                                        b["receiver_country"];
+                                    saveReceiver_infoEntreprise.text =
+                                        b["receiver_description"];
                                   }
                                 });
                                 return ListView.builder(
                                     shrinkWrap: true,
                                     padding: EdgeInsets.all(8),
                                     itemCount: 1,
-                                    itemBuilder: (BuildContext context, int index) {
-                                      return Container(
-                                        child: Form(
-                                          child: Column(
-                                            children: <Widget>[
-                                              Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 25.0,
-                                                      right: 25.0,
-                                                      top: 2.0),
-                                                  child: new Row(
-                                                    mainAxisSize: MainAxisSize.max,
-                                                    children: <Widget>[
-                                                      new Flexible(
-                                                          child: Container(
-                                                            padding:
-                                                            const EdgeInsets.only(
-                                                                left: 10.0,
-                                                                right: 10.0),
-                                                            decoration: BoxDecoration(
-                                                                borderRadius:
-                                                                BorderRadius
-                                                                    .circular(5.0),
-                                                                border: Border.all()),
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      if (editReceiver_Is_company == false) {
+                                        return Container(
+                                          child: Form(
+                                            child: Column(
+                                              children: <Widget>[
+                                                Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 25.0,
+                                                        right: 25.0,
+                                                        top: 2.0),
+                                                    child: new Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      children: <Widget>[
+                                                        new Flexible(
+                                                            child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 10.0,
+                                                                  right: 10.0),
+                                                          decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5.0),
+                                                              border:
+                                                                  Border.all()),
+                                                          child:
+                                                              DropdownButtonHideUnderline(
                                                             child:
-                                                            DropdownButtonHideUnderline(
-                                                              child: DropdownButton(
-                                                                hint: Text(
-                                                                    "Choisir un pays"),
-                                                                items: testCountry
-                                                                    ?.map((item) {
-                                                                  return DropdownMenuItem(
-                                                                    child: Text(item[
-                                                                    'country_name']),
-                                                                    value:
-                                                                    item['id'],
-                                                                  );
-                                                                })?.toList() ??
-                                                                    [],
-                                                                onChanged: (country) {
+                                                                DropdownButton(
+                                                              hint: Text(
+                                                                  "Choisir un pays"),
+                                                              items: testCountry
+                                                                      ?.map(
+                                                                          (item) {
+                                                                    return DropdownMenuItem(
+                                                                      child: Text(
+                                                                          item[
+                                                                              'country_name']),
+                                                                      value: item[
+                                                                          'id'],
+                                                                    );
+                                                                  })?.toList() ??
+                                                                  [],
+                                                              onChanged:
+                                                                  (country) {
+                                                                setState(() {
                                                                   setState(() {
-                                                                    setState(() {
-                                                                      // showLoaderDialog(context);
+                                                                    // showLoaderDialog(context);
+                                                                    _mySelectionCountry =
+                                                                        country;
+                                                                    setState(
+                                                                        () {
+                                                                      var selectedReceiverCountry = countrydata
+                                                                          .map((item) =>
+                                                                              item)
+                                                                          .toList();
+                                                                      selectedReceiverCountry.forEach(
+                                                                          (f) =>
+                                                                              {
+                                                                                if (f['id'] == _mySelectionCountry)
+                                                                                  {
+                                                                                    if (!f['country_isdisponible'])
+                                                                                      {
+                                                                                        showAlertDialogContry(context),
+                                                                                      }
+                                                                                  }
+                                                                              });
                                                                       _mySelectionCountry =
                                                                           country;
-                                                                      setState(() {
-                                                                        var selectedReceiverCountry =
-                                                                        countrydata
-                                                                            .map((item) =>
-                                                                        item)
-                                                                            .toList();
-                                                                        selectedReceiverCountry
-                                                                            .forEach(
-                                                                                (f) => {
-
-                                                                              if (f['id'] == _mySelectionCountry)
-                                                                                {
-                                                                                  if (!f['country_isdisponible'])
-                                                                                    {
-                                                                                      showAlertDialogContry(context),
-                                                                                    }
-                                                                                }
-                                                                            });
-                                                                        _mySelectionCountry =
-                                                                            country;
-                                                                      });
                                                                     });
                                                                   });
-                                                                },
-                                                                value: 1,
-                                                              ),
+                                                                });
+                                                              },
+                                                              value: 1,
                                                             ),
-                                                          ))
-                                                    ],
-                                                  )),
-                                              const SizedBox(height: 20.0),
-                                              Padding(
+                                                          ),
+                                                        ))
+                                                      ],
+                                                    )),
+                                                const SizedBox(height: 20.0),
+                                                Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 25.0,
+                                                        right: 25.0,
+                                                        top: 2.0),
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      children: <Widget>[
+                                                        Flexible(
+                                                          child:
+                                                              new TextFormField(
+                                                            onSaved: (val) =>
+                                                                setState(() =>
+                                                                    editReceiver_last_name
+                                                                            .text =
+                                                                        val),
+                                                            controller:
+                                                                TextEditingController()
+                                                                  ..text =
+                                                                      editReceiver_last_name
+                                                                          .text,
+                                                            decoration:
+                                                                const InputDecoration(
+                                                              hintText:
+                                                                  "Entrez un nom",
+                                                              border:
+                                                                  OutlineInputBorder(),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )),
+                                                const SizedBox(height: 20.0),
+                                                Padding(
                                                   padding: EdgeInsets.only(
                                                       left: 25.0,
                                                       right: 25.0,
                                                       top: 2.0),
-                                                  child: Row(
-                                                    mainAxisSize: MainAxisSize.max,
+                                                  child: new Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
                                                     children: <Widget>[
-                                                      Flexible(
-                                                        child: new TextFormField(
+                                                      new Flexible(
+                                                        child:
+                                                            new TextFormField(
                                                           onSaved: (val) =>
                                                               setState(() =>
-                                                              editReceiver_last_name
-                                                                  .text = val),
+                                                                  editReceiver_first_name
+                                                                          .text =
+                                                                      val),
                                                           controller:
-                                                          TextEditingController()
-                                                            ..text =
-                                                                editReceiver_last_name
-                                                                    .text,
+                                                              editReceiver_first_name,
                                                           decoration:
-                                                          const InputDecoration(
+                                                              const InputDecoration(
                                                             hintText:
-                                                            "Entrez un nom",
+                                                                "Entrez un prenom",
                                                             border:
-                                                            OutlineInputBorder(),
+                                                                OutlineInputBorder(),
                                                           ),
                                                         ),
                                                       ),
                                                     ],
-                                                  )),
-                                              const SizedBox(height: 20.0),
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 25.0,
-                                                    right: 25.0,
-                                                    top: 2.0),
-                                                child: new Row(
-                                                  mainAxisSize: MainAxisSize.max,
-                                                  children: <Widget>[
-                                                    new Flexible(
-                                                      child: new TextFormField(
-                                                        onSaved: (val) => setState(
-                                                                () =>
-                                                            editReceiver_first_name
-                                                                .text = val),
-                                                        controller :
-                                                        editReceiver_first_name
-                                                        ,
-                                                        decoration:
-                                                        const InputDecoration(
-                                                          hintText:
-                                                          "Entrez un prenom",
-                                                          border:
-                                                          OutlineInputBorder(),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
+                                                  ),
                                                 ),
-                                              ),
-                                              const SizedBox(height: 20.0),
-                                              Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 25.0,
-                                                      right: 25.0,
-                                                      top: 2.0),
-                                                  child: new Row(
-                                                    mainAxisSize: MainAxisSize.max,
-                                                    children: <Widget>[
-                                                      new Flexible(
-                                                        child: new TextFormField(
-                                                          onSaved: (val) =>
-                                                              setState(() =>
-                                                              editReceiver_email
-                                                                  .text = val),
-                                                          controller:
-                                                          TextEditingController()
-                                                            ..text =
-                                                                editReceiver_email
-                                                                    .text,
-                                                          decoration:
-                                                          const InputDecoration(
-                                                            hintText:
-                                                            "exemple@gmail.com",
-                                                            border:
-                                                            OutlineInputBorder(),
+                                                const SizedBox(height: 20.0),
+                                                Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 25.0,
+                                                        right: 25.0,
+                                                        top: 2.0),
+                                                    child: new Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      children: <Widget>[
+                                                        new Flexible(
+                                                          child:
+                                                              new TextFormField(
+                                                            onSaved: (val) =>
+                                                                setState(() =>
+                                                                    editReceiver_email
+                                                                            .text =
+                                                                        val),
+                                                            controller:
+                                                                TextEditingController()
+                                                                  ..text =
+                                                                      editReceiver_email
+                                                                          .text,
+                                                            decoration:
+                                                                const InputDecoration(
+                                                              hintText:
+                                                                  "exemple@gmail.com",
+                                                              border:
+                                                                  OutlineInputBorder(),
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
-                                                    ],
-                                                  )),
-                                              const SizedBox(height: 20.0),
-                                              Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 25.0,
-                                                      right: 25.0,
-                                                      top: 2.0),
-                                                  child: new Row(
-                                                    mainAxisSize: MainAxisSize.max,
-                                                    children: <Widget>[
-                                                      new Flexible(
-                                                        child: new TextFormField(
-                                                          onSaved: (val) =>
-                                                              setState(() =>
-                                                              editReceiver_phone
-                                                                  .text = val),
-                                                          controller:
-                                                          TextEditingController()
-                                                            ..text =
-                                                                editReceiver_phone
-                                                                    .text,
-                                                          decoration: const InputDecoration(
-                                                              hintText:
-                                                              "Entre un téléphone",
-                                                              border:
-                                                              OutlineInputBorder()),
+                                                      ],
+                                                    )),
+                                                const SizedBox(height: 20.0),
+                                                Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 25.0,
+                                                        right: 25.0,
+                                                        top: 2.0),
+                                                    child: new Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      children: <Widget>[
+                                                        new Flexible(
+                                                          child:
+                                                              new TextFormField(
+                                                            onSaved: (val) =>
+                                                                setState(() =>
+                                                                    editReceiver_phone
+                                                                            .text =
+                                                                        val),
+                                                            controller:
+                                                                TextEditingController()
+                                                                  ..text =
+                                                                      editReceiver_phone
+                                                                          .text,
+                                                            decoration: const InputDecoration(
+                                                                hintText:
+                                                                    "Entre un téléphone",
+                                                                border:
+                                                                    OutlineInputBorder()),
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ],
-                                                  )
-                                              ),
-                                              const SizedBox(height: 20.0),
-                                              Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 25.0,
-                                                      right: 25.0,
-                                                      top: 2.0),
-                                                  child: new Row(
-                                                    mainAxisSize: MainAxisSize.max,
-                                                    children: <Widget>[
-                                                      new Flexible(
-                                                        child: new TextFormField(
-                                                          onSaved: (val) =>
-                                                              setState(() =>
-                                                              editReceiver_description
-                                                                  .text = val),
-                                                          controller: editReceiver_description,
-
-                                                          decoration: const InputDecoration(
-                                                              hintText:
-                                                              "Description",
-                                                              border:
-                                                              OutlineInputBorder()),
+                                                      ],
+                                                    )),
+                                                const SizedBox(height: 20.0),
+                                                Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 25.0,
+                                                        right: 25.0,
+                                                        top: 2.0),
+                                                    child: new Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      children: <Widget>[
+                                                        new Flexible(
+                                                          child:
+                                                              new TextFormField(
+                                                            onSaved: (val) =>
+                                                                setState(() =>
+                                                                    editReceiver_description
+                                                                            .text =
+                                                                        val),
+                                                            controller:
+                                                                editReceiver_description,
+                                                            decoration: const InputDecoration(
+                                                                hintText:
+                                                                    "Description",
+                                                                border:
+                                                                    OutlineInputBorder()),
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ],
-                                                  )
-                                              ),
-                                            ],
+                                                      ],
+                                                    )),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      );
+                                        );
+                                      } else {
+                                        return Container(
+                                          child: Form(
+                                            child: Column(
+                                              children: <Widget>[
+                                                Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 25.0,
+                                                        right: 25.0,
+                                                        top: 2.0),
+                                                    child: new Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      children: <Widget>[
+                                                        new Flexible(
+                                                            child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 10.0,
+                                                                  right: 10.0),
+                                                          decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5.0),
+                                                              border:
+                                                                  Border.all()),
+                                                          child:
+                                                              DropdownButtonHideUnderline(
+                                                            child:
+                                                                DropdownButton(
+                                                              hint: Text(
+                                                                  "Choisir un pays"),
+                                                              items: testCountry
+                                                                      ?.map(
+                                                                          (item) {
+                                                                    return DropdownMenuItem(
+                                                                      child: Text(
+                                                                          item[
+                                                                              'country_name']),
+                                                                      value: item[
+                                                                          'id'],
+                                                                    );
+                                                                  })?.toList() ??
+                                                                  [],
+                                                              onChanged:
+                                                                  (country) {
+                                                                setState(() {
+                                                                  setState(() {
+                                                                    // showLoaderDialog(context);
+                                                                    _mySelectionCountry =
+                                                                        country;
+                                                                    setState(
+                                                                        () {
+                                                                      var selectedReceiverCountry = countrydata
+                                                                          .map((item) =>
+                                                                              item)
+                                                                          .toList();
+                                                                      selectedReceiverCountry.forEach(
+                                                                          (f) =>
+                                                                              {
+                                                                                if (f['id'] == _mySelectionCountry)
+                                                                                  {
+                                                                                    if (!f['country_isdisponible'])
+                                                                                      {
+                                                                                        showAlertDialogContry(context),
+                                                                                      }
+                                                                                  }
+                                                                              });
+                                                                      _mySelectionCountry =
+                                                                          country;
+                                                                    });
+                                                                  });
+                                                                });
+                                                              },
+                                                              value: 1,
+                                                            ),
+                                                          ),
+                                                        ))
+                                                      ],
+                                                    )),
+                                                const SizedBox(height: 20.0),
+                                                Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 25.0,
+                                                        right: 25.0,
+                                                        top: 2.0),
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      children: <Widget>[
+                                                        Flexible(
+                                                          child:
+                                                              new TextFormField(
+                                                            onSaved: (val) =>
+                                                                setState(() =>
+                                                                    saveReceiver_raisonEntreprise
+                                                                            .text =
+                                                                        val),
+                                                            controller:
+                                                                TextEditingController()
+                                                                  ..text =
+                                                                      saveReceiver_raisonEntreprise
+                                                                          .text,
+                                                            decoration:
+                                                                const InputDecoration(
+                                                              hintText:
+                                                                  "Entrez une raison",
+                                                              border:
+                                                                  OutlineInputBorder(),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )),
+                                                const SizedBox(height: 20.0),
+                                                Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 25.0,
+                                                        right: 25.0,
+                                                        top: 2.0),
+                                                    child: new Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      children: <Widget>[
+                                                        new Flexible(
+                                                          child:
+                                                              new TextFormField(
+                                                            onSaved: (val) =>
+                                                                setState(() =>
+                                                                    saveReceiver_emailEntreprise
+                                                                            .text =
+                                                                        val),
+                                                            controller:
+                                                                TextEditingController()
+                                                                  ..text =
+                                                                      saveReceiver_emailEntreprise
+                                                                          .text,
+                                                            decoration:
+                                                                const InputDecoration(
+                                                              hintText:
+                                                                  "exemple@gmail.com",
+                                                              border:
+                                                                  OutlineInputBorder(),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )),
+                                                const SizedBox(height: 20.0),
+                                                Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 25.0,
+                                                        right: 25.0,
+                                                        top: 2.0),
+                                                    child: new Row(
+                                                      mainAxisSize:
+                                                      MainAxisSize.max,
+                                                      children: <Widget>[
+                                                        new Flexible(
+                                                          child:
+                                                          new TextFormField(
+                                                            onSaved: (val) =>
+                                                                setState(() =>
+                                                                saveReceiver_sitewebEntreprise
+                                                                    .text =
+                                                                    val),
+                                                            controller:
+                                                            TextEditingController()
+                                                              ..text =
+                                                                  saveReceiver_sitewebEntreprise
+                                                                      .text,
+                                                            decoration:
+                                                            const InputDecoration(
+                                                              hintText:
+                                                              "",
+                                                              border:
+                                                              OutlineInputBorder(),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )),
+                                                const SizedBox(height: 20.0),
+                                                Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 25.0,
+                                                        right: 25.0,
+                                                        top: 2.0),
+                                                    child: new Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      children: <Widget>[
+                                                        new Flexible(
+                                                          child:
+                                                              new TextFormField(
+                                                            onSaved: (val) =>
+                                                                setState(() =>
+                                                                    saveReceiver_phoneEntreprise
+                                                                            .text =
+                                                                        val),
+                                                            controller:
+                                                                TextEditingController()
+                                                                  ..text =
+                                                                      saveReceiver_phoneEntreprise
+                                                                          .text,
+                                                            decoration: const InputDecoration(
+                                                                hintText:
+                                                                    "Entre un téléphone",
+                                                                border:
+                                                                    OutlineInputBorder()),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )),
+                                                const SizedBox(height: 20.0),
+                                                Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 25.0,
+                                                        right: 25.0,
+                                                        top: 2.0),
+                                                    child: new Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      children: <Widget>[
+                                                        new Flexible(
+                                                          child:
+                                                              new TextFormField(
+                                                            onSaved: (val) =>
+                                                                setState(() =>
+                                                                    saveReceiver_infoEntreprise
+                                                                            .text =
+                                                                        val),
+                                                            controller:
+                                                            saveReceiver_infoEntreprise,
+                                                            decoration: const InputDecoration(
+                                                                hintText:
+                                                                    "Description",
+                                                                border:
+                                                                    OutlineInputBorder()),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      }
                                     });
                               } else {
-                                return Center(child: CircularProgressIndicator());
+                                return Center(
+                                    child: CircularProgressIndicator());
                               }
                             }))
                   ],
-                )
-            ),
+                )),
             actions: <Widget>[
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Container(
-                    width:120 ,
+                    width: 120,
                     child: RaisedButton(
-                      onPressed: () { Navigator.of(context).pop();},
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
                       color: Colors.grey.shade300,
                       textColor: Colors.grey.shade600,
                       child: Text(
@@ -535,81 +836,95 @@ class _HomePageState extends State<HomePage> {
                       ),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(
-                            8,
-                          ))),
+                        8,
+                      ))),
                     ),
                   ),
                   SizedBox(
                     width: 16,
                   ),
                   Container(
-                    width:120 ,
-                    child:   RaisedButton(
+                    width: 120,
+                    child: RaisedButton(
                       onPressed: () {
                         //updateUserProfile();
-                      //  print(user_id);
+                        //  print(user_id);
                         storage.write(
                             key: "beneficiaireInfo",
                             value: json.encode([
                               {
-                                "id":_beneficiaireID,
-                                "receiver_first_name": editReceiver_first_name.text,
-                                "receiver_last_name": editReceiver_last_name.text,
+                                "id": _beneficiaireID,
+                                "receiver_first_name":
+                                    editReceiver_first_name.text,
+                                "receiver_last_name":
+                                    editReceiver_last_name.text,
                                 "receiver_email": editReceiver_email.text,
                                 "receiver_phone": editReceiver_phone.text,
                                 "receiver_country": editReceiver_country.text,
-                                "receiver_description":  editReceiver_description.text,
+                                "receiver_description":
+                                    editReceiver_description.text,
                               }
                             ]));
                         Navigator.of(context).pop();
-                        storage.write(key: "transactionBackend", value: json.encode([
-                          {
-                            "user_id":user_id,
-                            //sender
-                            "first_name":first_name,
-                            "last_name":last_name,
-                            "country":country,
-                            "phone":phone,
-                            "email":email,
+                        storage.write(
+                            key: "transactionBackend",
+                            value: json.encode([
+                              {
+                                "user_id": user_id,
+                                //sender
+                                "first_name": first_name,
+                                "last_name": last_name,
+                                "country": country,
+                                "phone": phone,
+                                "email": email,
+                                "receiver_company":saveReceiver_raisonEntreprise.text,
+                                "receiver_siteweb": saveReceiver_sitewebEntreprise.text,
 
-                            //receiver
+                                //receiver
 
-                            "receiver_first_name": editReceiver_first_name.text,
-                            "receiver_last_name": editReceiver_last_name.text,
-                            "receiver_email": editReceiver_email.text,
-                            "receiver_phone": editReceiver_phone.text,
-                            "receiver_country": _mySelectionCountry,
-                            "receiver_description":  editReceiver_description.text,
+                                "receiver_first_name":
+                                    editReceiver_first_name.text,
+                                "receiver_last_name":
+                                    editReceiver_last_name.text,
+                                "receiver_email": editReceiver_email.text,
+                                "receiver_phone": editReceiver_phone.text,
+                                "receiver_country": _mySelectionCountry,
+                                "receiver_description":
+                                    editReceiver_description.text,
 
-                            //transaction
+                                //transaction
 
-                            "montant_send":_montant_send*100,
-                            "montant_receive":_montant_receive*100,
-                            "transac_commission":_transac_commission,
-                            "transac_total":_stripeAmount,
-                            "devise_receive":_devise_receive,
-                            "devise_sender":_currencySend,
-                            "point_retrait":_mySelectionPointRetrait,
-                            "transac_num":_transac_num
-                          }
-                        ]));
-                        storage.write(key: "transaction", value: json.encode([
-                            {
-                            "montant_send":this._montant_send*100,
-                            "montant_receive":this._montant_receive*100,
-                            "transac_commission":this._transac_commission,
-                            "transac_total":_stripeAmount,
-                            "devise_send":_currencySend,
-                            "receiver_name":editReceiver_first_name.text,
-                            "receiver_last_name": editReceiver_last_name.text,
-                            "receiver_email":editReceiver_email.text,
-                            "devise_receive":_devise_receive,
-                            "point_retrait":_mySelectionPointRetrait,
-                            }
+                                "montant_send": _montant_send,
+                                "montant_receive": _montant_receive,
+                                "transac_commission": _transac_commission,
+                                "transac_total": _stripeAmount,
+                                "devise_receive": _devise_receive,
+                                "devise_sender": _currencySend,
+                                "point_retrait": _mySelectionPointRetrait,
+                                "transac_num": _transac_num
+                              }
+                            ]));
+                        storage.write(
+                            key: "transaction",
+                            value: json.encode([
+                              {
+                                "montant_send": this._montant_send,
+                                "montant_receive": this._montant_receive,
+                                "transac_commission": this._transac_commission,
+                                "transac_total": _stripeAmount,
+                                "devise_send": _currencySend,
+                                "receiver_name": editReceiver_first_name.text,
+                                "receiver_last_name":
+                                    editReceiver_last_name.text,
+                                "receiver_email": editReceiver_email.text,
+                                "devise_receive": _devise_receive,
+                                "point_retrait": _mySelectionPointRetrait,
+                              }
                             ]));
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => PaymentPage()),
+                          MaterialPageRoute(
+                              builder: (context) => PaymentPage()),
                         );
                       },
                       color: kPrimaryColor,
@@ -622,8 +937,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(
-                            8,
-                          ))),
+                        8,
+                      ))),
                     ),
                   )
                 ],
@@ -634,43 +949,42 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
-  _displaySnackMessage (){
-  }
-displayRecap() async {
-  var transactionResume = await storage.read(key: "transactionResume");
-  transactionInfoRecap=json.decode(transactionResume);
-  transactionInfoRecap.forEach((transaction) {
-    _amount=transaction['transac_total'];
-    _montant_send=transaction['montant_send'];
-    _senderCurrencySymbole=transaction['devise_send_symbol'];
-    _transac_commission=transaction['transac_commission'];
-    _montant_receive=transaction['montant_receive'];
-    _stripeAmount=transaction['transac_total'];
-    _devise_receive=transaction['devise_receive'];
-    _currencySend=transaction['devise_send'];
 
-   setState(() {
-     _amount;
-     _montant_send;
-     _senderCurrencySymbole;
-     _transac_commission;
-     _montant_receive;
-     _stripeAmount;
-     _currencySend;
-   });
-  });
-}
+  _displaySnackMessage() {}
+  displayRecap() async {
+    var transactionResume = await storage.read(key: "transactionResume");
+    transactionInfoRecap = json.decode(transactionResume);
+    transactionInfoRecap.forEach((transaction) {
+      _amount = transaction['transac_total'];
+      _montant_send = transaction['montant_send'];
+      _senderCurrencySymbole = transaction['devise_send_symbol'];
+      _transac_commission = transaction['transac_commission'];
+      _montant_receive = transaction['montant_receive'];
+      _stripeAmount = transaction['transac_total'];
+      _devise_receive = transaction['devise_receive'];
+      _currencySend = transaction['devise_send'];
+
+      setState(() {
+        _amount;
+        _montant_send;
+        _senderCurrencySymbole;
+        _transac_commission;
+        _montant_receive;
+        _stripeAmount;
+        _currencySend;
+      });
+    });
+  }
 
   displayUserInfo() async {
     var jwt = await storage.read(key: "userInfo");
     Map<String, dynamic> responseStorageUser = json.decode(jwt);
-    user_id=responseStorageUser["user_id"];
+    user_id = responseStorageUser["user_id"];
     first_name = responseStorageUser["first_name"];
     last_name = responseStorageUser["last_name"];
     email = responseStorageUser["email"];
     phone = responseStorageUser["phone"];
     country = responseStorageUser["country"];
-
   }
 
   @override
@@ -710,12 +1024,11 @@ displayRecap() async {
         Expanded(
           child: Container(
             decoration: BoxDecoration(
-              color:kPrimaryColor ,
+              color: kPrimaryColor,
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(
                 66,
               )),
-
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -723,7 +1036,7 @@ displayRecap() async {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(
-                     // top: 48,
+                      // top: 48,
                       //bottom: 42,
                       left: 24,
                     ),
@@ -731,60 +1044,59 @@ displayRecap() async {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                      Expanded(
-                        child:   MaterialButton(
-                          minWidth:10,
-                          color: Colors.white,
-                          shape: CircleBorder(),
-                          elevation: 0,
-                          child: Icon(Icons.arrow_back),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      AccueilBootomBarPage()),
-                              //   ModalRoute.withName('/')
-                            );
-                            //_showUserPassword();
-                          },
+                        Expanded(
+                          child: MaterialButton(
+                            minWidth: 10,
+                            color: Colors.white,
+                            shape: CircleBorder(),
+                            elevation: 0,
+                            child: Icon(Icons.arrow_back),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        AccueilBootomBarPage()),
+                                //   ModalRoute.withName('/')
+                              );
+                              //_showUserPassword();
+                            },
+                          ),
                         ),
-                      ),
                         Text(
                           "Vous envoyez",
                           style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white
-                          ),
+                              fontSize: 22,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white),
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              _amount.toString()+' '+_senderCurrencySymbole,
+                              _amount.toString() + ' ' + _senderCurrencySymbole,
                               style: TextStyle(
-                                fontSize: 42,
-                                fontWeight: FontWeight.bold,
-                                  color: Colors.white
-                              ),
+                                  fontSize: 42,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
                             ),
                             SizedBox(
                               height: 8,
                             ),
                             ListTile(
-                              title: Text('Commission',
+                              title: Text(
+                                'Commission',
                                 style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                    color: Colors.white
-                                ),
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white),
                               ),
-                              subtitle: Text(_transac_commission.toString()+' '+_senderCurrencySymbole,
+                              subtitle: Text(
+                                  _transac_commission.toString() +
+                                      ' ' +
+                                      _senderCurrencySymbole,
                                   style: TextStyle(
-                                     fontWeight: FontWeight.w600,
-                                      color: Colors.white
-                                  )
-                              ),
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white)),
                             ),
                           ],
                         ),
@@ -817,49 +1129,51 @@ displayRecap() async {
 
   Widget _buildDropDownPointRetrait() {
     return Container(
-      width: 50,
-      padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-      decoration: BoxDecoration(
-        color: kPrimaryColor,
-          borderRadius: BorderRadius.circular(5.0), border: Border.all()),
-      child: ButtonTheme(
-      alignedDropdown: true,
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton(
-          hint: Text("Choisir un point de retrait",
-         style: TextStyle(fontSize: 14.0, color: Color(0xFFF5F5F5)),),
-          items: receiver_point_retait?.map((item) {
-            return DropdownMenuItem(
-              child: Text(item['agence_name']),
-              value: item['id'],
-            );
-          })?.toList() ??
-              [],
-          onChanged: (newVal) {
-            setState(() {
-              var selectedPoint =
-              receiver_point_retait.map((item) => item).toList();
-              selectedPoint.forEach((f) => {
-                if (f['id'] == newVal)
-                  {
-                    if (!f['agence_isdisponible'])
-                      {
-                        print("indispo"),
-                        showAlertDialogPointRetrait(context)
-                      }
-                  }
-              });
-              _mySelectionPointRetrait = newVal;
-            });
-          },
-          value: _mySelectionPointRetrait,
-          style: new TextStyle(
-            color: Colors.black,
+        width: 50,
+        padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+        decoration: BoxDecoration(
+            color: kPrimaryColor,
+            borderRadius: BorderRadius.circular(5.0),
+            border: Border.all()),
+        child: ButtonTheme(
+          alignedDropdown: true,
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton(
+              hint: Text(
+                "Choisir un point de retrait",
+                style: TextStyle(fontSize: 14.0, color: Color(0xFFF5F5F5)),
+              ),
+              items: receiver_point_retait?.map((item) {
+                    return DropdownMenuItem(
+                      child: Text(item['agence_name']),
+                      value: item['id'],
+                    );
+                  })?.toList() ??
+                  [],
+              onChanged: (newVal) {
+                setState(() {
+                  var selectedPoint =
+                      receiver_point_retait.map((item) => item).toList();
+                  selectedPoint.forEach((f) => {
+                        if (f['id'] == newVal)
+                          {
+                            if (!f['agence_isdisponible'])
+                              {
+                                print("indispo"),
+                                showAlertDialogPointRetrait(context)
+                              }
+                          }
+                      });
+                  _mySelectionPointRetrait = newVal;
+                });
+              },
+              value: _mySelectionPointRetrait,
+              style: new TextStyle(
+                color: Colors.black,
+              ),
+            ),
           ),
-        ),
-      ),
-      )
-    );
+        ));
   }
 
   Future<List> getRecepient() async {
@@ -868,17 +1182,15 @@ displayRecap() async {
     String token = responseJson["access_token"];
     int user_id = responseJson["user_id"];
     var beneficiaireInfo = await storage.read(key: "beneficiaireNew");
-    http.Response response = await http.get(apiUrl + '$user_id',
-        headers: {
-          "Accept": "application/json",
-          'Authorization': 'Bearer $token',
-        }
-    );
+    http.Response response = await http.get(apiUrl + '$user_id', headers: {
+      "Accept": "application/json",
+      'Authorization': 'Bearer $token',
+    });
     List allBeneficiaireList = List();
     json.decode(response.body)['data_beneficiaire']?.forEach((k, v) {
       allBeneficiaireList.add(v[0]);
     });
-    if(beneficiaireInfo != null){
+    if (beneficiaireInfo != null) {
       List responseJsonBeneficiaire = json.decode(beneficiaireInfo);
       responseJsonBeneficiaire.forEach((element) {
         allBeneficiaireList.add(element);
@@ -891,11 +1203,9 @@ displayRecap() async {
   }
 
   Widget _buildRecepientsSection() {
-    var smallItemPadding = EdgeInsets.only(
-        left: 12.0, right: 12.0, top: 12.0);
+    var smallItemPadding = EdgeInsets.only(left: 12.0, right: 12.0, top: 12.0);
     if (screenWidth <= 320) {
-      smallItemPadding = EdgeInsets.only(
-          left: 10.0, right: 10.0, top: 12.0);
+      smallItemPadding = EdgeInsets.only(left: 10.0, right: 10.0, top: 12.0);
     }
     return Container(
       color: Colors.transparent,
@@ -907,119 +1217,136 @@ displayRecap() async {
             ),
             child: Text(
               "Choisissez un point de retrait",
-              style: TextStyle(
-                  fontWeight: FontWeight.w600, color: Colors.black),
+              style:
+                  TextStyle(fontWeight: FontWeight.w600, color: Colors.black),
             ),
           ),
           ListTile(
             title: _buildDropDownPointRetrait(),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 16,
-            ),
-            child: ListTile(
-                    title: Text(
-                      "Choisissez un destinataire",
-                      style: TextStyle(
-                      fontWeight: FontWeight.w600, color: Colors.black),
-                      ),
-                    trailing: MaterialButton(
-                      color: kPrimaryColor,
-                      shape: CircleBorder(),
-                      elevation: 0,
-                      child: Icon(Icons.person_add,color: Colors.white),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  RegisterBeneficiairePage()),
-                          //   ModalRoute.withName('/')
-                        );
-                        //_showUserPassword();
-                      },
-                    )
-                   )
-          ),
+              padding: const EdgeInsets.symmetric(
+                vertical: 16,
+              ),
+              child: ListTile(
+                  title: Text(
+                    "Choisissez un destinataire",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600, color: Colors.black),
+                  ),
+                  trailing: MaterialButton(
+                    color: kPrimaryColor,
+                    shape: CircleBorder(),
+                    elevation: 0,
+                    child: Icon(Icons.person_add, color: Colors.white),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                RegisterBeneficiairePage()),
+                        //   ModalRoute.withName('/')
+                      );
+                      //_showUserPassword();
+                    },
+                  ))),
           Flexible(
             child: FutureBuilder<List<dynamic>>(
-
               future: getRecepient(),
-              builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<dynamic>> snapshot) {
                 if (snapshot.hasData) {
                   final List<dynamic> data = snapshot.data;
-                  return
-                    ListView.builder(
+                  return ListView.builder(
                       padding: EdgeInsets.all(10),
                       itemCount: snapshot.data.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return
-                         Container(
-                           child:  Card(
-                             color: kPrimaryColor,
-                             child: Column(
-                               children: <Widget>[
-                                 ListTile(
-                                   title: Text(snapshot.data[index]
-                                   ['receiver_first_name']+' '+snapshot.data[index]
-                                   ['receiver_last_name'].toString().toUpperCase(),
-                                       style: TextStyle(
-                                           fontWeight: FontWeight.w600,
-                                           color: Colors.white
-                                       )
-                                   ),
-                                   leading: new CircleAvatar(
-                                     backgroundColor: Colors.white,
-                                     child: Text(
-                                       '${snapshot.data[index]['receiver_first_name'].substring(0, 1)}',
-                                     ),
-                                   ),
-                                   trailing: MaterialButton(
-                                     color: Colors.white,
-                                     shape: CircleBorder(),
-                                     elevation: 0,
-                                     child: Icon(Icons.arrow_forward_ios,color: kPrimaryColor),
-                                     onPressed: () {
-                                       if (_mySelectionPointRetrait == null){
-                                         final snackBar = SnackBar(
-                                           content: Text('Veuillez choisir le point de retrait'),
-                                           action: SnackBarAction(
-                                             label: 'Ok',
-                                             onPressed: () {
-                                               //Navigator.pop(context,true);
-                                             },
-                                           ),
-                                         );
+                        return Container(
+                          child: Card(
+                            color: kPrimaryColor,
+                            child: Column(
+                              children: <Widget>[
+                                ListTile(
+                                  title:  snapshot.data[index]['is_company']
+                                      ? Text(
+                                    snapshot.data[index]['receiver_company'],
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white
+                                      )
+                                  )
+                                      : Text(
+                                      snapshot.data[index]
+                                      ['receiver_first_name']+' '+snapshot.data[index]
+                                      ['receiver_last_name'].toString().toUpperCase(),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white
+                                      )
+                                  ),
+                                  subtitle: Row(
+                                    children: [
+                                      snapshot.data[index]['is_company']
+                                          ? Icon(Icons.account_balance_outlined,
+                                              color: Colors.white)
+                                          : Icon(Icons.person,
+                                              color: Colors.white)
+                                    ],
+                                  ),
+                                  leading: new CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      child: snapshot.data[index]['is_company']
+                                          ? Text(
+                                              '${snapshot.data[index]['receiver_company'].substring(0, 1)}',
+                                            )
+                                          : Text(
+                                              '${snapshot.data[index]['receiver_first_name'].substring(0, 1)}',
+                                            )),
+                                  trailing: MaterialButton(
+                                    color: Colors.white,
+                                    shape: CircleBorder(),
+                                    elevation: 0,
+                                    child: Icon(Icons.arrow_forward_ios,
+                                        color: kPrimaryColor),
+                                    onPressed: () {
+                                      if (_mySelectionPointRetrait == null) {
+                                        final snackBar = SnackBar(
+                                          content: Text(
+                                              'Veuillez choisir le point de retrait'),
+                                          action: SnackBarAction(
+                                            label: 'Ok',
+                                            onPressed: () {
+                                              //Navigator.pop(context,true);
+                                            },
+                                          ),
+                                        );
 
-                                         // Find the Scaffold in the widget tree and use
-                                         // it to show a SnackBar.
-                                         Scaffold.of(context).showSnackBar(snackBar);
-                                       }
-                                       else {
-                                         _beneficiaireID = snapshot.data[index]['id'];
-                                         _showBeneficiaireInfo();
-                                       }
-                                     },
-                                   ),
-
-                                 )
-                               ],
-                             ),
-                           ),
-                         );
-                      }
-                      );
+                                        // Find the Scaffold in the widget tree and use
+                                        // it to show a SnackBar.
+                                        Scaffold.of(context)
+                                            .showSnackBar(snackBar);
+                                      } else {
+                                        _beneficiaireID =
+                                            snapshot.data[index]['id'];
+                                        _showBeneficiaireInfo();
+                                      }
+                                    },
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      });
                 } else {
                   return Center(
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text('En cours'),
-                          CircularProgressIndicator()
-                        ],
-                      )
-                  );
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text('En cours'),
+                      CircularProgressIndicator()
+                    ],
+                  ));
                 }
               },
             ),

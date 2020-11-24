@@ -33,8 +33,8 @@ class _OperationListPageState extends State<OperationListPage> {
   @override
   void initState() {
     super.initState();
-    this.fetchMyTransaction();
-    this.fetchMyTransactionDelivery();
+    fetchMyTransaction();
+    fetchMyTransactionDelivery();
   }
 
   Future<String> displayTransactionInfo() async {
@@ -68,14 +68,14 @@ class _OperationListPageState extends State<OperationListPage> {
       _dataTransaction.add(v[0]);
     });
     _dataTransaction = transactionList;
-   var _dataTransactionProgress= _dataTransaction.where((element) => element['transac_status']=='encours');
+    var _dataTransactionProgress = _dataTransaction
+        .where((element) => element['transac_status'] == 'encours');
     _dataTransactionProgress.forEach((element) {
       _dataTransactionProgressRefactored.add(element);
     });
 
     return _dataTransactionProgressRefactored;
   }
-
 
   var resMyBody;
   Future<List<dynamic>> fetchMyTransactionDelivery() async {
@@ -95,17 +95,13 @@ class _OperationListPageState extends State<OperationListPage> {
     json.decode(res.body);
 
     resMyBody = json.decode(res.body);
-    var _dataTransactionProgressDelivery= _dataTransaction.where((element) => element['transac_status']!='encours');
+    var _dataTransactionProgressDelivery = _dataTransaction
+        .where((element) => element['transac_status'] != 'encours');
     _dataTransactionProgressDelivery.forEach((element) {
       _dataTransactionDeliveryRefactored.add(element);
     });
-      return _dataTransactionDeliveryRefactored;
+    return _dataTransactionDeliveryRefactored;
   }
-
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -170,31 +166,31 @@ class _OperationListPageState extends State<OperationListPage> {
                                                           child: ListTile(
                                                               title: Text(
                                                                   snapshot.data[index]
-                                                                  [
-                                                                  'transac_num'] !=
-                                                                      null
-                                                                      ? snapshot.data[
-                                                                  index]
-                                                                  [
-                                                                  'transac_num']
+                                                                              [
+                                                                              'transac_num'] !=
+                                                                          null
+                                                                      ? snapshot
+                                                                              .data[index]
+                                                                          [
+                                                                          'transac_num']
                                                                       : '',
                                                                   style: TextStyle(
                                                                       fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
+                                                                          FontWeight
+                                                                              .bold)),
                                                               trailing: Text(
                                                                 snapshot.data[index]
-                                                                [
-                                                                'transac_montant_send'] !=
-                                                                    null
-                                                                    ? snapshot.data[
-                                                                index][
-                                                                'transac_montant_send']+' '+(snapshot.data[
-                                                                index][
-                                                                'transac_devise_sender']!=
-                                                                    null?snapshot.data[
-                                                                index][
-                                                                'transac_devise_sender'].toString().toUpperCase():'')
+                                                                            [
+                                                                            'transac_montant_send'] !=
+                                                                        null
+                                                                    ? snapshot.data[index]
+                                                                            [
+                                                                            'transac_montant_send'] +
+                                                                        ' ' +
+                                                                        (snapshot.data[index]['transac_devise_sender'] !=
+                                                                                null
+                                                                            ? snapshot.data[index]['transac_devise_sender'].toString().toUpperCase()
+                                                                            : '')
                                                                     : '',
                                                               )))),
                                                   // more widgets
@@ -208,81 +204,90 @@ class _OperationListPageState extends State<OperationListPage> {
                                               ),
                                               Row(
                                                 mainAxisAlignment:
-                                                MainAxisAlignment.start,
+                                                    MainAxisAlignment.start,
                                                 children: <Widget>[
                                                   Row(children: <Widget>[
                                                     const SizedBox(
-                                                        width: 15.0, height: 30),
-
-                                                    Icon(Icons.account_circle_outlined ),
+                                                        width: 15.0,
+                                                        height: 30),
+                                                    Icon(Icons
+                                                        .account_circle_outlined),
                                                     const SizedBox(width: 5),
                                                     Text(
                                                       'Nom & Prenom(s):',
-                                                       style: TextStyle(
-                                                           fontWeight:
-                                                           FontWeight.bold),
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold),
                                                     ),
                                                     Text(
-                                                        snapshot.data[index][
-                                                        'receiver_first_name'] !=
-                                                            null
-                                                            ? snapshot.data[index][
-                                                        'receiver_first_name'] +
-                                                            ' ' +
-                                                            snapshot.data[index]
-                                                            [
-                                                            'receiver_last_name']
-                                                            : '',
-                                                        ),
+                                                      snapshot.data[index][
+                                                                  'receiver_first_name'] !=
+                                                              null
+                                                          ? snapshot.data[index]
+                                                                  [
+                                                                  'receiver_first_name'] +
+                                                              ' ' +
+                                                              snapshot.data[
+                                                                      index][
+                                                                  'receiver_last_name']
+                                                          : '',
+                                                    ),
                                                   ]),
                                                 ],
                                               ),
                                               Row(
                                                 mainAxisAlignment:
-                                                MainAxisAlignment.start,
+                                                    MainAxisAlignment.start,
                                                 children: <Widget>[
                                                   Row(children: <Widget>[
                                                     const SizedBox(
-                                                        width: 15.0, height: 30),
-
+                                                        width: 15.0,
+                                                        height: 30),
                                                     Icon(Icons.watch_later),
                                                     const SizedBox(width: 5),
-                                                    Text('Status:',style: TextStyle(
-                                                        fontWeight:
-                                                        FontWeight.bold
-                                                    ),),
+                                                    Text(
+                                                      'Status:',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
                                                     const SizedBox(width: 5),
                                                     Text(
                                                         snapshot.data[index][
-                                                        'transac_status'] !=
-                                                            null
-                                                            ? snapshot.data[index]
-                                                        ['transac_status']
+                                                                    'transac_status'] !=
+                                                                null
+                                                            ? snapshot
+                                                                    .data[index]
+                                                                [
+                                                                'transac_status']
                                                             : '',
                                                         style: TextStyle(
-                                                            color: Colors.green)),
+                                                            color:
+                                                                Colors.green)),
                                                   ]),
                                                 ],
                                               ),
                                               Row(
                                                 mainAxisAlignment:
-                                                MainAxisAlignment.start,
+                                                    MainAxisAlignment.start,
                                                 children: <Widget>[
                                                   Row(children: <Widget>[
                                                     const SizedBox(
-                                                        width: 15.0, height: 30),
+                                                        width: 15.0,
+                                                        height: 30),
                                                     Icon(Icons.date_range),
                                                     const SizedBox(width: 5),
-                                                    Text('Date:',style: TextStyle(
-                                                        fontWeight:
-                                                        FontWeight.bold
-                                                    )),
+                                                    Text('Date:',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold)),
                                                     Text(
                                                       snapshot.data[index][
-                                                      'transac_date'] !=
-                                                          null
+                                                                  'transac_date'] !=
+                                                              null
                                                           ? snapshot.data[index]
-                                                      ['transac_date']
+                                                              ['transac_date']
                                                           : '',
                                                     ),
                                                     const SizedBox(height: 5),
@@ -295,9 +300,7 @@ class _OperationListPageState extends State<OperationListPage> {
                                       ],
                                     ),
                                   );
-                                }
-                                )
-                            ;
+                                });
                           } else {
                             return Center(
                               child: CircularProgressIndicator(),
@@ -355,14 +358,17 @@ class _OperationListPageState extends State<OperationListPage> {
                                                                         'transac_montant_send'] !=
                                                                     null
                                                                 ? snapshot.data[
-                                                                        index][
-                                                                    'transac_montant_send']+' '+
-                                                                (snapshot.data[
-                                                            index][
-                                                            'transac_devise_sender']!=
-                                                                    null?snapshot.data[
-                                                                index][
-                                                                'transac_devise_sender'].toString().toUpperCase():'')
+                                                                            index]
+                                                                        [
+                                                                        'transac_montant_send'] +
+                                                                    ' ' +
+                                                                    (snapshot.data[index]['transac_devise_sender'] !=
+                                                                            null
+                                                                        ? snapshot
+                                                                            .data[index]['transac_devise_sender']
+                                                                            .toString()
+                                                                            .toUpperCase()
+                                                                        : '')
                                                                 : '',
                                                           )))),
                                               // more widgets
@@ -445,7 +451,7 @@ class _OperationListPageState extends State<OperationListPage> {
                                 });
                           } else {
                             return Center(
-                                child:   Text('Aucune transaction n\'est livrée'),
+                              child: Text('Aucune transaction n\'est livrée'),
                             );
                           }
                         },

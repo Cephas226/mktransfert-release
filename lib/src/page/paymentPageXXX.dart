@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mktransfert/core/presentation/res/assets.dart';
 import 'package:mktransfert/src/contant/constant.dart';
-import 'package:mktransfert/src/page/payement.dart';
+import 'package:mktransfert/src/page/payement-NoTouch.dart';
+
 import 'package:mktransfert/src/page/succesPage.dart';
 import 'package:mktransfert/src/page/transaction.dart';
 import 'package:mktransfert/src/services/payment-service.dart';
@@ -17,14 +18,17 @@ import 'beneficiaireScreen.dart';
 import 'loginPage.dart';
 double _amount;
 String _currency;
+String _currencySymbol;
 List transactionInfo = List();
+List transactionDetails = List();
+List transactionInfoBackend = List();
 String _transactionDate;
 String _transactionTime;
 String _receiver_Name;
 String _receiver_last_name;
 String _receiver_Email;
+String receiver_last_name;
 String _transac_num;
-List transactionInfoBackend = List();
 //Sender
 int _user_id;
 
@@ -32,24 +36,23 @@ String _first_name="";
 String _last_name="";
 String _country="";
 String _phone= "";
+String _receiver_company="";
+String _receiver_siteweb="";
 String _email="";
-
 //receiver
-
 String _receiver_first_name="";
 String _receiver_phone ="";
 String _receiver_description ="";
 String _devise_receive="";
 String _devise_sender="";
-
 int _point_retrait;
 int _receiver_country;
-
 double _transac_total;
 int _montant_send;
 double _montant_receive;
 double _transac_commission;
-
+List<String> sample = <String>[
+];
 class PaymentPage extends StatefulWidget {
   PaymentPage({Key key}) : super(key: key);
 
@@ -245,26 +248,12 @@ class PaymentSuccessDialog extends StatelessWidget {
       ),
     );
   }*/
-  List<String> sample = <String>[
-    'Sample data 1',
-    'Sample data 2',
-    'Sample data 3',
-    'Sample data 4',
-    'Sample data 5',
-    'Sample data 6',
-    'Sample data 7',
-    'Sample data 8'
-  ];
   Widget build(BuildContext context) {
     //getSuccesInfo();
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: kPrimaryColor,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
           title: Text("Succès"),
           centerTitle: true,
         ),
@@ -283,7 +272,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                   ),
                 ),
                 expansionTitle: Text(
-                  'Details',
+                  'Details de la transaction',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                   ),
@@ -293,7 +282,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                 separatorHeight: 2.0,
                 color: Colors.white,
                 curve: Curves.easeOut,
-                titleColor: kPrimaryColor,
+                titleColor:kPrimaryColor,
                 shrinkIcon: Align(
                   alignment: Alignment.centerRight,
                   child: CircleAvatar(
@@ -306,7 +295,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                   ),
                 ),
                 ticketTitle: Text(
-                  '',
+                  'Détails',
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -318,8 +307,9 @@ class PaymentSuccessDialog extends StatelessWidget {
                 height: 220,
                 shadowColor: Colors.blue.withOpacity(0.5),
                 elevation: 8,
-                shouldExpand: false,
-                child: Padding(
+                shouldExpand: true,
+                child:
+                Padding(
                   padding:
                   const EdgeInsets.symmetric(horizontal: 30.0, vertical: 5),
                   child: Container(
@@ -341,7 +331,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                                       CrossAxisAlignment.start,
                                       children: <Widget>[
                                         Text(
-                                          'Heure',
+                                          'HEURE',
                                           style: TextStyle(
                                               color: Colors.black
                                                   .withOpacity(0.5)),
@@ -361,13 +351,30 @@ class PaymentSuccessDialog extends StatelessWidget {
                                       crossAxisAlignment:
                                       CrossAxisAlignment.start,
                                       children: <Widget>[
+                                        _receiver_siteweb == null?
                                         Text(
                                           'Nom & Prenom',
                                           style: TextStyle(
                                             color:
                                             Colors.black.withOpacity(0.5),
                                           ),
-                                        ),
+                                        ):
+                                        Text(
+                                          'RAISON SOCIALE',
+                                          style: TextStyle(
+                                            color:
+                                            Colors.black.withOpacity(0.5),
+                                          ),
+                                        ) ,
+                                        _receiver_siteweb != null?
+                                        Text(
+                                          _receiver_company,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ):
                                         Text(
                                           _receiver_Name+' '+_receiver_last_name,
                                           overflow: TextOverflow.ellipsis,
@@ -394,7 +401,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                                     CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        'Date',
+                                        'DATE',
                                         style: TextStyle(
                                             color:
                                             Colors.black.withOpacity(0.5)),
@@ -415,35 +422,40 @@ class PaymentSuccessDialog extends StatelessWidget {
                                     CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        'MONTANT',
+                                        'MONTANT PAYE',
                                         style: TextStyle(
                                             color:
                                             Colors.black.withOpacity(0.5)),
                                       ),
-                                      Text(
-                                        _currency + '•' + _amount.toString(),
+                                      _currency == 'eur'? Text(
+                                        _amount.toString()+ ' '+"EUROS",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600),
-                                      ),
+                                      ):
+                                      Text(
+                                        _amount.toString()+ ' '+_currency.toUpperCase(),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600),
+                                      )
                                     ],
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                       Expanded(
+                          Expanded(
                             child: Row(
                               children: <Widget>[
                                 Expanded(
                                   child: Column(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                    MainAxisAlignment.start,
                                     crossAxisAlignment:
                                     CrossAxisAlignment.start,
                                     children: <Widget>[
 
                                       Text(
-                                        'Numero',
+                                        'NUMERO TRANSACTION',
                                         style: TextStyle(
                                             color:
                                             Colors.black.withOpacity(0.5)),
@@ -451,7 +463,7 @@ class PaymentSuccessDialog extends StatelessWidget {
 
                                       Text(
                                         _transac_num.toString(),
-                                       /* Center(
+                                        /* Center(
                                             child: Column(
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: <Widget>[
@@ -473,8 +485,235 @@ class PaymentSuccessDialog extends StatelessWidget {
                         ],
                       ),
                     ),
+    ))
+            ),
+        /*  TicketPass(
+              alignment: Alignment.center,
+              animationDuration: Duration(seconds: 2),
+              expandedHeight: 600,
+              expandIcon: CircleAvatar(
+                maxRadius: 14,
+                child: Icon(
+                  Icons.keyboard_arrow_down,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+              expansionTitle: Text(
+                'Details',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              purchaserList: sample,
+              separatorColor: Colors.black,
+              separatorHeight: 2.0,
+              color: Colors.white,
+              curve: Curves.easeOut,
+              titleColor: kPrimaryColor,
+              shrinkIcon: Align(
+                alignment: Alignment.centerRight,
+                child: CircleAvatar(
+                  maxRadius: 14,
+                  child: Icon(
+                    Icons.keyboard_arrow_up,
+                    color: Colors.white,
+                    size: 20,
                   ),
-                )),
+                ),
+              ),
+              ticketTitle: Text(
+                'Details',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                ),
+              ),
+              titleHeight: 50,
+              width: 350,
+              height: 220,
+              shadowColor: Colors.blue.withOpacity(0.5),
+              elevation: 8,
+              shouldExpand: false,
+              child: Padding(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 30.0, vertical: 5),
+                child: Container(
+                  height: 140,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        'HEURE',
+                                        style: TextStyle(
+                                            color: Colors.black
+                                                .withOpacity(0.5)),
+                                      ),
+                                      Text(
+                                        _transactionTime,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      _receiver_siteweb == null ?
+                                      Text(
+                                        'Nom & Prenom',
+                                        style: TextStyle(
+                                          color:
+                                          Colors.black.withOpacity(0.5),
+                                        ),
+                                      ) :
+                                      Text(
+                                        'RAISON SOCIALE',
+                                        style: TextStyle(
+                                          color:
+                                          Colors.black.withOpacity(0.5),
+                                        ),
+                                      ),
+                                      _receiver_siteweb != null ?
+                                      Text(
+                                        _receiver_company,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ) :
+                                      Text(
+                                        _receiver_Name + ' ' + _receiver_last_name,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      'DATE',
+                                      style: TextStyle(
+                                          color:
+                                          Colors.black.withOpacity(0.5)),
+                                    ),
+                                    Text(
+                                      _transactionDate,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      'MONTANT PAYE',
+                                      style: TextStyle(
+                                          color:
+                                          Colors.black.withOpacity(0.5)),
+                                    ),
+                                    _currency == 'eur' ? Text(
+                                      _amount.toString() + ' ' + "EUROS",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600),
+                                    ) :
+                                    Text(
+                                      _amount.toString() + ' ' + _currency.toUpperCase(),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.start,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  children: <Widget>[
+
+                                    Text(
+                                      'NUMERO TRANSACTION',
+                                      style: TextStyle(
+                                          color:
+                                          Colors.black.withOpacity(0.5)),
+                                    ),
+
+                                    Text(
+                                      _transac_num.toString(),
+                                      *//* Center(
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Text('En cours'),
+                                                CircularProgressIndicator()
+                                              ],
+                                            )
+                                        ),*//*
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )),*/
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(
@@ -523,7 +762,20 @@ class HomePageState extends State<PaymentPage> {
     var transactionBackend  = await storage.read(key: "transactionBackend");
     transactionInfoBackend=json.decode(transactionBackend);
     print(transactionInfoBackend);
+    sample=null;
     transactionInfoBackend.forEach((element) {
+      sample.add(
+         "Commission:"+ element["transac_commission"].toString(),
+      );
+      sample.add(
+        "Prenom:"+element["first_name"],
+      );
+      sample.add(
+      "Nom:"+element["last_name"],
+      );
+      sample.add(
+          "Montant reçu:"+element["montant_receive"].toString(),
+      );
       _user_id=element["user_id"];
       //sender
       _first_name=element["first_name"];
@@ -531,6 +783,10 @@ class HomePageState extends State<PaymentPage> {
       _country=element["country"];
       _phone=element["phone"];
       _email=element["email"];
+
+      _receiver_company=element["receiver_company"];
+      _receiver_siteweb=element["receiver_siteweb"];
+
       //receiver
       _receiver_first_name=element["receiver_first_name"];
       _receiver_last_name=element["receiver_last_name"];
@@ -539,8 +795,8 @@ class HomePageState extends State<PaymentPage> {
       _receiver_country= element["receiver_country"];
       _receiver_description= element[ "receiver_description"];
       //transaction
-      _montant_send=element["montant_send"]*100;
-      _montant_receive=element["montant_receive"]*100;
+      _montant_send=element["montant_send"];
+      _montant_receive=element["montant_receive"];
       _transac_commission=element["transac_commission"];
       _transac_total=element["transac_total"];
       _devise_receive=element["devise_receive"];
@@ -551,7 +807,7 @@ class HomePageState extends State<PaymentPage> {
     setState(() {
       _transac_num;
     });
-    print(_transac_num);
+    print(sample);
   }
   @override
   void initState() {
@@ -576,7 +832,7 @@ class HomePageState extends State<PaymentPage> {
     Map<String, dynamic> responseJson = json.decode(jwt);
     String token = responseJson["access_token"];
     int user_id = responseJson["user_id"];
-   /* final Map<String, dynamic>  myBody = {"user_id": "1", "first_name": "administrateur", "last_name": "admin", "country": "France", "phone": "0639607953", "email": "admin@mktransfert.fr", "receiver_first_name": "Emmanuel", "receiver_last_name": "Emma", "receiver_email": "emma@gmail.com", "receiver_phone": "0639607953", "receiver_country": 1, "receiver_description": "scolarité", "montant_send": 100000.0, "montant_receive": 1190000000.0, "transac_commission": 0.04, "transac_total": 10.04, "devise_receive": "GNF", "point_retrait": 4,"devise_sender": "eur"};
+    /* final Map<String, dynamic>  myBody = {"user_id": "1", "first_name": "administrateur", "last_name": "admin", "country": "France", "phone": "0639607953", "email": "admin@mktransfert.fr", "receiver_first_name": "Emmanuel", "receiver_last_name": "Emma", "receiver_email": "emma@gmail.com", "receiver_phone": "0639607953", "receiver_country": 1, "receiver_description": "scolarité", "montant_send": 100000.0, "montant_receive": 1190000000.0, "transac_commission": 0.04, "transac_total": 10.04, "devise_receive": "GNF", "point_retrait": 4,"devise_sender": "eur"};
 */
     print(_devise_receive);
     print(_montant_send);
@@ -600,6 +856,8 @@ class HomePageState extends State<PaymentPage> {
         "receiver_phone": _receiver_phone,
         "receiver_country": _receiver_country,
         "receiver_description":  _receiver_description,
+        "receiver_company": _receiver_company,
+        "receiver_siteweb": _receiver_siteweb,
         "montant_send":_montant_send,
         "montant_receive":_montant_receive,
         "transac_commission":_transac_commission,
@@ -621,11 +879,11 @@ class HomePageState extends State<PaymentPage> {
     );
     await dialog.show();
     var response = await StripeService.payWithNewCard(
-        amount: (_amount*100).truncate().toString(),
-        currency: "$_currency",
+      amount: (_amount*100).truncate().toString(),
+      currency: "$_currency",
     );
     await dialog.hide();
-   /* Scaffold.of(context).showSnackBar(
+    /* Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text(response.message),
           duration: new Duration(milliseconds: response.success == true ? 1200 : 3000),
@@ -640,7 +898,7 @@ class HomePageState extends State<PaymentPage> {
       if(response.success){
         displayTransactionInfo();
         displayTransactionInfoBackend();
-       // getSuccesInfo();
+        // getSuccesInfo();
         postTransaction();
         _paymentSuccessDialog(context);
       }
@@ -693,7 +951,7 @@ class HomePageState extends State<PaymentPage> {
                   icon = Icon(Icons.add_circle, color: theme.primaryColor);
                   text = Text('Payer avec une carte');
                   break;
-               /* case 1:
+              /* case 1:
                   icon = Icon(Icons.credit_card, color: theme.primaryColor);
                   text = Text('Payer via une carte existante');
                   break;*/

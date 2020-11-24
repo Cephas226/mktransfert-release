@@ -46,7 +46,7 @@ class StripeService {
           )
       );
       if (response.status == 'succeeded') {
-      //  _paymentSuccessDialog(context);
+        //  _paymentSuccessDialog(context);
 
         return new StripeTransactionResponse(
             message: 'Transaction réussie',
@@ -61,7 +61,7 @@ class StripeService {
     } on PlatformException catch(err) {
       return StripeService.getPlatformExceptionErrorResult(err);
     }
-     catch (err) {
+    catch (err) {
       return new StripeTransactionResponse(
           message: 'La transaction a échoué: ${err.toString()}',
           success: false
@@ -137,4 +137,3 @@ class StripeService {
     return null;
   }
 }
-

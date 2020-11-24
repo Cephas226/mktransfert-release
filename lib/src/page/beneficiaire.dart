@@ -10,7 +10,7 @@ import 'chooseBeneficiaire.dart';
 import 'loginPage.dart';
 import 'navigation.dart';
 import 'operations/beneficiaireOperations.dart';
-
+List transactionDetails = List();
 Future<List<dynamic>> fetchMyBeneficiaire() async {
   var jwt = await storage.read(key: "jwt");
   Map<String, dynamic> responseJson = json.decode(jwt);
