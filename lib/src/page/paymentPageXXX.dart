@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:minimize_app/minimize_app.dart';
 import 'package:mktransfert/core/presentation/res/assets.dart';
 import 'package:mktransfert/src/contant/constant.dart';
 import 'package:mktransfert/src/page/payement-NoTouch.dart';
@@ -27,7 +28,7 @@ String _transactionTime;
 String _receiver_Name;
 String _receiver_last_name;
 String _receiver_Email;
-String receiver_last_name;
+
 String _transac_num;
 //Sender
 int _user_id;
@@ -51,7 +52,7 @@ double _transac_total;
 int _montant_send;
 double _montant_receive;
 double _transac_commission;
-List<String> sample = <String>[
+List<String> details = <String>[
 ];
 class PaymentPage extends StatefulWidget {
   PaymentPage({Key key}) : super(key: key);
@@ -248,222 +249,252 @@ class PaymentSuccessDialog extends StatelessWidget {
       ),
     );
   }*/
+
   Widget build(BuildContext context) {
-    //getSuccesInfo();
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: kPrimaryColor,
-          title: Text("Succès"),
-          centerTitle: true,
+    Future<bool> _onBackPressed() {
+
+      return showDialog(
+
+        context: context,
+        builder: (context) => new AlertDialog(
+          title: new Text('Êtes-vous sûr?'),
+          content: new Text('Voulez-vous quitter une application'),
+          actions: <Widget>[
+            new GestureDetector(
+              onTap: () => Navigator.of(context).pop(false),
+              child: Text("Non"),
+            ),
+            SizedBox(height: 16),
+            new GestureDetector(
+              onTap: () => MinimizeApp.minimizeApp(),
+              child: Text("Oui"),
+            ),
+          ],
         ),
-        body: Container(
-          child: Center(
-            child: TicketPass(
-                alignment: Alignment.center,
-                animationDuration: Duration(seconds: 2),
-                expandedHeight: 600,
-                expandIcon: CircleAvatar(
-                  maxRadius: 14,
-                  child: Icon(
-                    Icons.keyboard_arrow_down,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),
-                expansionTitle: Text(
-                  'Details de la transaction',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                purchaserList: sample,
-                separatorColor: Colors.black,
-                separatorHeight: 2.0,
-                color: Colors.white,
-                curve: Curves.easeOut,
-                titleColor:kPrimaryColor,
-                shrinkIcon: Align(
-                  alignment: Alignment.centerRight,
-                  child: CircleAvatar(
-                    maxRadius: 14,
-                    child: Icon(
-                      Icons.keyboard_arrow_up,
-                      color: Colors.white,
-                      size: 20,
+      ) ??
+          false;
+
+    }
+    //getSuccesInfo();
+    return
+      new WillPopScope(
+        onWillPop: _onBackPressed,
+        child: MaterialApp(
+
+          home: Scaffold(
+            appBar: AppBar(
+              backgroundColor: kPrimaryColor,
+              title: Text("Succès"),
+              centerTitle: true,
+            ),
+            body: Container(
+              child: Center(
+                child: TicketPass(
+                    alignment: Alignment.center,
+                    animationDuration: Duration(seconds: 2),
+                    expandedHeight: 600,
+                    expandIcon: CircleAvatar(
+                      maxRadius: 14,
+                      child: Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Colors.white,
+                        size: 20,
+                      ),
                     ),
-                  ),
-                ),
-                ticketTitle: Text(
-                  'Détails',
-                  style: const TextStyle(
+                    expansionTitle: Text(
+                      'Details de la transaction',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    purchaserList: details,
+                    separatorColor: Colors.black,
+                    separatorHeight: 2.0,
                     color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
-                  ),
-                ),
-                titleHeight: 50,
-                width: 350,
-                height: 220,
-                shadowColor: Colors.blue.withOpacity(0.5),
-                elevation: 8,
-                shouldExpand: true,
-                child:
-                Padding(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 30.0, vertical: 5),
-                  child: Container(
-                    height: 140,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Expanded(
-                            child: Container(
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                          'HEURE',
-                                          style: TextStyle(
-                                              color: Colors.black
-                                                  .withOpacity(0.5)),
-                                        ),
-                                        Text(
-                                          _transactionTime,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        _receiver_siteweb == null?
-                                        Text(
-                                          'Nom & Prenom',
-                                          style: TextStyle(
-                                            color:
-                                            Colors.black.withOpacity(0.5),
-                                          ),
-                                        ):
-                                        Text(
-                                          'RAISON SOCIALE',
-                                          style: TextStyle(
-                                            color:
-                                            Colors.black.withOpacity(0.5),
-                                          ),
-                                        ) ,
-                                        _receiver_siteweb != null?
-                                        Text(
-                                          _receiver_company,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ):
-                                        Text(
-                                          _receiver_Name+' '+_receiver_last_name,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Row(
+                    curve: Curves.easeOut,
+                    titleColor:kPrimaryColor,
+                    shrinkIcon: Align(
+                      alignment: Alignment.centerRight,
+                      child: CircleAvatar(
+                        maxRadius: 14,
+                        child: Icon(
+                          Icons.keyboard_arrow_up,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                    ticketTitle: Text(
+                      'Détails',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                      ),
+                    ),
+                    titleHeight: 50,
+                    width: 350,
+                    height: 220,
+                    shadowColor: Colors.blue.withOpacity(0.5),
+                    elevation: 8,
+                    shouldExpand: true,
+                    child:
+                    Padding(
+                        padding:
+                        const EdgeInsets.symmetric(horizontal: 30.0, vertical: 5),
+                        child: Container(
+                          height: 140,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Expanded(
-                                  child: Column(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                  child: Container(
+                                    child: Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(
+                                                'HEURE',
+                                                style: TextStyle(
+                                                    color: Colors.black
+                                                        .withOpacity(0.5)),
+                                              ),
+                                              Text(
+                                                _transactionTime,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              _receiver_siteweb == ''?
+                                              Text(
+                                                'NOM & PRENOM',
+                                                style: TextStyle(
+                                                  color:
+                                                  Colors.black.withOpacity(0.5),
+                                                ),
+                                              ):
+                                              Text(
+                                                'RAISON SOCIALE',
+                                                style: TextStyle(
+                                                  color:
+                                                  Colors.black.withOpacity(0.5),
+                                                ),
+                                              ) ,
+                                              _receiver_siteweb == ''?
+                                              Text(
+                                                _receiver_first_name+' '+_receiver_last_name,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                                style: TextStyle(
+
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ):
+                                              Text(
+                                                _receiver_company,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Row(
                                     children: <Widget>[
-                                      Text(
-                                        'DATE',
-                                        style: TextStyle(
-                                            color:
-                                            Colors.black.withOpacity(0.5)),
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                              'DATE',
+                                              style: TextStyle(
+                                                  color:
+                                                  Colors.black.withOpacity(0.5)),
+                                            ),
+                                            Text(
+                                              _transactionDate,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      Text(
-                                        _transactionDate,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600),
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                              'MONTANT PAYE',
+                                              style: TextStyle(
+                                                  color:
+                                                  Colors.black.withOpacity(0.5)),
+                                            ),
+                                            _currency == 'eur'? Text(
+                                              _amount.toString()+ ' '+"EUROS",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600),
+                                            ):
+                                            Text(
+                                              _amount.toString()+ ' '+_currency.toUpperCase(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600),
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
                                 ),
                                 Expanded(
-                                  child: Column(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                  child: Row(
                                     children: <Widget>[
-                                      Text(
-                                        'MONTANT PAYE',
-                                        style: TextStyle(
-                                            color:
-                                            Colors.black.withOpacity(0.5)),
-                                      ),
-                                      _currency == 'eur'? Text(
-                                        _amount.toString()+ ' '+"EUROS",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600),
-                                      ):
-                                      Text(
-                                        _amount.toString()+ ' '+_currency.toUpperCase(),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: Column(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: <Widget>[
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: <Widget>[
 
-                                      Text(
-                                        'NUMERO TRANSACTION',
-                                        style: TextStyle(
-                                            color:
-                                            Colors.black.withOpacity(0.5)),
-                                      ),
+                                            Text(
+                                              'NUMERO TRANSACTION',
+                                              style: TextStyle(
+                                                  color:
+                                                  Colors.black.withOpacity(0.5)),
+                                            ),
 
-                                      Text(
-                                        _transac_num.toString(),
-                                        /* Center(
+                                            Text(
+                                              _transac_num.toString(),
+                                              /* Center(
                                             child: Column(
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: <Widget>[
@@ -472,22 +503,22 @@ class PaymentSuccessDialog extends StatelessWidget {
                                               ],
                                             )
                                         ),*/
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                          ],
+                                        ),
                                       ),
+
                                     ],
                                   ),
                                 ),
-
                               ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-    ))
-            ),
-        /*  TicketPass(
+                        ))
+                ),
+                /*  TicketPass(
               alignment: Alignment.center,
               animationDuration: Duration(seconds: 2),
               expandedHeight: 600,
@@ -714,24 +745,28 @@ class PaymentSuccessDialog extends StatelessWidget {
                   ),
                 ),
               )),*/
+              ),
+            ),
+
+
+            floatingActionButton: FloatingActionButton.extended(
+              onPressed: () {
+                storage.delete(key: "transactionBackend");
+                storage.delete(key: "beneficiaireNew");
+
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => AccueilBootomBarPage()),
+                    ModalRoute.withName("/accueilBottom"));
+              },
+              label: Text('Effectuer un autre transert'),
+              icon: Icon(Icons.add),
+              backgroundColor: kPrimaryColorSuccesButton,
+            ),
           ),
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            storage.delete(key: "transactionBackend");
-            storage.delete(key: "beneficiaireNew");
-            print('ok');
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => AccueilBootomBarPage()),
-                ModalRoute.withName("/accueilBottom"));
-          },
-          label: Text('Effectuer un autre transert'),
-          icon: Icon(Icons.add),
-          backgroundColor: kPrimaryColorSuccesButton,
-        ),
-      ),
-    );
+        )
+      );
+
   }
 
 }
@@ -746,7 +781,7 @@ class HomePageState extends State<PaymentPage> {
       _currency=transaction['devise_send'];
       _receiver_Name=transaction['receiver_name'];
       _receiver_Email=transaction['receiver_email'];
-      receiver_last_name = transaction['receiver_last_name'];
+      _receiver_last_name = transaction['receiver_last_name'];
       _receiver_Email = transaction['receiver_email'];
     });
     var now = new DateTime.now();
@@ -761,20 +796,19 @@ class HomePageState extends State<PaymentPage> {
   displayTransactionInfoBackend() async {
     var transactionBackend  = await storage.read(key: "transactionBackend");
     transactionInfoBackend=json.decode(transactionBackend);
-    print(transactionInfoBackend);
-    sample=null;
     transactionInfoBackend.forEach((element) {
-      sample.add(
-         "Commission:"+ element["transac_commission"].toString(),
+      details.add("Prenom:"+element["first_name"]);
+   details.add(
+        "Nom:"+element["last_name"],
       );
-      sample.add(
-        "Prenom:"+element["first_name"],
+      details.add(
+        "Email:"+element["email"],
       );
-      sample.add(
-      "Nom:"+element["last_name"],
+      details.add(
+         "Commission:"+ element["transac_commission"].toString()+' '+element["devise_sender"],
       );
-      sample.add(
-          "Montant reçu:"+element["montant_receive"].toString(),
+      details.add(
+          "Montant reçu:"+element["montant_receive"].toString()+' '+element["devise_receive"],
       );
       _user_id=element["user_id"];
       //sender
@@ -786,7 +820,6 @@ class HomePageState extends State<PaymentPage> {
 
       _receiver_company=element["receiver_company"];
       _receiver_siteweb=element["receiver_siteweb"];
-
       //receiver
       _receiver_first_name=element["receiver_first_name"];
       _receiver_last_name=element["receiver_last_name"];
@@ -807,14 +840,14 @@ class HomePageState extends State<PaymentPage> {
     setState(() {
       _transac_num;
     });
-    print(sample);
+    print(details);
   }
   @override
   void initState() {
     super.initState();
     StripeService.init();
     this.displayTransactionInfo();
-    this.displayTransactionInfoBackend();
+  this.displayTransactionInfoBackend();
   }
   onItemPress(BuildContext context, int index) async {
     switch(index) {
@@ -832,10 +865,6 @@ class HomePageState extends State<PaymentPage> {
     Map<String, dynamic> responseJson = json.decode(jwt);
     String token = responseJson["access_token"];
     int user_id = responseJson["user_id"];
-    /* final Map<String, dynamic>  myBody = {"user_id": "1", "first_name": "administrateur", "last_name": "admin", "country": "France", "phone": "0639607953", "email": "admin@mktransfert.fr", "receiver_first_name": "Emmanuel", "receiver_last_name": "Emma", "receiver_email": "emma@gmail.com", "receiver_phone": "0639607953", "receiver_country": 1, "receiver_description": "scolarité", "montant_send": 100000.0, "montant_receive": 1190000000.0, "transac_commission": 0.04, "transac_total": 10.04, "devise_receive": "GNF", "point_retrait": 4,"devise_sender": "eur"};
-*/
-    print(_devise_receive);
-    print(_montant_send);
     return http.post(
       'https://www.mktransfert.com/api/success/'+'$user_id',
       headers: <String, String>{
@@ -883,12 +912,6 @@ class HomePageState extends State<PaymentPage> {
       currency: "$_currency",
     );
     await dialog.hide();
-    /* Scaffold.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.message),
-          duration: new Duration(milliseconds: response.success == true ? 1200 : 3000),
-        )
-    );*/
     Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text(response.message),
@@ -897,10 +920,11 @@ class HomePageState extends State<PaymentPage> {
     ).closed.then((_) {
       if(response.success){
         displayTransactionInfo();
-        displayTransactionInfoBackend();
+        //displayTransactionInfoBackend();
         // getSuccesInfo();
         postTransaction();
         _paymentSuccessDialog(context);
+        // PaymentSuccessDialog();
       }
       else{
         Navigator.pop(context);

@@ -1076,7 +1076,7 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               _amount.toString() + ' ' + _senderCurrencySymbole,
                               style: TextStyle(
-                                  fontSize: 42,
+                                  fontSize: 40,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white),
                             ),
@@ -1090,13 +1090,22 @@ class _HomePageState extends State<HomePage> {
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white),
                               ),
-                              subtitle: Text(
-                                  _transac_commission.toString() +
+                              subtitle:
+                              _transac_commission != null?
+                              Text(
+                                  _transac_commission.toStringAsFixed(2) +
                                       ' ' +
                                       _senderCurrencySymbole,
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      color: Colors.white)),
+                                      color: Colors.white)
+                              ):
+                               Text(
+                                    _senderCurrencySymbole,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white)
+                            ),
                             ),
                           ],
                         ),
