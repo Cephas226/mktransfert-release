@@ -189,7 +189,11 @@ class _OperationListPageState extends State<OperationListPage> {
                                                                         ' ' +
                                                                         (snapshot.data[index]['transac_devise_sender'] !=
                                                                                 null
-                                                                            ? snapshot.data[index]['transac_devise_sender'].toString().toUpperCase()
+                                                                            ?
+                                                                        (snapshot.data[index]['transac_devise_sender'].toString()=='eur'?
+                                                                            "EUROS":
+                                                                            ''
+                                                                        )
                                                                             : '')
                                                                     : '',
                                                               )))),

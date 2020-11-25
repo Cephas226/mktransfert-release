@@ -15,8 +15,10 @@ import 'package:ticket_pass_package/ticket_pass.dart';
 import 'package:http/http.dart';
 import 'AccueilBottomBar.dart';
 import 'package:http/http.dart' as http;
+import 'accueil.dart';
 import 'beneficiaireScreen.dart';
 import 'loginPage.dart';
+
 double _amount;
 String _currency;
 String _currencySymbol;
@@ -33,33 +35,34 @@ String _transac_num;
 //Sender
 int _user_id;
 
-String _first_name="";
-String _last_name="";
-String _country="";
-String _phone= "";
-String _receiver_company="";
-String _receiver_siteweb="";
-String _email="";
+String _first_name = "";
+String _last_name = "";
+String _country = "";
+String _phone = "";
+String _receiver_company = "";
+String _receiver_siteweb = "";
+String _email = "";
 //receiver
-String _receiver_first_name="";
-String _receiver_phone ="";
-String _receiver_description ="";
-String _devise_receive="";
-String _devise_sender="";
+String _receiver_first_name = "";
+String _receiver_phone = "";
+String _receiver_description = "";
+String _devise_receive = "";
+String _devise_sender = "";
 int _point_retrait;
 int _receiver_country;
 double _transac_total;
 int _montant_send;
 double _montant_receive;
 double _transac_commission;
-List<String> details = <String>[
-];
+List<String> details = <String>[];
+
 class PaymentPage extends StatefulWidget {
   PaymentPage({Key key}) : super(key: key);
 
   @override
   HomePageState createState() => HomePageState();
 }
+
 _paymentSuccessDialog(BuildContext context) {
   showDialog(
       context: context,
@@ -67,7 +70,6 @@ _paymentSuccessDialog(BuildContext context) {
         return PaymentSuccessDialog();
       });
 }
-
 
 class PaymentSuccessDialog extends StatelessWidget {
 /*  getSuccesInfo() async {
@@ -89,9 +91,9 @@ class PaymentSuccessDialog extends StatelessWidget {
       _transac_num=v['transac_num'];
     });
     print(_transac_num);
-   *//* setState(() {
+   */ /* setState(() {
       _transac_num;
-    });*//*
+    });*/ /*
     //return json.decode(response.body);
   }*/
   final image = images[2];
@@ -252,35 +254,37 @@ class PaymentSuccessDialog extends StatelessWidget {
 
   Widget build(BuildContext context) {
     Future<bool> _onBackPressed() {
-
       return showDialog(
-
-        context: context,
-        builder: (context) => new AlertDialog(
-          title: new Text('Êtes-vous sûr?'),
-          content: new Text('Voulez-vous quitter une application'),
-          actions: <Widget>[
-            new GestureDetector(
-              onTap: () => Navigator.of(context).pop(false),
-              child: Text("Non"),
+            context: context,
+            builder: (context) => new AlertDialog(
+              title: new Text('Êtes-vous sûr?'),
+              content: new Text('Voulez-vous quitter une application'),
+              actions: <Widget>[
+                new GestureDetector(
+                  onTap: () => Navigator.of(context).pop(false),
+                  child: Text("Non"),
+                ),
+                SizedBox(height: 16),
+                new GestureDetector(
+                  onTap: () => {
+                    Navigator.of(context).pop(false),
+                    Navigator.push(context,  MaterialPageRoute(
+                        builder: (context) => AccueilPage()),
+                    ),
+                    MinimizeApp.minimizeApp(),
+                  },
+                  child: Text("Oui"),
+                ),
+              ],
             ),
-            SizedBox(height: 16),
-            new GestureDetector(
-              onTap: () => MinimizeApp.minimizeApp(),
-              child: Text("Oui"),
-            ),
-          ],
-        ),
-      ) ??
+          ) ??
           false;
-
     }
+
     //getSuccesInfo();
-    return
-      new WillPopScope(
+    return new WillPopScope(
         onWillPop: _onBackPressed,
         child: MaterialApp(
-
           home: Scaffold(
             appBar: AppBar(
               backgroundColor: kPrimaryColor,
@@ -309,10 +313,10 @@ class PaymentSuccessDialog extends StatelessWidget {
                     ),
                     purchaserList: details,
                     separatorColor: Colors.black,
-                    separatorHeight: 2.0,
+                    separatorHeight: 1.0,
                     color: Colors.white,
                     curve: Curves.easeOut,
-                    titleColor:kPrimaryColor,
+                    titleColor: kPrimaryColor,
                     shrinkIcon: Align(
                       alignment: Alignment.centerRight,
                       child: CircleAvatar(
@@ -338,10 +342,9 @@ class PaymentSuccessDialog extends StatelessWidget {
                     shadowColor: Colors.blue.withOpacity(0.5),
                     elevation: 8,
                     shouldExpand: true,
-                    child:
-                    Padding(
-                        padding:
-                        const EdgeInsets.symmetric(horizontal: 30.0, vertical: 5),
+                    child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30.0, vertical: 5),
                         child: Container(
                           height: 140,
                           child: Padding(
@@ -356,9 +359,9 @@ class PaymentSuccessDialog extends StatelessWidget {
                                         Expanded(
                                           child: Column(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
+                                                MainAxisAlignment.spaceAround,
                                             crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                             children: <Widget>[
                                               Text(
                                                 'HEURE',
@@ -369,7 +372,8 @@ class PaymentSuccessDialog extends StatelessWidget {
                                               Text(
                                                 _transactionTime,
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.w600),
+                                                    fontWeight:
+                                                        FontWeight.w600),
                                               ),
                                             ],
                                           ),
@@ -377,43 +381,48 @@ class PaymentSuccessDialog extends StatelessWidget {
                                         Expanded(
                                           child: Column(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
+                                                MainAxisAlignment.spaceAround,
                                             crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                             children: <Widget>[
-                                              _receiver_siteweb == ''?
-                                              Text(
-                                                'NOM & PRENOM',
-                                                style: TextStyle(
-                                                  color:
-                                                  Colors.black.withOpacity(0.5),
-                                                ),
-                                              ):
-                                              Text(
-                                                'RAISON SOCIALE',
-                                                style: TextStyle(
-                                                  color:
-                                                  Colors.black.withOpacity(0.5),
-                                                ),
-                                              ) ,
-                                              _receiver_siteweb == ''?
-                                              Text(
-                                                _receiver_first_name+' '+_receiver_last_name,
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                                style: TextStyle(
-
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ):
-                                              Text(
-                                                _receiver_company,
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
+                                              _receiver_siteweb == ''
+                                                  ? Text(
+                                                      'NOM & PRENOM',
+                                                      style: TextStyle(
+                                                        color: Colors.black
+                                                            .withOpacity(0.5),
+                                                      ),
+                                                    )
+                                                  : Text(
+                                                      'RAISON SOCIALE',
+                                                      style: TextStyle(
+                                                        color: Colors.black
+                                                            .withOpacity(0.5),
+                                                      ),
+                                                    ),
+                                              _receiver_siteweb == ''
+                                                  ? Text(
+                                                      _receiver_first_name +
+                                                          ' ' +
+                                                          _receiver_last_name,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 1,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    )
+                                                  : Text(
+                                                      _receiver_company,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 1,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
                                             ],
                                           ),
                                         ),
@@ -427,15 +436,15 @@ class PaymentSuccessDialog extends StatelessWidget {
                                       Expanded(
                                         child: Column(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
+                                              MainAxisAlignment.spaceAround,
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
                                               'DATE',
                                               style: TextStyle(
-                                                  color:
-                                                  Colors.black.withOpacity(0.5)),
+                                                  color: Colors.black
+                                                      .withOpacity(0.5)),
                                             ),
                                             Text(
                                               _transactionDate,
@@ -448,26 +457,33 @@ class PaymentSuccessDialog extends StatelessWidget {
                                       Expanded(
                                         child: Column(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
+                                              MainAxisAlignment.spaceAround,
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
                                               'MONTANT PAYE',
                                               style: TextStyle(
-                                                  color:
-                                                  Colors.black.withOpacity(0.5)),
+                                                  color: Colors.black
+                                                      .withOpacity(0.5)),
                                             ),
-                                            _currency == 'eur'? Text(
-                                              _amount.toString()+ ' '+"EUROS",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600),
-                                            ):
-                                            Text(
-                                              _amount.toString()+ ' '+_currency.toUpperCase(),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600),
-                                            )
+                                            _currency == 'eur'
+                                                ? Text(
+                                                    _amount.toString() +
+                                                        ' ' +
+                                                        "EUROS",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  )
+                                                : Text(
+                                                    _amount.toString() +
+                                                        ' ' +
+                                                        _currency.toUpperCase(),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  )
                                           ],
                                         ),
                                       ),
@@ -480,18 +496,16 @@ class PaymentSuccessDialog extends StatelessWidget {
                                       Expanded(
                                         child: Column(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                              MainAxisAlignment.start,
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: <Widget>[
-
                                             Text(
                                               'NUMERO TRANSACTION',
                                               style: TextStyle(
-                                                  color:
-                                                  Colors.black.withOpacity(0.5)),
+                                                  color: Colors.black
+                                                      .withOpacity(0.5)),
                                             ),
-
                                             Text(
                                               _transac_num.toString(),
                                               /* Center(
@@ -509,15 +523,13 @@ class PaymentSuccessDialog extends StatelessWidget {
                                           ],
                                         ),
                                       ),
-
                                     ],
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                        ))
-                ),
+                        ))),
                 /*  TicketPass(
               alignment: Alignment.center,
               animationDuration: Duration(seconds: 2),
@@ -721,7 +733,7 @@ class PaymentSuccessDialog extends StatelessWidget {
 
                                     Text(
                                       _transac_num.toString(),
-                                      *//* Center(
+                                      */ /* Center(
                                             child: Column(
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: <Widget>[
@@ -729,7 +741,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                                                 CircularProgressIndicator()
                                               ],
                                             )
-                                        ),*//*
+                                        ),*/ /*
                                       style: TextStyle(
                                           fontWeight: FontWeight.w600),
                                     ),
@@ -747,8 +759,6 @@ class PaymentSuccessDialog extends StatelessWidget {
               )),*/
               ),
             ),
-
-
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () {
                 storage.delete(key: "transactionBackend");
@@ -756,7 +766,8 @@ class PaymentSuccessDialog extends StatelessWidget {
 
                 Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => AccueilBootomBarPage()),
+                    MaterialPageRoute(
+                        builder: (context) => AccueilBootomBarPage()),
                     ModalRoute.withName("/accueilBottom"));
               },
               label: Text('Effectuer un autre transert'),
@@ -764,93 +775,103 @@ class PaymentSuccessDialog extends StatelessWidget {
               backgroundColor: kPrimaryColorSuccesButton,
             ),
           ),
-        )
-      );
-
+        ));
   }
-
 }
-class HomePageState extends State<PaymentPage> {
 
+class HomePageState extends State<PaymentPage> {
   displayTransactionInfo() async {
     var jwt = await storage.read(key: "transaction");
-    transactionInfo=json.decode(jwt);
+    transactionInfo = json.decode(jwt);
 
     transactionInfo.forEach((transaction) {
-      _amount=transaction['transac_total'];
-      _currency=transaction['devise_send'];
-      _receiver_Name=transaction['receiver_name'];
-      _receiver_Email=transaction['receiver_email'];
+      _amount = transaction['transac_total'];
+      _currency = transaction['devise_send'];
+      _receiver_Name = transaction['receiver_name'];
+      _receiver_Email = transaction['receiver_email'];
       _receiver_last_name = transaction['receiver_last_name'];
       _receiver_Email = transaction['receiver_email'];
     });
     var now = new DateTime.now();
     var formatter = new DateFormat('yyyy-MM-dd');
     _transactionDate = formatter.format(now);
-    _transactionTime= DateFormat.Hm().format(now);
-    if(jwt == null) return   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => TransactionPage()), (Route<dynamic> route) => false);
+    _transactionTime = DateFormat.Hm().format(now);
+    if (jwt == null)
+      return Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (BuildContext context) => TransactionPage()),
+          (Route<dynamic> route) => false);
     else {
       return jwt;
     }
   }
-  displayTransactionInfoBackend() async {
-    var transactionBackend  = await storage.read(key: "transactionBackend");
-    transactionInfoBackend=json.decode(transactionBackend);
-    transactionInfoBackend.forEach((element) {
-      details.add("Prenom:"+element["first_name"]);
-   details.add(
-        "Nom:"+element["last_name"],
-      );
-      details.add(
-        "Email:"+element["email"],
-      );
-      details.add(
-         "Commission:"+ element["transac_commission"].toString()+' '+element["devise_sender"],
-      );
-      details.add(
-          "Montant reçu:"+element["montant_receive"].toString()+' '+element["devise_receive"],
-      );
-      _user_id=element["user_id"];
-      //sender
-      _first_name=element["first_name"];
-      _last_name=element["last_name"];
-      _country=element["country"];
-      _phone=element["phone"];
-      _email=element["email"];
 
-      _receiver_company=element["receiver_company"];
-      _receiver_siteweb=element["receiver_siteweb"];
+  displayTransactionInfoBackend() async {
+    var transactionBackend = await storage.read(key: "transactionBackend");
+    transactionInfoBackend = json.decode(transactionBackend);
+    transactionInfoBackend.forEach((element) {
+      details.add("Prenom:" + element["first_name"]);
+      details.add(
+        "Nom:" + element["last_name"],
+      );
+      details.add(
+        "Email:" + element["email"],
+      );
+      details.add(
+        "Commission:" +
+            element["transac_commission"].toString() +
+            ' ' +
+            element["devise_sender"],
+      );
+      details.add(
+        "Montant reçu:" +
+            element["montant_receive"].toString() +
+            ' ' +
+            element["devise_receive"],
+      );
+      _user_id = element["user_id"];
+      //sender
+      _first_name = element["first_name"];
+      _last_name = element["last_name"];
+      _country = element["country"];
+      _phone = element["phone"];
+      _email = element["email"];
+
+      _receiver_company = element["receiver_company"];
+      _receiver_siteweb = element["receiver_siteweb"];
       //receiver
-      _receiver_first_name=element["receiver_first_name"];
-      _receiver_last_name=element["receiver_last_name"];
-      _receiver_Email= element["receiver_Email"];
-      _receiver_phone= element["receiver_phone"];
-      _receiver_country= element["receiver_country"];
-      _receiver_description= element[ "receiver_description"];
+      _receiver_first_name = element["receiver_first_name"];
+      _receiver_last_name = element["receiver_last_name"];
+      _receiver_Email = element["receiver_Email"];
+      _receiver_phone = element["receiver_phone"];
+      _receiver_country = element["receiver_country"];
+      _receiver_description = element["receiver_description"];
       //transaction
-      _montant_send=element["montant_send"];
-      _montant_receive=element["montant_receive"];
-      _transac_commission=element["transac_commission"];
-      _transac_total=element["transac_total"];
-      _devise_receive=element["devise_receive"];
-      _devise_sender=element["devise_sender"];
-      _point_retrait=element["point_retrait"];
-      _transac_num=element["transac_num"];
+      _montant_send = element["montant_send"];
+      _montant_receive = element["montant_receive"];
+      _transac_commission = element["transac_commission"];
+      _transac_total = element["transac_total"];
+      _devise_receive = element["devise_receive"];
+      _devise_sender = element["devise_sender"];
+      _point_retrait = element["point_retrait"];
+      _transac_num = element["transac_num"];
     });
     setState(() {
       _transac_num;
     });
     print(details);
   }
+
   @override
   void initState() {
     super.initState();
     StripeService.init();
     this.displayTransactionInfo();
-  this.displayTransactionInfoBackend();
+    this.displayTransactionInfoBackend();
   }
+
   onItemPress(BuildContext context, int index) async {
-    switch(index) {
+    switch (index) {
       case 0:
         payViaNewCard(context);
         break;
@@ -866,71 +887,67 @@ class HomePageState extends State<PaymentPage> {
     String token = responseJson["access_token"];
     int user_id = responseJson["user_id"];
     return http.post(
-      'https://www.mktransfert.com/api/success/'+'$user_id',
+      'https://www.mktransfert.com/api/success/' + '$user_id',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
       },
-      body: jsonEncode(<String, dynamic>
-      {
-        "user_id":user_id,
-        "first_name":_first_name,
-        "last_name":_last_name,
-        "country":_country,
-        "phone":_phone,
-        "email":_email,
+      body: jsonEncode(<String, dynamic>{
+        "user_id": user_id,
+        "first_name": _first_name,
+        "last_name": _last_name,
+        "country": _country,
+        "phone": _phone,
+        "email": _email,
         "receiver_first_name": _receiver_first_name,
         "receiver_last_name": _receiver_last_name,
         "receiver_email": _receiver_Email,
         "receiver_phone": _receiver_phone,
         "receiver_country": _receiver_country,
-        "receiver_description":  _receiver_description,
+        "receiver_description": _receiver_description,
         "receiver_company": _receiver_company,
         "receiver_siteweb": _receiver_siteweb,
-        "montant_send":_montant_send,
-        "montant_receive":_montant_receive,
-        "transac_commission":_transac_commission,
-        "transac_total":_transac_total,
-        "devise_receive":_devise_receive,
-        "devise_sender":_devise_sender,
-        "point_retrait":_point_retrait,
-      }
-      ),
+        "montant_send": _montant_send,
+        "montant_receive": _montant_receive,
+        "transac_commission": _transac_commission,
+        "transac_total": _transac_total,
+        "devise_receive": _devise_receive,
+        "devise_sender": _devise_sender,
+        "point_retrait": _point_retrait,
+      }),
     );
-
   }
 
   payViaNewCard(BuildContext context) async {
     this.displayTransactionInfo();
     ProgressDialog dialog = new ProgressDialog(context);
-    dialog.style(
-        message: 'Patientez un instant...'
-    );
+    dialog.style(message: 'Patientez un instant...');
     await dialog.show();
     var response = await StripeService.payWithNewCard(
-      amount: (_amount*100).truncate().toString(),
+      amount: (_amount * 100).truncate().toString(),
       currency: "$_currency",
     );
     await dialog.hide();
-    Scaffold.of(context).showSnackBar(
-        SnackBar(
+    Scaffold.of(context)
+        .showSnackBar(SnackBar(
           content: Text(response.message),
           duration: new Duration(milliseconds: 1200),
-        )
-    ).closed.then((_) {
-      if(response.success){
+        ))
+        .closed
+        .then((_) {
+      if (response.success) {
         displayTransactionInfo();
         //displayTransactionInfoBackend();
         // getSuccesInfo();
         postTransaction();
         _paymentSuccessDialog(context);
         // PaymentSuccessDialog();
-      }
-      else{
+      } else {
         Navigator.pop(context);
       }
     });
   }
+
 /*
   getSuccesInfo() async {
     var jwt = await storage.read(key: "jwt");
@@ -970,12 +987,12 @@ class HomePageState extends State<PaymentPage> {
               Icon icon;
               Text text;
 
-              switch(index) {
+              switch (index) {
                 case 0:
                   icon = Icon(Icons.add_circle, color: theme.primaryColor);
                   text = Text('Payer avec une carte');
                   break;
-              /* case 1:
+                /* case 1:
                   icon = Icon(Icons.credit_card, color: theme.primaryColor);
                   text = Text('Payer via une carte existante');
                   break;*/
@@ -992,11 +1009,11 @@ class HomePageState extends State<PaymentPage> {
               );
             },
             separatorBuilder: (context, index) => Divider(
-              color: theme.primaryColor,
-            ),
-            itemCount: 2
-        ),
+                  color: theme.primaryColor,
+                ),
+            itemCount: 2),
       ),
-    );;
+    );
+    ;
   }
 }
