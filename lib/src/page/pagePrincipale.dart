@@ -1038,7 +1038,7 @@ Widget _buildDateHeader(DateTime date) {
             ),*/
         ),
       ),
-      const SizedBox(width: 20.0),
+      //const SizedBox(width: 20.0),
       const SizedBox(height: 80.0),
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1052,10 +1052,13 @@ Widget _buildDateHeader(DateTime date) {
                 letterSpacing: 2.0,
               ),
             ),*/
-          Text(
-            "Estimation du transfert",
-            style: (boldStyle),
-          )
+         SizedBox (
+           width: 200,
+           child: Text(
+             "Estimation du transfert",
+             style: (boldStyle),
+           ),
+         )
         ],
       ),
     ],

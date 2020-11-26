@@ -5,6 +5,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:fancy_alert_dialog/fancy_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:international_phone_input/international_phone_input.dart';
 import 'package:mktransfert/src/contant/constant.dart';
 import 'package:mktransfert/src/page/AccueilBottomBar.dart';
 import 'package:mktransfert/src/page/beneficiaire.dart';
@@ -54,6 +55,10 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
   var saveReceiver_emailEntreprise = TextEditingController();
   var saveReceiver_phoneEntreprise = TextEditingController();
   var saveReceiver_infoEntreprise = TextEditingController();
+  String phoneNumber;
+  String phoneIsoCode;
+  bool visible = false;
+  String confirmedNumber = '';
 
   final _beneficiaire = Beneficiaire();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -70,6 +75,23 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
     return items;
   }
 
+
+  void onPhoneNumberChange(
+      String number, String internationalizedPhoneNumber, String isoCode) {
+    print(number);
+    setState(() {
+      phoneNumber = number;
+      phoneIsoCode = isoCode;
+    });
+  }
+
+  onValidPhoneNumber(
+      String number, String internationalizedPhoneNumber, String isoCode) {
+    setState(() {
+      visible = true;
+      confirmedNumber = internationalizedPhoneNumber;
+    });
+  }
   Future<String> displayCountriesInfo() async {
     var jwt = await storage.read(key: "jwt");
     var countryList = List();
@@ -474,7 +496,14 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                           child: Row(
                                             children: <Widget>[
                                               Flexible(
-                                                  child: TextFormField(
+                                                child:   InternationalPhoneInput(
+                                                  onPhoneNumberChange: onPhoneNumberChange,
+                                                  initialPhoneNumber: phoneNumber,
+                                                  initialSelection: phoneIsoCode,
+                                                  enabledCountries: ['+233', '+1'],
+                                                  labelText: "Phone Number",
+                                                ),
+                                             /*     child: TextFormField(
                                                 validator: (value) {
                                                   if (value.isEmpty) {
                                                     return 'Veuillez saisir un telephone';
@@ -495,7 +524,8 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                                       "Entre un telephone",
                                                   border: OutlineInputBorder(),
                                                 ),
-                                              )),
+                                              )*/
+                                              ),
                                             ],
                                           )),
                                       Padding(

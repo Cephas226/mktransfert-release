@@ -50,6 +50,7 @@ dependencies:
   flutter_launcher_icons: ^0.8.0
   ticket_pass_package: 0.1.0
   minimize_app: ^0.1.1
+  international_phone_input: ^1.0.4
 
 
 

@@ -1308,9 +1308,15 @@ class _HomePageState extends State<HomePage> {
                                           ? Text(
                                               '${snapshot.data[index]['receiver_company'].substring(0, 1)}',
                                             )
-                                          : Text(
+                                          :
+                                     ( snapshot.data[index]['receiver_first_name']!=''?
+                                      Text(
                                               '${snapshot.data[index]['receiver_first_name'].substring(0, 1)}',
-                                            )),
+                                            ):
+                                      Text(
+                                        '',
+                                      ))
+                                  ),
                                   trailing: MaterialButton(
                                     color: Colors.white,
                                     shape: CircleBorder(),
