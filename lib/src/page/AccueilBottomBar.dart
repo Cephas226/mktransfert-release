@@ -13,6 +13,7 @@ import 'package:mktransfert/src/utils/oval-right-clipper.dart';
 
 import 'accueil.dart';
 import 'beneficiaireScreen.dart';
+import 'cooly.dart';
 import 'items/help_page.dart';
 import 'items/stats_page.dart';
 import 'loginPage.dart';
@@ -355,7 +356,7 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
             : (currentIndex == 1)
             ? Center(
           child: Container(
-            child: OperationListPage(),
+            child: TransactionPage(),
           ),
         )
             : Center(

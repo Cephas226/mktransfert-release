@@ -178,7 +178,6 @@ class _HomePageState extends State<HomePage> {
       data = beneficiaireList;
       countrydata = countryList;
     });
-    print(beneficiaireList);
     return beneficiaireList;
   }
 
@@ -215,7 +214,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   getSuccesInfo() async {
-    print('hello');
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
     String token = responseJson["access_token"];
@@ -227,7 +225,6 @@ class _HomePageState extends State<HomePage> {
           'Authorization': 'Bearer $token',
         });
     var resBody = json.decode(response.body);
-    print(resBody["API_transac_data"]);
     _transac_num = resBody["API_transac_data"];
     /* resBody?.forEach((k, v) {
       print(v['transac_num']);
@@ -270,8 +267,9 @@ class _HomePageState extends State<HomePage> {
                                 });
                                 var selectedBeneficiaire =
                                     data.map((item) => item).toList();
-                                selectedBeneficiaire
+                             var selectedBeneficiaires=   selectedBeneficiaire
                                     .where((f) => f["id"] == _beneficiaireID);
+                                print(selectedBeneficiaires);
                                 selectedBeneficiaire.forEach((b) {
                                   if (b['id'] == _beneficiaireID) {
                                     editReceiver_first_name.text =
@@ -279,7 +277,7 @@ class _HomePageState extends State<HomePage> {
                                     editReceiver_last_name.text =
                                         b["receiver_last_name"];
                                     editReceiver_country.text =
-                                        b["receiver_country"];
+                                        b["receiver_country"].toString();
                                     editReceiver_phone.text =
                                         b["receiver_phone"];
                                     editReceiver_email.text =
@@ -300,7 +298,7 @@ class _HomePageState extends State<HomePage> {
                                     saveReceiver_phoneEntreprise.text =
                                         b["receiver_phone"];
                                     saveReceiver_countryEntreprise.text =
-                                        b["receiver_country"];
+                                        b["receiver_country"].toString();
                                     saveReceiver_infoEntreprise.text =
                                         b["receiver_description"];
                                   }
@@ -886,7 +884,7 @@ class _HomePageState extends State<HomePage> {
                                     editReceiver_first_name.text,
                                 "receiver_last_name":
                                     editReceiver_last_name.text,
-                                "receiver_email": editReceiver_email.text,
+                                "receiver_email": editReceiver_email.text != null?editReceiver_email.text:'non renseigné',
                                 "receiver_phone": editReceiver_phone.text,
                                 "receiver_country": _mySelectionCountry,
                                 "receiver_description":
@@ -901,7 +899,8 @@ class _HomePageState extends State<HomePage> {
                                 "devise_receive": _devise_receive,
                                 "devise_sender": _currencySend,
                                 "point_retrait": _mySelectionPointRetrait,
-                                "transac_num": _transac_num
+                                "transac_num": _transac_num,
+                                "is_company": editReceiver_Is_company
                               }
                             ]));
                         storage.write(
@@ -1148,6 +1147,7 @@ class _HomePageState extends State<HomePage> {
           alignedDropdown: true,
           child: DropdownButtonHideUnderline(
             child: DropdownButton(
+              dropdownColor: Colors.grey,
               hint: Text(
                 "Choisir un point de retrait",
                 style: TextStyle(fontSize: 14.0, color: Color(0xFFF5F5F5)),
@@ -1168,7 +1168,6 @@ class _HomePageState extends State<HomePage> {
                           {
                             if (!f['agence_isdisponible'])
                               {
-                                print("indispo"),
                                 showAlertDialogPointRetrait(context)
                               }
                           }
@@ -1178,7 +1177,7 @@ class _HomePageState extends State<HomePage> {
               },
               value: _mySelectionPointRetrait,
               style: new TextStyle(
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
           ),
@@ -1276,14 +1275,25 @@ class _HomePageState extends State<HomePage> {
                             child: Column(
                               children: <Widget>[
                                 ListTile(
-                                  title:  snapshot.data[index]['is_company']
-                                      ? Text(
-                                    snapshot.data[index]['receiver_company'],
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white
-                                      )
-                                  )
+                                  title:  snapshot.data[index]['is_company']==true
+                                      ?
+                                (
+                            snapshot.data[index]['receiver_company']!=null?
+                            Text(
+                                snapshot.data[index]['receiver_company'],
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white
+                                )
+                            ):
+                            Text(
+                                'non renseigné',style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white
+                            ),
+                            )
+                               )
+
                                       : Text(
                                       snapshot.data[index]
                                       ['receiver_first_name']+' '+snapshot.data[index]
@@ -1295,7 +1305,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   subtitle: Row(
                                     children: [
-                                      snapshot.data[index]['is_company']
+                                      snapshot.data[index]['is_company']==true
                                           ? Icon(Icons.account_balance_outlined,
                                               color: Colors.white)
                                           : Icon(Icons.person,
@@ -1304,18 +1314,24 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   leading: new CircleAvatar(
                                       backgroundColor: Colors.white,
-                                      child: snapshot.data[index]['is_company']
-                                          ? Text(
+                                      child: snapshot.data[index]['is_company']==true
+                                          ? (snapshot.data[index]['receiver_company']!=""?
+                                      Text(
                                               '${snapshot.data[index]['receiver_company'].substring(0, 1)}',
-                                            )
+                                            ):Text(
+                                        '',
+                                      ))
                                           :
                                      ( snapshot.data[index]['receiver_first_name']!=''?
                                       Text(
                                               '${snapshot.data[index]['receiver_first_name'].substring(0, 1)}',
                                             ):
                                       Text(
-                                        '',
-                                      ))
+                                        '',style: TextStyle(
+                                        color: Colors.white
+                                      ),
+                                      )
+                                     )
                                   ),
                                   trailing: MaterialButton(
                                     color: Colors.white,

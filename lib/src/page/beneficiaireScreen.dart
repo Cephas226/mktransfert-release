@@ -27,18 +27,19 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
   String displayUser_first_name;
   String displayUser_email;
   int amount = 10;
-  double amountWaitted=10;
+
+  double amountWaitted = 10;
   double amountTotal;
   double commission;
   int _beneficiaireID;
   int _mySelectionPointRetrait;
-  String _senderCurrency="";
-  String _senderCurrencySymbole="";
+  String _senderCurrency = "";
+  String _senderCurrencySymbole = "";
   String _receiverCurrency;
   double _convertResult;
-  int maxSlider=9999;
+  int maxSlider = 9999;
   double _stripeAmount;
-
+  var myAmountController = TextEditingController();
   double _taux;
   double _conversion_eur;
   double _conversion_usd;
@@ -51,19 +52,17 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawerEnableOpenDragGesture: false,
-     // drawer:   _buildDrawer(),
+      // drawer:   _buildDrawer(),
       appBar: AppBar(
-        leading:
-        IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PagePrincipale()))
-        ),
+        leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => PagePrincipale()))),
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: true,
         title: Text(
           "Envoyer de l'argent",
         ),
-
         elevation: 0,
         centerTitle: true,
       ),
@@ -73,35 +72,28 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       bottomNavigationBar: _buildButtonsSection(),
     );
   }
+
   displayMontantSend() async {
     var montantSend = await storage.read(key: "montantSend");
-    print(montantSend);
-    if (montantSend==''){
-      this.amount=10;
-    }
-    else{
-      this.amount=int.parse(montantSend);
+    if (montantSend == '') {
+      this.amount = 10;
+      this.myAmountController.text=this.amount.toString();
+      _doConversionEur();
+    } else {
+      this.amount = int.parse(montantSend);
+      this.myAmountController.text=this.amount.toString();
+      _doConversionEur();
     }
   }
+
   displayUserInfo() async {
     var jwt = await storage.read(key: "userInfo");
-
     Map<String, dynamic> responseStorageUser = json.decode(jwt);
-    /*editUser_first_name.text = responseStorageUser["first_name"];
-    editUser_last_name.text = responseStorageUser["last_name"];
-    editUser_email.text = responseStorageUser["email"];
-    editUser_phone.text = responseStorageUser["phone"];
-    editUser_country.text = responseStorageUser["country"];
-
-    user_id_profil=responseStorageUser["user_id_profil"];*/
-
     displayUser_first_name = responseStorageUser["first_name"];
     displayUser_last_name = responseStorageUser["last_name"];
     displayUser_email = responseStorageUser["email"];
-    print(displayUser_first_name);
-/*    displayUser_phone = responseStorageUser["phone"];
-    displayUser_country = responseStorageUser["country"];*/
   }
+
   Future<AlertDialog> maxAlert(BuildContext context) {
     return showDialog<AlertDialog>(
       context: context,
@@ -114,8 +106,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Text(
-                      'Pour ce montant merci de contacter MK Tranfert pour effectuer votre opération  Numéros de téléphone 0033760562143 et 0033661217174 '
-                  )
+                      'Pour ce montant merci de contacter MK Tranfert pour effectuer votre opération  Numéros de téléphone 0033760562143 et 0033661217174 ')
                 ],
               ),
             ),
@@ -131,73 +122,87 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       },
     );
   }
+
   displayPaymentInfo() async {
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
     String token = responseJson["access_token"];
     int user_id = responseJson["user_id"];
-    var res = await http.get(
-        Uri.encodeFull(
-            'https://www.mktransfert.com/api/payment/' +
-                '$user_id'),
-        headers: {
-          "Accept": "application/json",
-          'Authorization': 'Bearer $token',
-        }).then((value) => {
-          if (value.statusCode==200){
-            _senderCurrency = json.decode(value.body)['API_transac_data']['devise_sender'],
-             _taux=json.decode(value.body)['API_transac_data']['taux'],
-            _conversion_eur=json.decode(value.body)['API_transac_data']['conversion_eur'],
-            _conversion_usd=json.decode(value.body)['API_transac_data']['conversion_usd'],
-            json.decode(value.body)['point_retait']?.forEach((k, v) {
-                  receiver_point_retait.add(v[0]);
-                }),
-              },}
-              ).catchError((erreur)=>print(erreur));
+    var res = await http
+        .get(
+            Uri.encodeFull(
+                'https://www.mktransfert.com/api/payment/' + '$user_id'),
+            headers: {
+              "Accept": "application/json",
+              'Authorization': 'Bearer $token',
+            })
+        .then((value) => {
+              if (value.statusCode == 200)
+                {
+                  _senderCurrency = json.decode(value.body)['API_transac_data']
+                      ['devise_sender'],
+                  _taux = json.decode(value.body)['API_transac_data']['taux'],
+                  _conversion_eur = json.decode(value.body)['API_transac_data']
+                      ['conversion_eur'],
+                  _conversion_usd = json.decode(value.body)['API_transac_data']
+                      ['conversion_usd'],
+                  json.decode(value.body)['point_retait']?.forEach((k, v) {
+                    receiver_point_retait.add(v[0]);
+                  }),
+                    setState(() {
+                    _conversion_eur = json.decode(value.body)['API_transac_data']
+                    ['conversion_eur'];
+                    _conversion_usd = json.decode(value.body)['API_transac_data']
+                    ['conversion_usd'];
+                    })
+                },
+            })
+        .catchError((erreur) => print(erreur));
 
-            if(_senderCurrency=='eur'){
-             setState(() {
-               _dropdownMenuItemsReceiver.add(
-                   DropdownMenuItem(
-                     child: Row(
-                       children: <Widget>[
-                         Text('EUR'),
-                         Image.asset("assets/Image/eu.png", width: 20),
-                       ],
-                     ),
-                     value:  ListItemReceiver("assets/Image/eu.png", "EUR",2),
-                   ));
-               _doConversionEur();
-               this._senderCurrencySymbole='€';
-             });
-            }
-    if(_senderCurrency=='usd'){
-      _dropdownMenuItemsReceiver.add(
-          DropdownMenuItem(
-            child: Row(
-              children: <Widget>[
-                Text('EUR'),
-                Image.asset("assets/Image/eu.png", width: 30),
-              ],
-            ),
-            value:  ListItemReceiver("assets/Image/us.png", "USD",2),
-          ));
-      this._senderCurrencySymbole='\$';
+    if (_senderCurrency == 'eur') {
+      setState(() {
+        _dropdownMenuItemsReceiver.add(DropdownMenuItem(
+          child: Row(
+            children: <Widget>[
+              Text('EUR'),
+              Image.asset("assets/Image/eu.png", width: 20),
+            ],
+          ),
+          value: ListItemReceiver("assets/Image/eu.png", "EUR", 2),
+        ));
+        _doConversionEur();
+        this._senderCurrencySymbole = '€';
+      });
     }
+    if (_senderCurrency == 'usd') {
+      _dropdownMenuItemsReceiver.add(DropdownMenuItem(
+        child: Row(
+          children: <Widget>[
+            Text('USD'),
+            Image.asset("assets/Image/us.png", width: 20),
+          ],
+        ),
+        value: ListItemReceiver("assets/Image/us.png", "USD", 2),
+      ));
+      _doConversionEur();
+      this._senderCurrencySymbole = '\$';
+    }
+
   }
+
   @override
-  Future<void> initState()  {
+  Future<void> initState() {
     super.initState();
     this.displayPaymentInfo();
+    _doConversionEur();
     _dropdownMenuItemsReceiver = buildDropDownMenuItemsReceiver(_dropdownItemsReceiver);
     _selectedItemReceiver = _dropdownMenuItemsReceiver[0].value;
     displayUserInfo();
     displayMontantSend();
   }
+
   List<ListItemReceiver> _dropdownItemsReceiver = [
-    ListItemReceiver("assets/Image/gnf.png", "GNF",1),
-  /*  ListItemReceiver("assets/Image/eu.png", "EUR",2),
-    ListItemReceiver("assets/Image/us.png", "USD",3),*/
+    ListItemReceiver("assets/Image/gnf.png", "GNF", 1),
   ];
 
   List<DropdownMenuItem<ListItemReceiver>> _dropdownMenuItemsReceiver;
@@ -211,7 +216,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
         DropdownMenuItem(
           child: Row(
             children: <Widget>[
-              Text(listItem.name,style: TextStyle(fontSize: 10)),
+              Text(listItem.name, style: TextStyle(fontSize: 10)),
               Image.asset(listItem.imageReceiver, width: 20),
             ],
           ),
@@ -221,11 +226,27 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     }
     return items;
   }
+
   Future<double> _doConversionEur() async {
-    this.amountWaitted=this.amount*this._conversion_eur;
-    this.commission=this.amount*this._taux;
-    this.amountTotal=this.amount+this.commission;
+    if (_senderCurrency =='eur'){
+      this.amountWaitted = this.amount * this._conversion_eur;
+      this.commission = this.amount * this._taux;
+      this.amountTotal = this.amount + this.commission;
+    }
+    if (_senderCurrency =='usd'){
+      this.amountWaitted = this.amount * this._conversion_usd;
+      this.commission = this.amount * this._taux;
+      this.amountTotal = this.amount + this.commission;
+    }
+    print(_senderCurrency);
   }
+
+  Future<double> _doConversionUSD() async {
+    this.amountWaitted = this.amount * this._conversion_usd;
+    this.commission = this.amount * this._taux;
+    this.amountTotal = this.amount + this.commission;
+  }
+
   Widget _buildBody() {
     return Container(
       margin: EdgeInsets.only(top: 50),
@@ -252,7 +273,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 50,right: 50,top: 0,bottom: 0),
+            padding:
+                const EdgeInsets.only(left: 50, right: 50, top: 0, bottom: 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: kAmounts.map((amount) {
@@ -260,13 +282,15 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                   text: amount,
                   onTap: () {
                     setState(() {
-                      if (_selectedItemReceiver.name!='GNF'){
+                      if (_selectedItemReceiver.name != 'GNF') {
                         this.amount = int.parse(amount);
-                        this.amountWaitted=this.amount.toDouble();
-                        this.commission=this.amount*this._taux;
+                        this.amountWaitted = this.amount.toDouble();
+                        this.commission = this.amount * this._taux;
+                        this.myAmountController.text=this.amount.toString();
                       }
-                      if (_selectedItemReceiver.name=='GNF'){
+                      if (_selectedItemReceiver.name == 'GNF') {
                         this.amount = int.parse(amount);
+                        this.myAmountController.text=this.amount.toString();
                         _doConversionEur();
                       }
                     });
@@ -277,19 +301,23 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
           ),
           Divider(),
           _buildAmountSection(),
-          _taux != null?_buildRecepientsSection():Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('En cours'),
-                  CircularProgressIndicator()
-                ],
-              )
-          ),
+          _buildRecepientsSection(),
+         /* amountTotal != null
+              ? _buildRecepientsSection()
+              : Center(
+                  child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text('En cours'),
+                    CircularProgressIndicator()
+                  ],
+                )
+          )*/
         ],
       ),
     );
   }
+
   Widget _buildDropButtonTo() {
     return Row(
       children: <Widget>[
@@ -300,12 +328,12 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
               onChanged: (value) {
                 setState(() {
                   _selectedItemReceiver = value;
-                  if (_selectedItemReceiver.name!='GNF'){
-                    this.amountWaitted=this.amount.toDouble();
-                    this.commission=this.amount*this._taux;
-                    this.amountTotal=this.amount+this.commission;
+                  if (_selectedItemReceiver.name != 'GNF') {
+                    this.amountWaitted = this.amount.toDouble();
+                    this.commission = this.amount * this._taux;
+                    this.amountTotal = this.amount + this.commission;
                   }
-                  if (_selectedItemReceiver.name=='GNF'){
+                  if (_selectedItemReceiver.name == 'GNF') {
                     _doConversionEur();
                   }
                 });
@@ -314,9 +342,10 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       ],
     );
   }
+
   Widget _buildAmountSection() {
     return Padding(
-      padding: const EdgeInsets.only(left: 30,right: 30,top: 0,bottom: 0),
+      padding: const EdgeInsets.only(left: 30, right: 30, top: 0, bottom: 0),
       child: Column(
         children: <Widget>[
           Row(
@@ -325,57 +354,78 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
               RoundButton(
                 onTap: () {
                   setState(() {
-                    if (_selectedItemReceiver.name!='GNF'){
+                    if (_selectedItemReceiver.name != 'GNF') {
                       amount--;
-                      this.amountWaitted=this.amount.toDouble();
-                      this.commission=this.amount*this._taux;
-                      this.amountTotal=this.amount+this.commission;
+                      this.amountWaitted = this.amount.toDouble();
+                      this.commission = this.amount * this._taux;
+                      this.amountTotal = this.amount + this.commission;
+                      this.myAmountController.text=this.amount.toString();
                     }
-                    if (_selectedItemReceiver.name=='GNF'){
+                    if (_selectedItemReceiver.name == 'GNF') {
                       amount--;
+                      this.myAmountController.text=this.amount.toString();
                       _doConversionEur();
                     }
                   });
                 },
                 icon: Icons.remove,
               ),
+              Flexible(
+                child: TextFormField(
+                  controller: myAmountController,
+                  decoration: InputDecoration(
+                    hintText: "1000€",
+                  ),
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  onChanged: (val) => {
+                    setState(() {
+                      this.amount=int.parse(val);
+                      _doConversionEur();
+                      if (int.parse(val) > 9999) {
+                        this.maxAlert(context);
+                        amount = 9999;
+                      }
+                    }),
+                    //myAmountController.text=this.amount.toString()
+                  },
+                ),
+              ),
               _senderCurrency == "eur"? Flexible(child: Text(
-                "$amount"+' '+ 'Euros',
+                'Euros',
                 style: TextStyle(
-
                   color: kPrimaryColor,
-                  fontSize: 30,
+                 fontSize: 20,
                 ),
               )
               ):
               Flexible(child: Text(
-                "$amount"+' '+ this._senderCurrencySymbole,
+                'USD',
                 style: TextStyle(
-
                   color: kPrimaryColor,
-                  fontSize: 30,
+                  fontSize: 20,
                 ),
               )
-              )
-              ,
+              ),
               RoundButton(
                 onTap: () {
                   setState(() {
-                    if (_selectedItemReceiver.name!='GNF'){
+                    if (_selectedItemReceiver.name != 'GNF') {
                       amount++;
-                      if (amount>9999){
+                      if (amount > 9999) {
                         this.maxAlert(context);
-                        amount=9999;
+                        amount = 9999;
                       }
-                      this.amountWaitted=this.amount.toDouble();
-                      this.commission=this.amount*this._taux;
-                      this.amountTotal=this.amount+this.commission;
+                      this.amountWaitted = this.amount.toDouble();
+                      this.commission = this.amount * this._taux;
+                      this.amountTotal = this.amount + this.commission;
+                      this.myAmountController.text=this.amount.toString();
                     }
-                    if (_selectedItemReceiver.name=='GNF'){
+                    if (_selectedItemReceiver.name == 'GNF') {
                       amount++;
-                      if (amount>9999){
+                      this.myAmountController.text=this.amount.toString();
+                      if (amount > 9999) {
                         this.maxAlert(context);
-                        amount=9999;
+                        amount = 9999;
                       }
                       _doConversionEur();
                     }
@@ -385,26 +435,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
               ),
             ],
           ),
-
-          Slider(
-            value: amount.toDouble(),
-            onChanged: (newValue) {
-              _doConversionEur();
-              setState(() {
-                if (_selectedItemReceiver.name!='GNF'){
-                  this.amountWaitted=this.amount.toDouble();
-                  this.commission=this.amount*this._taux;
-                  amount = newValue.toInt();
-                }
-                if (_selectedItemReceiver.name=='GNF'){
-                  amount = newValue.toInt();
-                  _doConversionEur();
-                }
-              });
-            },
-            min: 10,
-            max: maxSlider.toDouble(),
-          ),
+          SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -457,8 +488,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
   }
 
   Widget _buildRecepientsSection() {
-    return
-    Container (
+    _doConversionEur();
+    return Container(
       color: kBackgroundWhiteColor,
       child: Column(
         children: <Widget>[
@@ -483,9 +514,13 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                           leading: Text(
                             "Montant à recevoir",
                             style: TextStyle(
-                                color: Colors.white, fontWeight: FontWeight.w500),
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500),
                           ),
-                          trailing: Text(this.amountWaitted.toString()+' '+_selectedItemReceiver.name,
+                          trailing: Text(
+                              this.amountWaitted.toString() +
+                                  ' ' +
+                                  _selectedItemReceiver.name,
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w500)),
@@ -500,8 +535,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
             margin: EdgeInsets.only(left: 10),
             decoration: const BoxDecoration(
               border: Border(
-                left: BorderSide(
-                    width: 10.0, color: Colors.black54),
+                left: BorderSide(width: 10.0, color: Colors.black54),
               ),
             ),
             height: 60,
@@ -518,9 +552,11 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                           leading: Text(
                             "Montant commission",
                             style: TextStyle(
-                                color: Colors.black, fontWeight: FontWeight.w500),
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500),
                           ),
-                          trailing: Text(this.commission.toStringAsFixed(2),
+                          trailing: Text(this.commission != null?
+                          this.commission.toStringAsFixed(2):'',
                               style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w500)),
@@ -535,8 +571,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
             margin: EdgeInsets.only(left: 10),
             decoration: const BoxDecoration(
               border: Border(
-                left: BorderSide(
-                    width: 10.0, color: Colors.red),
+                left: BorderSide(width: 10.0, color: Colors.red),
               ),
             ),
             height: 60,
@@ -553,10 +588,15 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                           leading: Text(
                             "Montant total à payer",
                             style: TextStyle(
-                                color: Colors.black, fontWeight: FontWeight.w500),
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500),
                           ),
                           trailing:
-                          Text(this.amountTotal.toString()+' '+_senderCurrencySymbole,
+
+                          Text(
+                              this.amountTotal.toString() +
+                                  ' ' +
+                                  _senderCurrencySymbole,
                               style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w500)
@@ -568,7 +608,6 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
             ),
           ),
         ],
-
       ),
     );
 
@@ -633,7 +672,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: <Widget>[
-         /*   Expanded(
+            /*   Expanded(
               child: RaisedButton(
                 onPressed: () {},
                 color: Colors.grey.shade300,
@@ -656,20 +695,23 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
             Expanded(
               child: RaisedButton(
                 onPressed: () {
-                  storage.write(key: "transactionResume", value: json.encode([
-                    {
-                      "montant_send":this.amount,
-                      "montant_receive":this.amountWaitted,
-                      "transac_commission":this.commission,
-                      "transac_total":this.amountTotal,
-                      "devise_send":_senderCurrency,
-                      "devise_send_symbol":_senderCurrencySymbole,
-                      "devise_receive":_selectedItemReceiver.name
-                    }
-                  ]));
+                  storage.write(
+                      key: "transactionResume",
+                      value: json.encode([
+                        {
+                          "montant_send": this.amount,
+                          "montant_receive": this.amountWaitted,
+                          "transac_commission": this.commission,
+                          "transac_total": this.amountTotal,
+                          "devise_send": _senderCurrency,
+                          "devise_send_symbol": _senderCurrencySymbole,
+                          "devise_receive": _selectedItemReceiver.name
+                        }
+                      ]));
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ExpenseTrackerApp()),
+                    MaterialPageRoute(
+                        builder: (context) => ExpenseTrackerApp()),
                   );
                 },
                 color: kPrimaryColor,

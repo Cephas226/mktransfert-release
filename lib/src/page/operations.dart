@@ -191,7 +191,7 @@ class _OperationListPageState extends State<OperationListPage> {
                                                                                 null
                                                                             ?
                                                                         (snapshot.data[index]['transac_devise_sender'].toString()=='eur'?
-                                                                            "EUROS":
+                                                                            "Euros":
                                                                             ''
                                                                         )
                                                                             : '')
@@ -324,7 +324,8 @@ class _OperationListPageState extends State<OperationListPage> {
                         future: fetchMyTransactionDelivery(),
                         builder: (BuildContext context,
                             AsyncSnapshot<List<dynamic>> snapshot) {
-                          if (snapshot.hasError) {
+                          print(snapshot.data);
+                          if (snapshot.hasData) {
                             final List<dynamic> data = snapshot.data;
                             return ListView.builder(
                                 padding: EdgeInsets.all(8),

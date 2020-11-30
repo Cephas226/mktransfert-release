@@ -700,7 +700,7 @@ class _MainPageState extends State<PagePrincipale> {
                                             height: 40.0,
                                             child: Center(
                                               child: Text(_selectedCurrency == 1?'Montant Réçu en EUROS':
-                                              'Montant à Envoyer en USD',
+                                              'Montant à Réçu en USD',
                                                   style: TextStyle(color:Colors.white)),
                                             ),
                                           ),

@@ -41,6 +41,7 @@ String _country = "";
 String _phone = "";
 String _receiver_company = "";
 String _receiver_siteweb = "";
+bool _Is_company;
 String _email = "";
 //receiver
 String _receiver_first_name = "";
@@ -258,7 +259,7 @@ class PaymentSuccessDialog extends StatelessWidget {
             context: context,
             builder: (context) => new AlertDialog(
               title: new Text('Êtes-vous sûr?'),
-              content: new Text('Voulez-vous quitter une application'),
+              content: new Text('Voulez-vous quitter l\'application'),
               actions: <Widget>[
                 new GestureDetector(
                   onTap: () => Navigator.of(context).pop(false),
@@ -306,7 +307,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                       ),
                     ),
                     expansionTitle: Text(
-                      'Details de la transaction',
+                      'Informations du bénéficiaire',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                       ),
@@ -338,15 +339,15 @@ class PaymentSuccessDialog extends StatelessWidget {
                     ),
                     titleHeight: 50,
                     width: 350,
-                    height: 220,
+                    height: 300,
                     shadowColor: Colors.blue.withOpacity(0.5),
                     elevation: 8,
                     shouldExpand: true,
                     child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 30.0, vertical: 5),
+                            horizontal: 30.0, vertical: 0),
                         child: Container(
-                          height: 140,
+                          height: 200,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 2.0),
                             child: Column(
@@ -385,7 +386,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: <Widget>[
-                                              _receiver_siteweb == ''
+                                              _Is_company==false
                                                   ? Text(
                                                       'NOM & PRENOM',
                                                       style: TextStyle(
@@ -400,11 +401,11 @@ class PaymentSuccessDialog extends StatelessWidget {
                                                             .withOpacity(0.5),
                                                       ),
                                                     ),
-                                              _receiver_siteweb == ''
+                                              _Is_company==false
                                                   ? Text(
-                                                      _receiver_first_name +
+                                                      _first_name +
                                                           ' ' +
-                                                          _receiver_last_name,
+                                                          _last_name,
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                       maxLines: 1,
@@ -471,7 +472,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                                                 ? Text(
                                                     _amount.toString() +
                                                         ' ' +
-                                                        "EUROS",
+                                                        "Euros",
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.w600),
@@ -500,263 +501,61 @@ class PaymentSuccessDialog extends StatelessWidget {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
+                                          Text(
+                                                  'NUMERO \nTRANSACTION :',
+                                                  style: TextStyle(
+                                                      color: Colors.black
+                                                          .withOpacity(0.5)),
+                                              ),
+                                             Text(
+                                                  _transac_num.toString(),style: TextStyle(
+                                                 fontWeight:
+                                                 FontWeight.w600),
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: <Widget>[
                                             Text(
-                                              'NUMERO TRANSACTION',
+                                              'COMMISSION :',
                                               style: TextStyle(
                                                   color: Colors.black
                                                       .withOpacity(0.5)),
                                             ),
-                                            Text(
-                                              _transac_num.toString(),
-                                              /* Center(
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: <Widget>[
-                                                Text('En cours'),
-                                                CircularProgressIndicator()
-                                              ],
-                                            )
-                                        ),*/
+                                            _currency == 'eur'
+                                                ? Text(
+                                              _transac_commission.toString()+
+                                                  ' ' +
+                                                  "Euros",
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.w600),
-                                            ),
+                                                  fontWeight:
+                                                  FontWeight.w600),
+                                            )
+                                                : Text(
+                                              _amount.toString() +
+                                                  ' ' +
+                                                  _currency.toUpperCase(),
+                                              style: TextStyle(
+                                                  fontWeight:
+                                                  FontWeight.w600),
+                                            )
                                           ],
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
+
                               ],
                             ),
                           ),
                         ))),
-                /*  TicketPass(
-              alignment: Alignment.center,
-              animationDuration: Duration(seconds: 2),
-              expandedHeight: 600,
-              expandIcon: CircleAvatar(
-                maxRadius: 14,
-                child: Icon(
-                  Icons.keyboard_arrow_down,
-                  color: Colors.white,
-                  size: 20,
-                ),
-              ),
-              expansionTitle: Text(
-                'Details',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              purchaserList: sample,
-              separatorColor: Colors.black,
-              separatorHeight: 2.0,
-              color: Colors.white,
-              curve: Curves.easeOut,
-              titleColor: kPrimaryColor,
-              shrinkIcon: Align(
-                alignment: Alignment.centerRight,
-                child: CircleAvatar(
-                  maxRadius: 14,
-                  child: Icon(
-                    Icons.keyboard_arrow_up,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),
-              ),
-              ticketTitle: Text(
-                'Details',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 18,
-                ),
-              ),
-              titleHeight: 50,
-              width: 350,
-              height: 220,
-              shadowColor: Colors.blue.withOpacity(0.5),
-              elevation: 8,
-              shouldExpand: false,
-              child: Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 30.0, vertical: 5),
-                child: Container(
-                  height: 140,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Expanded(
-                          child: Container(
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: Column(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(
-                                        'HEURE',
-                                        style: TextStyle(
-                                            color: Colors.black
-                                                .withOpacity(0.5)),
-                                      ),
-                                      Text(
-                                        _transactionTime,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      _receiver_siteweb == null ?
-                                      Text(
-                                        'Nom & Prenom',
-                                        style: TextStyle(
-                                          color:
-                                          Colors.black.withOpacity(0.5),
-                                        ),
-                                      ) :
-                                      Text(
-                                        'RAISON SOCIALE',
-                                        style: TextStyle(
-                                          color:
-                                          Colors.black.withOpacity(0.5),
-                                        ),
-                                      ),
-                                      _receiver_siteweb != null ?
-                                      Text(
-                                        _receiver_company,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ) :
-                                      Text(
-                                        _receiver_Name + ' ' + _receiver_last_name,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      'DATE',
-                                      style: TextStyle(
-                                          color:
-                                          Colors.black.withOpacity(0.5)),
-                                    ),
-                                    Text(
-                                      _transactionDate,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      'MONTANT PAYE',
-                                      style: TextStyle(
-                                          color:
-                                          Colors.black.withOpacity(0.5)),
-                                    ),
-                                    _currency == 'eur' ? Text(
-                                      _amount.toString() + ' ' + "EUROS",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600),
-                                    ) :
-                                    Text(
-                                      _amount.toString() + ' ' + _currency.toUpperCase(),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: <Widget>[
-
-                                    Text(
-                                      'NUMERO TRANSACTION',
-                                      style: TextStyle(
-                                          color:
-                                          Colors.black.withOpacity(0.5)),
-                                    ),
-
-                                    Text(
-                                      _transac_num.toString(),
-                                      */ /* Center(
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: <Widget>[
-                                                Text('En cours'),
-                                                CircularProgressIndicator()
-                                              ],
-                                            )
-                                        ),*/ /*
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              )),*/
               ),
             ),
             floatingActionButton: FloatingActionButton.extended(
@@ -770,7 +569,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                         builder: (context) => AccueilBootomBarPage()),
                     ModalRoute.withName("/accueilBottom"));
               },
-              label: Text('Effectuer un autre transert'),
+              label: Text('Effectuer un nouveau transfert'),
               icon: Icon(Icons.add),
               backgroundColor: kPrimaryColorSuccesButton,
             ),
@@ -807,27 +606,31 @@ class HomePageState extends State<PaymentPage> {
   }
 
   displayTransactionInfoBackend() async {
+    details=[];
     var transactionBackend = await storage.read(key: "transactionBackend");
     transactionInfoBackend = json.decode(transactionBackend);
     transactionInfoBackend.forEach((element) {
-      details.add("Prenom:" + element["first_name"]);
       details.add(
-        "Nom:" + element["last_name"],
+        "Nom:" + element["receiver_last_name"],
+      );
+      details.add("Prenom:" + element["receiver_first_name"]);
+      details.add(
+        "Telephone:" + element["receiver_phone"],
       );
       details.add(
-        "Email:" + element["email"],
+        "Email:" + element["receiver_email"] ,
       );
       details.add(
         "Commission:" +
             element["transac_commission"].toString() +
             ' ' +
-            element["devise_sender"],
+           ( element["devise_sender"]=='eur'?'Euros':element["devise_sender"].toString().toUpperCase()),
       );
       details.add(
-        "Montant reçu:" +
-            element["montant_receive"].toString() +
+        "Montant à recevoir:" +
+            element["montant_send"].toString() +
             ' ' +
-            element["devise_receive"],
+            ( element["devise_sender"]=='eur'?'Euros':element["devise_sender"].toString().toUpperCase()),
       );
       _user_id = element["user_id"];
       //sender
@@ -839,6 +642,7 @@ class HomePageState extends State<PaymentPage> {
 
       _receiver_company = element["receiver_company"];
       _receiver_siteweb = element["receiver_siteweb"];
+      _Is_company=element["is_company"];
       //receiver
       _receiver_first_name = element["receiver_first_name"];
       _receiver_last_name = element["receiver_last_name"];
@@ -907,6 +711,7 @@ class HomePageState extends State<PaymentPage> {
         "receiver_description": _receiver_description,
         "receiver_company": _receiver_company,
         "receiver_siteweb": _receiver_siteweb,
+        "is_company":_Is_company,
         "montant_send": _montant_send,
         "montant_receive": _montant_receive,
         "transac_commission": _transac_commission,
