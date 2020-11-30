@@ -291,7 +291,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                                             {
                                                               _mySelectionCountry =
                                                               1,
-                                                              showAlertDialog(context),
+                                                              showAlertDialogContry(context),
                                                             }
                                                         }
                                                     });
@@ -627,23 +627,6 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                         )),
                                   ],
                                 )),
-                            /*Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 40, vertical: 20),
-                                child: Text.rich(
-                                  TextSpan(children: [
-                                    TextSpan(
-                                        text:
-                                        "En cliquant sur Continuer, vous acceptez ce qui suit"),
-                                    TextSpan(
-                                        text: " Termes and Conditions ",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.blue)),
-                                    TextSpan(text: "sans réserves."),
-                                  ]),
-                                ),
-                              ),*/
                             const SizedBox(height: 20.0),
                             Row(
                               mainAxisAlignment:
@@ -654,8 +637,6 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                     width: double.infinity,
                                     child: RaisedButton(
                                       elevation: 0,
-                                      /*padding: const EdgeInsets.only(
-                                          left: 170, right: 170),*/
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                           BorderRadius.circular(
@@ -708,7 +689,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                                   saveReceiver_last_name
                                                       .text,
                                                   "receiver_phone":
-                                                  saveReceiver_phoneEntreprise
+                                                  saveReceiver_phone
                                                       .text,
                                                   "receiver_email":
                                                   saveReceiver_email
@@ -838,7 +819,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                                             {
                                                               saveReceiver_countryEntreprise =
                                                               1,
-                                                              showAlertDialog(context),
+                                                              showAlertDialogContry(context),
                                                             }
                                                         }
                                                     });
@@ -1414,6 +1395,36 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
           ),
         ),
       ),
+    );
+  }
+
+  showAlertDialogContry(BuildContext context) {  // set up the button
+    return showDialog<AlertDialog>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Container(
+            margin: EdgeInsets.all(8.0),
+            child: Form(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                      'Cette distination est indisponible'
+                  )
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("Ok"))
+          ],
+        );
+      },
     );
   }
 }

@@ -102,7 +102,6 @@ class _HomePageState extends State<HomePage> {
   var saveReceiver_infoEntreprise = TextEditingController();
   var editReceiver_Is_company;
 
-
   String TosaveReceiver_raisonEntreprise;
   String TosaveReceiver_last_nameEntreprise;
   String TosaveReceiver_first_nameEntreprise;
@@ -133,7 +132,8 @@ class _HomePageState extends State<HomePage> {
   String _devise_receive = "";
   String _currencySend = "";
   String _senderCurrencySymbole = "";
-
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
   displayPaymentInfo() async {
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
@@ -268,6 +268,7 @@ class _HomePageState extends State<HomePage> {
                                 });
                                 var selectedBeneficiaire =
                                     data.map((item) => item).toList();
+                                print(selectedBeneficiaire);
                                 var selectedBeneficiaires = selectedBeneficiaire
                                     .where((f) => f["id"] == _beneficiaireID);
                                 selectedBeneficiaire.forEach((b) {
@@ -505,16 +506,16 @@ class _HomePageState extends State<HomePage> {
                                                         new Flexible(
                                                           child:
                                                               new TextFormField(
+                                                                keyboardType: TextInputType.number,
+                                                                maxLength: 8,
                                                             onSaved: (val) =>
                                                                 setState(() =>
                                                                     editReceiver_phone
                                                                             .text =
                                                                         val),
                                                             controller:
-                                                                TextEditingController()
-                                                                  ..text =
                                                                       editReceiver_phone
-                                                                          .text,
+                                                                          ,
                                                             decoration: const InputDecoration(
                                                                 hintText:
                                                                     "Entre un téléphone",
@@ -747,6 +748,8 @@ class _HomePageState extends State<HomePage> {
                                                         new Flexible(
                                                           child:
                                                               new TextFormField(
+                                                                maxLength: 8,
+                                                                keyboardType: TextInputType.number,
                                                             onSaved: (val) =>
                                                                 setState(() =>
                                                                   {
@@ -896,7 +899,6 @@ class _HomePageState extends State<HomePage> {
                     width: 120,
                     child: RaisedButton(
                       onPressed: () {
-                        print(TosaveReceiver_raisonEntreprise);
                       print( {
                         "receiver_company":saveReceiver_raisonEntreprise.text,
                         "receiver_siteweb": saveReceiver_sitewebEntreprise.text,
@@ -958,15 +960,7 @@ class _HomePageState extends State<HomePage> {
                                 "is_company": editReceiver_Is_company
                               }
                             ]));
-                        /*setState(() {
-                          saveReceiver_raisonEntreprise.text=TosaveReceiver_raisonEntreprise;
-                          saveReceiver_sitewebEntreprise.text=TosaveReceiver_sitewebEntreprise;
-                          saveReceiver_first_nameEntreprise.text=TosaveReceiver_first_nameEntreprise;
-                          saveReceiver_last_nameEntreprise.text=TosaveReceiver_last_nameEntreprise;
-                          saveReceiver_emailEntreprise.text=editReceiver_email.text != null ? TosaveReceiver_emailEntreprise : 'non renseigné';
-                          saveReceiver_phoneEntreprise.text=TosaveReceiver_phoneEntreprise;
-                          saveReceiver_infoEntreprise.text=TosaveReceiver_infoEntreprise;
-                        });*/
+
                         storage.write(
                             key: "transaction",
                             value: json.encode([

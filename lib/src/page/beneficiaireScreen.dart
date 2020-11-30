@@ -554,11 +554,11 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                                 color: Colors.black,
                                 fontWeight: FontWeight.w500),
                           ),
-                          trailing: Text(this.commission != null?
-                          this.commission.toStringAsFixed(2):'',
+                          trailing: this.commission != null?Text(
+                          this.commission.toStringAsFixed(2),
                               style: TextStyle(
                                   color: Colors.black,
-                                  fontWeight: FontWeight.w500)),
+                                  fontWeight: FontWeight.w500)):CircularProgressIndicator(),
                         )),
                   )
                 ],
@@ -591,15 +591,15 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                                 fontWeight: FontWeight.w500),
                           ),
                           trailing:
-
+                          this.commission != null?
                           Text(
-                              this.amountTotal.toString() +
+                              this.amountTotal.toStringAsFixed(2) +
                                   ' ' +
                                   _senderCurrencySymbole,
                               style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w500)
-                          ),
+                          ):CircularProgressIndicator(),
                         )),
                   )
                 ],

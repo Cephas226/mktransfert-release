@@ -1090,7 +1090,7 @@ class _TransactionState extends State<TransactionPage> {
                 if (f['id']==newVal){
                   if (!f['agence_isdisponible']){
                     print(f),
-                    showAlertDialog(context)
+                    showAlertDialogContry(context)
                   }
                 }
               });
@@ -1103,7 +1103,7 @@ class _TransactionState extends State<TransactionPage> {
     );
   }
 }
-showAlertDialog(BuildContext context) {  // set up the button
+/*showAlertDialog(BuildContext context) {  // set up the button
   Alert(
     context: context,
     type: AlertType.info,
@@ -1121,7 +1121,7 @@ showAlertDialog(BuildContext context) {  // set up the button
       ),
     ],
   ).show();
-}
+}*/
 showAlertDialogContry(BuildContext context) {  // set up the button
   return showDialog<AlertDialog>(
     context: context,
