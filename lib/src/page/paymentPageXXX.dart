@@ -54,7 +54,7 @@ int _receiver_country;
 double _transac_total;
 int _montant_send;
 double _montant_receive;
-double _transac_commission;
+String _transac_commission;
 List<String> details = <String>[];
 
 class PaymentPage extends StatefulWidget {
@@ -386,23 +386,23 @@ class PaymentSuccessDialog extends StatelessWidget {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: <Widget>[
-                                              _Is_company==false
-                                                  ? Text(
+                                              _Is_company==false?
+                                                  Text(
                                                       'NOM & PRENOM',
                                                       style: TextStyle(
                                                         color: Colors.black
                                                             .withOpacity(0.5),
                                                       ),
-                                                    )
-                                                  : Text(
-                                                      'RAISON SOCIALE',
-                                                      style: TextStyle(
-                                                        color: Colors.black
-                                                            .withOpacity(0.5),
-                                                      ),
-                                                    ),
+                                                    ): Text(
+                                                '',
+                                                style: TextStyle(
+                                                  color: Colors.black
+                                                      .withOpacity(0.5),
+                                                ),
+                                              ),
                                               _Is_company==false
-                                                  ? Text(
+                                                  ?
+                                               Text(
                                                       _first_name +
                                                           ' ' +
                                                           _last_name,
@@ -414,8 +414,8 @@ class PaymentSuccessDialog extends StatelessWidget {
                                                             FontWeight.w600,
                                                       ),
                                                     )
-                                                  : Text(
-                                                      _receiver_company,
+                                                 : Text(
+                                                      '',
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                       maxLines: 1,
@@ -538,7 +538,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                                                   FontWeight.w600),
                                             )
                                                 : Text(
-                                              _amount.toString() +
+                                              _transac_commission.toString() +
                                                   ' ' +
                                                   _currency.toUpperCase(),
                                               style: TextStyle(
@@ -609,29 +609,51 @@ class HomePageState extends State<PaymentPage> {
     details=[];
     var transactionBackend = await storage.read(key: "transactionBackend");
     transactionInfoBackend = json.decode(transactionBackend);
+    print(transactionInfoBackend);
     transactionInfoBackend.forEach((element) {
-      details.add(
-        "Nom:" + element["receiver_last_name"],
-      );
-      details.add("Prenom:" + element["receiver_first_name"]);
-      details.add(
-        "Telephone:" + element["receiver_phone"],
-      );
-      details.add(
-        "Email:" + element["receiver_email"] ,
-      );
-      details.add(
-        "Commission:" +
-            element["transac_commission"].toString() +
-            ' ' +
-           ( element["devise_sender"]=='eur'?'Euros':element["devise_sender"].toString().toUpperCase()),
-      );
-      details.add(
-        "Montant à recevoir:" +
-            element["montant_send"].toString() +
-            ' ' +
-            ( element["devise_sender"]=='eur'?'Euros':element["devise_sender"].toString().toUpperCase()),
-      );
+      if (element["is_company"]==false){
+        details.add(
+          "Nom:" + element["receiver_last_name"],
+        );
+        details.add("Prenom:" + element["receiver_first_name"]);
+        details.add(
+          "Telephone:" + element["receiver_phone"],
+        );
+        details.add(
+          "Email:" + element["receiver_email"] ,
+        );
+        details.add(
+          "Commission:" +
+              element["transac_commission"].toString() +
+              ' ' +
+              ( element["devise_sender"]=='eur'?'Euros':element["devise_sender"].toString().toUpperCase()),
+        );
+        details.add(
+          "Montant à recevoir:" +
+              element["montant_send"].toString() +
+              ' ' +
+              ( element["devise_sender"]=='eur'?'Euros':element["devise_sender"].toString().toUpperCase()),
+        );
+      }
+      else {
+
+        details.add(
+          "Raison socaile:" + element["receiver_company"],
+        );
+        details.add("Nom du répresentant:" + element["receiver_first_name"]);
+        details.add("Prenom du répresentant:" + element["receiver_last_name"]);
+        details.add("Telephone:" + element["receiver_phone"]);
+        details.add("Email:" + element["receiver_email"]);
+        details.add("Commission:" + element["transac_commission"].toString() +
+              ' ' +
+              ( element["devise_sender"]=='eur'?'Euros':element["devise_sender"].toString().toUpperCase()),
+        );
+        details.add("Montant à recevoir:" + element["montant_send"].toString() +
+              ' ' +( element["devise_sender"]=='eur'?'Euros':element["devise_sender"].toString().toUpperCase()),
+        );
+      }
+
+
       _user_id = element["user_id"];
       //sender
       _first_name = element["first_name"];
@@ -663,7 +685,6 @@ class HomePageState extends State<PaymentPage> {
     setState(() {
       _transac_num;
     });
-    print(details);
   }
 
   @override

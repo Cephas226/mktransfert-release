@@ -100,8 +100,19 @@ class _HomePageState extends State<HomePage> {
   var saveReceiver_phoneEntreprise = TextEditingController();
   var saveReceiver_countryEntreprise = TextEditingController();
   var saveReceiver_infoEntreprise = TextEditingController();
-
   var editReceiver_Is_company;
+
+
+  String TosaveReceiver_raisonEntreprise;
+  String TosaveReceiver_last_nameEntreprise;
+  String TosaveReceiver_first_nameEntreprise;
+  String TosaveReceiver_nameEntreprise;
+  String TosaveReceiver_sitewebEntreprise;
+  String TosaveReceiver_emailEntreprise;
+  String TosaveReceiver_phoneEntreprise;
+  String TosaveReceiver_countryEntreprise;
+  String TosaveReceiver_infoEntreprise;
+  String ToeditReceiver_Is_company;
 
   int user_id;
   String first_name = "";
@@ -159,7 +170,6 @@ class _HomePageState extends State<HomePage> {
     var beneficiaireList = List();
     var resBody = json.decode(res.body);
     var beneficiaireInfo = await storage.read(key: "beneficiaireNew");
-
     if (beneficiaireInfo != null) {
       List responseJsonBeneficiaire = json.decode(beneficiaireInfo);
       responseJsonBeneficiaire.forEach((element) {
@@ -226,15 +236,6 @@ class _HomePageState extends State<HomePage> {
         });
     var resBody = json.decode(response.body);
     _transac_num = resBody["API_transac_data"];
-    /* resBody?.forEach((k, v) {
-      print(v['transac_num']);
-      _transac_num=v['transac_num'];
-    });
-    print(_transac_num);
-    setState(() {
-      _transac_num;
-    });*/
-    //return json.decode(response.body);
   }
 
   void _showBeneficiaireInfo() {
@@ -267,9 +268,8 @@ class _HomePageState extends State<HomePage> {
                                 });
                                 var selectedBeneficiaire =
                                     data.map((item) => item).toList();
-                             var selectedBeneficiaires=   selectedBeneficiaire
+                                var selectedBeneficiaires = selectedBeneficiaire
                                     .where((f) => f["id"] == _beneficiaireID);
-                                print(selectedBeneficiaires);
                                 selectedBeneficiaire.forEach((b) {
                                   if (b['id'] == _beneficiaireID) {
                                     editReceiver_first_name.text =
@@ -285,10 +285,11 @@ class _HomePageState extends State<HomePage> {
                                     editReceiver_description.text =
                                         b["receiver_info"];
                                     editReceiver_Is_company = b["is_company"];
-
-                                    /*     saveReceiver_last_nameEntreprise.text=b["receiver_first_name"];
-                                    saveReceiver_first_nameEntreprise.text=b["receiver_first_name"];*/
-
+                                    //---><---//
+                                    saveReceiver_last_nameEntreprise.text =
+                                        b["receiver_last_name"];
+                                    saveReceiver_first_nameEntreprise.text =
+                                        b["receiver_first_name"];
                                     saveReceiver_raisonEntreprise.text =
                                         b["receiver_company"];
                                     saveReceiver_sitewebEntreprise.text =
@@ -538,11 +539,11 @@ class _HomePageState extends State<HomePage> {
                                                               new TextFormField(
                                                             onSaved: (val) =>
                                                                 setState(() =>
-                                                                    editReceiver_description
+                                                                editReceiver_description
                                                                             .text =
                                                                         val),
                                                             controller:
-                                                                editReceiver_description,
+                                                            editReceiver_description,
                                                             decoration: const InputDecoration(
                                                                 hintText:
                                                                     "Description",
@@ -556,7 +557,8 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ),
                                         );
-                                      } else {
+                                      }
+                                      else {
                                         return Container(
                                           child: Form(
                                             child: Column(
@@ -651,24 +653,23 @@ class _HomePageState extends State<HomePage> {
                                                         Flexible(
                                                           child:
                                                               new TextFormField(
-                                                            onSaved: (val) =>
-                                                                setState(() =>
-                                                                    saveReceiver_raisonEntreprise
-                                                                            .text =
-                                                                        val),
-                                                            controller:
-                                                                TextEditingController()
-                                                                  ..text =
-                                                                      saveReceiver_raisonEntreprise
-                                                                          .text,
-                                                            decoration:
-                                                                const InputDecoration(
-                                                              hintText:
-                                                                  "Entrez une raison",
-                                                              border:
-                                                                  OutlineInputBorder(),
-                                                            ),
-                                                          ),
+                                                                  onSaved: (val) =>
+                                                                      setState(
+                                                                              () =>
+                                                                                {
+                                                                                   saveReceiver_raisonEntreprise.text = val,
+                                                                                   TosaveReceiver_raisonEntreprise=val
+                                                                                }
+                                                                              ),
+                                                                  controller:saveReceiver_raisonEntreprise
+                                                                               ,
+                                                                  decoration:
+                                                                      const InputDecoration(
+                                                                    hintText:
+                                                                        "Entrez une raison",
+                                                                    border:
+                                                                        OutlineInputBorder(),
+                                                          ))
                                                         ),
                                                       ],
                                                     )),
@@ -687,14 +688,12 @@ class _HomePageState extends State<HomePage> {
                                                               new TextFormField(
                                                             onSaved: (val) =>
                                                                 setState(() =>
-                                                                    saveReceiver_emailEntreprise
-                                                                            .text =
-                                                                        val),
-                                                            controller:
-                                                                TextEditingController()
-                                                                  ..text =
-                                                                      saveReceiver_emailEntreprise
-                                                                          .text,
+                                                                          {
+                                                                            editReceiver_email.text = val,
+                                                                             TosaveReceiver_emailEntreprise=val
+                                                                          }
+                                                                        ),
+                                                            controller:editReceiver_email,
                                                             decoration:
                                                                 const InputDecoration(
                                                               hintText:
@@ -702,8 +701,7 @@ class _HomePageState extends State<HomePage> {
                                                               border:
                                                                   OutlineInputBorder(),
                                                             ),
-                                                          ),
-                                                        ),
+                                                        )),
                                                       ],
                                                     )),
                                                 const SizedBox(height: 20.0),
@@ -714,27 +712,23 @@ class _HomePageState extends State<HomePage> {
                                                         top: 2.0),
                                                     child: new Row(
                                                       mainAxisSize:
-                                                      MainAxisSize.max,
+                                                          MainAxisSize.max,
                                                       children: <Widget>[
                                                         new Flexible(
                                                           child:
-                                                          new TextFormField(
+                                                              new TextFormField(
                                                             onSaved: (val) =>
-                                                                setState(() =>
-                                                                saveReceiver_sitewebEntreprise
-                                                                    .text =
-                                                                    val),
-                                                            controller:
-                                                            TextEditingController()
-                                                              ..text =
-                                                                  saveReceiver_sitewebEntreprise
-                                                                      .text,
-                                                            decoration:
-                                                            const InputDecoration(
-                                                              hintText:
-                                                              "",
-                                                              border:
-                                                              OutlineInputBorder(),
+                                                                setState(
+                                                                        () =>
+                                                                     {
+                                                                       saveReceiver_sitewebEntreprise.text = val,
+                                                                       TosaveReceiver_sitewebEntreprise=val,
+                                                                     }
+                                                                 ),
+                                                            controller:saveReceiver_sitewebEntreprise,
+                                                            decoration: const InputDecoration(
+                                                              hintText: "",
+                                                              border: OutlineInputBorder(),
                                                             ),
                                                           ),
                                                         ),
@@ -755,20 +749,20 @@ class _HomePageState extends State<HomePage> {
                                                               new TextFormField(
                                                             onSaved: (val) =>
                                                                 setState(() =>
-                                                                    saveReceiver_phoneEntreprise
-                                                                            .text =
-                                                                        val),
+                                                                  {
+                                                                    editReceiver_phone.text =val,
+                                                                    TosaveReceiver_phoneEntreprise=val,
+                                                                  }
+                                                                ),
                                                             controller:
-                                                                TextEditingController()
-                                                                  ..text =
-                                                                      saveReceiver_phoneEntreprise
-                                                                          .text,
+                                                            editReceiver_phone
+                                                                         ,
                                                             decoration: const InputDecoration(
                                                                 hintText:
                                                                     "Entre un téléphone",
                                                                 border:
                                                                     OutlineInputBorder()),
-                                                          ),
+                                                              ),
                                                         ),
                                                       ],
                                                     )),
@@ -787,17 +781,74 @@ class _HomePageState extends State<HomePage> {
                                                               new TextFormField(
                                                             onSaved: (val) =>
                                                                 setState(() =>
-                                                                    saveReceiver_infoEntreprise
+                                                                            {
+                                                                              editReceiver_first_name.text = val,
+                                                                              TosaveReceiver_first_nameEntreprise=val
+                                                                            }
+                                                                          ),
+                                                            controller:
+                                                            editReceiver_first_name,
+                                                            decoration: const InputDecoration(
+                                                                hintText:
+                                                                    "Entrer un nom",
+                                                                border:
+                                                                    OutlineInputBorder()),
+                                                                  ),
+                                                        ),
+                                                      ],
+                                                    )),
+                                                const SizedBox(height: 20.0),
+                                                Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 25.0,
+                                                        right: 25.0,
+                                                        top: 2.0),
+                                                    child: new Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      children: <Widget>[
+                                                        new Flexible(
+                                                          child:
+                                                              new TextFormField(
+                                                            onSaved: (val) =>
+                                                                setState(() =>
+                                                                editReceiver_last_name
                                                                             .text =
                                                                         val),
                                                             controller:
-                                                            saveReceiver_infoEntreprise,
+                                                            editReceiver_last_name,
                                                             decoration: const InputDecoration(
                                                                 hintText:
-                                                                    "Description",
+                                                                    "Entrer un prenom",
                                                                 border:
-                                                                    OutlineInputBorder()),
-                                                          ),
+                                                                    OutlineInputBorder())),
+                                                        ),
+                                                      ],
+                                                    )),
+                                                const SizedBox(height: 20.0),
+                                                Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 25.0,
+                                                        right: 25.0,
+                                                        top: 2.0),
+                                                    child: new Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      children: <Widget>[
+                                                        new Flexible(
+                                                          child:
+                                                              new TextFormField(
+                                                                maxLines: 10,
+                                                                onSaved: (val) => setState(() =>
+                                                                editReceiver_description
+                                                                    .text = val),
+                                                                controller:editReceiver_description,
+                                                                decoration:const InputDecoration(
+                                                                  hintText:
+                                                                  "Information complémentaire",
+                                                                  border: OutlineInputBorder(),
+                                                                ),
+                                                              ),
                                                         ),
                                                       ],
                                                     )),
@@ -845,8 +896,18 @@ class _HomePageState extends State<HomePage> {
                     width: 120,
                     child: RaisedButton(
                       onPressed: () {
-                        //updateUserProfile();
-                        //  print(user_id);
+                        print(TosaveReceiver_raisonEntreprise);
+                      print( {
+                        "receiver_company":saveReceiver_raisonEntreprise.text,
+                        "receiver_siteweb": saveReceiver_sitewebEntreprise.text,
+                        //receiver
+                        "receiver_first_name": editReceiver_first_name.text,
+                        "receiver_last_name": editReceiver_last_name.text,
+                        "receiver_email": editReceiver_email.text != null?editReceiver_email.text:'non renseigné',
+                        "receiver_phone": editReceiver_phone.text,
+                        "receiver_country": _mySelectionCountry,
+                        "receiver_description": editReceiver_description.text,
+                        });
                         storage.write(
                             key: "beneficiaireInfo",
                             value: json.encode([
@@ -863,7 +924,6 @@ class _HomePageState extends State<HomePage> {
                                     editReceiver_description.text,
                               }
                             ]));
-                        Navigator.of(context).pop();
                         storage.write(
                             key: "transactionBackend",
                             value: json.encode([
@@ -877,24 +937,19 @@ class _HomePageState extends State<HomePage> {
                                 "email": email,
                                 "receiver_company":saveReceiver_raisonEntreprise.text,
                                 "receiver_siteweb": saveReceiver_sitewebEntreprise.text,
-
                                 //receiver
-
-                                "receiver_first_name":
-                                    editReceiver_first_name.text,
-                                "receiver_last_name":
-                                    editReceiver_last_name.text,
+                                "receiver_first_name": editReceiver_first_name.text,
+                                "receiver_last_name": editReceiver_last_name.text,
                                 "receiver_email": editReceiver_email.text != null?editReceiver_email.text:'non renseigné',
                                 "receiver_phone": editReceiver_phone.text,
                                 "receiver_country": _mySelectionCountry,
-                                "receiver_description":
-                                    editReceiver_description.text,
+                                "receiver_description": editReceiver_description.text,
 
                                 //transaction
 
                                 "montant_send": _montant_send,
                                 "montant_receive": _montant_receive,
-                                "transac_commission": _transac_commission,
+                                "transac_commission": _transac_commission.toStringAsFixed(2),
                                 "transac_total": _stripeAmount,
                                 "devise_receive": _devise_receive,
                                 "devise_sender": _currencySend,
@@ -903,27 +958,38 @@ class _HomePageState extends State<HomePage> {
                                 "is_company": editReceiver_Is_company
                               }
                             ]));
+                        /*setState(() {
+                          saveReceiver_raisonEntreprise.text=TosaveReceiver_raisonEntreprise;
+                          saveReceiver_sitewebEntreprise.text=TosaveReceiver_sitewebEntreprise;
+                          saveReceiver_first_nameEntreprise.text=TosaveReceiver_first_nameEntreprise;
+                          saveReceiver_last_nameEntreprise.text=TosaveReceiver_last_nameEntreprise;
+                          saveReceiver_emailEntreprise.text=editReceiver_email.text != null ? TosaveReceiver_emailEntreprise : 'non renseigné';
+                          saveReceiver_phoneEntreprise.text=TosaveReceiver_phoneEntreprise;
+                          saveReceiver_infoEntreprise.text=TosaveReceiver_infoEntreprise;
+                        });*/
                         storage.write(
                             key: "transaction",
                             value: json.encode([
                               {
                                 "montant_send": this._montant_send,
                                 "montant_receive": this._montant_receive,
-                                "transac_commission": this._transac_commission,
+                                "transac_commission":_transac_commission.toStringAsFixed(2),
                                 "transac_total": _stripeAmount,
                                 "devise_send": _currencySend,
                                 "receiver_name": editReceiver_first_name.text,
-                                "receiver_last_name":
-                                    editReceiver_last_name.text,
+                                "receiver_last_name":editReceiver_last_name.text,
                                 "receiver_email": editReceiver_email.text,
                                 "devise_receive": _devise_receive,
                                 "point_retrait": _mySelectionPointRetrait,
                               }
                             ]));
+                        Navigator.of(context).pop();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => PaymentPage()),
+                              builder: (BuildContext context) =>
+                                  PaymentPage()),
+                          //   ModalRoute.withName('/')
                         );
                       },
                       color: kPrimaryColor,
@@ -1089,22 +1155,18 @@ class _HomePageState extends State<HomePage> {
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white),
                               ),
-                              subtitle:
-                              _transac_commission != null?
-                              Text(
-                                  _transac_commission.toStringAsFixed(2) +
-                                      ' ' +
-                                      _senderCurrencySymbole,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white)
-                              ):
-                               Text(
-                                    _senderCurrencySymbole,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white)
-                            ),
+                              subtitle: _transac_commission != null
+                                  ? Text(
+                                      _transac_commission.toStringAsFixed(2) +
+                                          ' ' +
+                                          _senderCurrencySymbole,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white))
+                                  : Text(_senderCurrencySymbole,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white)),
                             ),
                           ],
                         ),
@@ -1167,9 +1229,7 @@ class _HomePageState extends State<HomePage> {
                         if (f['id'] == newVal)
                           {
                             if (!f['agence_isdisponible'])
-                              {
-                                showAlertDialogPointRetrait(context)
-                              }
+                              {showAlertDialogPointRetrait(context)}
                           }
                       });
                   _mySelectionPointRetrait = newVal;
@@ -1275,37 +1335,37 @@ class _HomePageState extends State<HomePage> {
                             child: Column(
                               children: <Widget>[
                                 ListTile(
-                                  title:  snapshot.data[index]['is_company']==true
-                                      ?
-                                (
-                            snapshot.data[index]['receiver_company']!=null?
-                            Text(
-                                snapshot.data[index]['receiver_company'],
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white
-                                )
-                            ):
-                            Text(
-                                'non renseigné',style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white
-                            ),
-                            )
-                               )
-
+                                  title: snapshot.data[index]['is_company'] ==
+                                          true
+                                      ? (snapshot.data[index]
+                                                  ['receiver_company'] !=
+                                              null
+                                          ? Text(
+                                              snapshot.data[index]
+                                                  ['receiver_company'],
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.white))
+                                          : Text(
+                                              'non renseigné',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.white),
+                                            ))
                                       : Text(
-                                      snapshot.data[index]
-                                      ['receiver_first_name']+' '+snapshot.data[index]
-                                      ['receiver_last_name'].toString().toUpperCase(),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white
-                                      )
-                                  ),
+                                          snapshot.data[index]
+                                                  ['receiver_first_name'] +
+                                              ' ' +
+                                              snapshot.data[index]
+                                                      ['receiver_last_name']
+                                                  .toString()
+                                                  .toUpperCase(),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white)),
                                   subtitle: Row(
                                     children: [
-                                      snapshot.data[index]['is_company']==true
+                                      snapshot.data[index]['is_company'] == true
                                           ? Icon(Icons.account_balance_outlined,
                                               color: Colors.white)
                                           : Icon(Icons.person,
@@ -1314,25 +1374,29 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   leading: new CircleAvatar(
                                       backgroundColor: Colors.white,
-                                      child: snapshot.data[index]['is_company']==true
-                                          ? (snapshot.data[index]['receiver_company']!=""?
-                                      Text(
-                                              '${snapshot.data[index]['receiver_company'].substring(0, 1)}',
-                                            ):Text(
-                                        '',
-                                      ))
-                                          :
-                                     ( snapshot.data[index]['receiver_first_name']!=''?
-                                      Text(
-                                              '${snapshot.data[index]['receiver_first_name'].substring(0, 1)}',
-                                            ):
-                                      Text(
-                                        '',style: TextStyle(
-                                        color: Colors.white
-                                      ),
-                                      )
-                                     )
-                                  ),
+                                      child: snapshot.data[index]
+                                                  ['is_company'] ==
+                                              true
+                                          ? (snapshot.data[index]
+                                                      ['receiver_company'] !=
+                                                  ""
+                                              ? Text(
+                                                  '${snapshot.data[index]['receiver_company'].substring(0, 1)}',
+                                                )
+                                              : Text(
+                                                  '',
+                                                ))
+                                          : (snapshot.data[index]
+                                                      ['receiver_first_name'] !=
+                                                  ''
+                                              ? Text(
+                                                  '${snapshot.data[index]['receiver_first_name'].substring(0, 1)}',
+                                                )
+                                              : Text(
+                                                  '',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ))),
                                   trailing: MaterialButton(
                                     color: Colors.white,
                                     shape: CircleBorder(),

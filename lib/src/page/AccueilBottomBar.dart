@@ -356,7 +356,7 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
             : (currentIndex == 1)
             ? Center(
           child: Container(
-            child: TransactionPage(),
+            child: OperationListPage(),
           ),
         )
             : Center(

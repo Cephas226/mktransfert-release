@@ -223,19 +223,24 @@ class _OperationListPageState extends State<OperationListPage> {
                                                           fontWeight:
                                                               FontWeight.bold),
                                                     ),
-                                                    Text(
-                                                      snapshot.data[index][
-                                                                  'receiver_first_name'] !=
-                                                              null
-                                                          ? snapshot.data[index]
-                                                                  [
-                                                                  'receiver_first_name'] +
-                                                              ' ' +
-                                                              snapshot.data[
-                                                                      index][
-                                                                  'receiver_last_name']
-                                                          : '',
-                                                    ),
+                                                    SizedBox(
+                                                      width: 150.0,
+                                                     child:  Text(
+                                                       snapshot.data[index][
+                                                       'receiver_first_name'] !=
+                                                           null
+                                                           ? snapshot.data[index]
+                                                       [
+                                                       'receiver_first_name'] +
+                                                           ' ' +
+                                                           snapshot.data[
+                                                           index][
+                                                           'receiver_last_name']
+                                                           : '',
+                                                       overflow:
+                                                       TextOverflow.ellipsis,
+                                                     ),
+                                                   )
                                                   ]),
                                                 ],
                                               ),
@@ -389,20 +394,24 @@ class _OperationListPageState extends State<OperationListPage> {
                                                 Text(
                                                   'Nom & Prenom(s):',
                                                 ),
-                                                Text(
+                                                SizedBox(
+                                                  width: 150.0,
+                                                  child:  Text(
                                                     snapshot.data[index][
-                                                                'receiver_first_name'] !=
-                                                            null
-                                                        ? snapshot.data[index][
-                                                                'receiver_first_name'] +
-                                                            ' ' +
-                                                            snapshot.data[index]
-                                                                [
-                                                                'receiver_last_name']
+                                                    'receiver_first_name'] !=
+                                                        null
+                                                        ? snapshot.data[index]
+                                                    [
+                                                    'receiver_first_name'] +
+                                                        ' ' +
+                                                        snapshot.data[
+                                                        index][
+                                                        'receiver_last_name']
                                                         : '',
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold)),
+                                                    overflow:
+                                                    TextOverflow.ellipsis,
+                                                  ),
+                                                )
                                               ]),
 
                                               // more widgets

@@ -19,8 +19,9 @@ import 'mesclasses/beneficiaireClasses.dart';
 import 'operations/beneficiaireOperations.dart';
 
 List countrydata = List();
-MyGlobals myGlobals = MyGlobals();
+//MyGlobals myGlobals = MyGlobals();
 
+/*
 class MyGlobals {
   GlobalKey _scaffoldKey;
   MyGlobals() {
@@ -28,7 +29,8 @@ class MyGlobals {
   }
   GlobalKey get scaffoldKey => _scaffoldKey;
 }
-GlobalKey<FormState> _homeKey = GlobalKey<FormState>(debugLabel: '_homeScreenkey');
+*/
+
 class RegisterBeneficiairePage extends StatefulWidget {
   @override
   RegisterBeneficiairePageState createState() =>
@@ -37,6 +39,7 @@ class RegisterBeneficiairePage extends StatefulWidget {
 
 class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
   static final String path = "lib/src/pages/login/signup2.dart";
+
   Future<Beneficiaire> _futureBeneficiaire;
   int _mySelectionCountry=1;
   int saveReceiver_countryEntreprise=1;
@@ -60,9 +63,11 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
   bool visible = false;
   String confirmedNumber = '';
   String _selectedCountryCode='+224';
+  String _selectedCountryCodeEntreprise='+224';
   List<String> _countryCodes = ['+224'];
   final _beneficiaire = Beneficiaire();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
   List<DropdownMenuItem<ListItem>> buildDropDownMenuItems(List listItems) {
     List<DropdownMenuItem<ListItem>> items = List();
     for (ListItem listItem in listItems) {
@@ -79,7 +84,6 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
 
   void onPhoneNumberChange(
       String number, String internationalizedPhoneNumber, String isoCode) {
-    print(number);
     setState(() {
       phoneNumber = number;
       phoneIsoCode = isoCode;
@@ -109,7 +113,6 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
       countryList.add(v[0]);
     });
     countrydata = countryList;
-    print(countrydata);
     setState(() {
       countrydata = countryList;
     });
@@ -166,8 +169,8 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
 
   @override
   Widget build(BuildContext context) {
-    key:
-    myGlobals.scaffoldKey;
+  /*  key:
+    myGlobals.scaffoldKey;*/
     return MaterialApp(
       home: DefaultTabController(
         length: 2,
@@ -180,7 +183,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AccueilBootomBarPage()),
+                      builder: (context) => ExpenseTrackerApp()),
                 )
               },
             ),
@@ -238,16 +241,16 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                 )),
                             Padding(
                                 padding: EdgeInsets.only(
-                                    left: 25.0,
-                                    right: 25.0,
+                                    left: 20.0,
+                                    right: 20.0,
                                     top: 20.0),
                                 child: new Row(
                                   mainAxisSize: MainAxisSize.max,
                                   children: <Widget>[
-                                    new Flexible(
+                                    new Expanded(
                                         child: Container(
                                           padding: const EdgeInsets.only(
-                                              left: 10.0, right: 10.0),
+                                              left: 100.0, right: 90.0),
                                           decoration: BoxDecoration(
                                               borderRadius:
                                               BorderRadius.circular(
@@ -286,7 +289,6 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                                           if (!f[
                                                           'country_isdisponible'])
                                                             {
-                                                              print(f),
                                                               _mySelectionCountry =
                                                               1,
                                                               showAlertDialog(context),
@@ -345,13 +347,11 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                             return null;
                                           },
                                           onSaved: (val) => setState(() =>
-                                          saveReceiver_last_name
+                                          saveReceiver_first_name
                                               .text = val),
                                           controller:
-                                          TextEditingController()
-                                            ..text =
-                                                saveReceiver_last_name
-                                                    .text,
+                                                saveReceiver_first_name
+                                                   ,
                                           decoration:
                                           const InputDecoration(
                                             hintText: "Entrez un nom",
@@ -400,13 +400,11 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                             return null;
                                           },
                                           onSaved: (val) => setState(() =>
-                                          saveReceiver_first_name
+                                          saveReceiver_last_name
                                               .text = val),
                                           controller:
-                                          TextEditingController()
-                                            ..text =
-                                                saveReceiver_first_name
-                                                    .text,
+                                                saveReceiver_last_name
+                                                   ,
                                           decoration:
                                           const InputDecoration(
                                             hintText: "Entrez un prenom",
@@ -429,7 +427,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
                                         new Text(
-                                          'Entrez un e-mail*',
+                                          'Entrez un e-mail',
                                           style: TextStyle(
                                               fontSize: 16.0,
                                               fontWeight:
@@ -454,9 +452,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                                 .validate(value)
                                                 ? null
                                                 : "Veuillez saisir un e-mail valide",*/
-                                          controller:
-                                          TextEditingController()
-                                            ..text = saveReceiver_email.text,
+                                          controller: saveReceiver_email,
                                           decoration:
                                           const InputDecoration(
                                             hintText: "example@gmail.com",
@@ -553,9 +549,12 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                             margin: new EdgeInsets.only(top: 10.0, bottom: 10.0, right: 3.0),
                                             color: Colors.white,
                                             child: new TextFormField(
+                                              maxLength: 8,
+                                              onSaved: (val) => setState(() => saveReceiver_phone.text = val),
+                                              controller: saveReceiver_phone,
                                               validator: (value) {
                                                 if (value.isEmpty) {
-                                                  return 'Please enter some text';
+                                                  return 'Veuillez entre un numero valide';
                                                 }
                                                 else {
                                                   return null;
@@ -665,11 +664,31 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                       color: kPrimaryColor,
                                       textColor: Colors.white,
                                       onPressed: () {
-                                        print(_mySelectionCountry);
                                         final form =
                                             _formKey.currentState;
                                         if (_formKey.currentState
                                             .validate()) {
+                                          print('hello');
+                                          print(
+                                              {
+                                                "country_id":
+                                                _mySelectionCountry,
+                                                "receiver_first_name":
+                                                saveReceiver_first_name
+                                                    .text,
+                                                "receiver_last_name":
+                                                saveReceiver_last_name
+                                                    .text,
+                                                "receiver_phone":
+                                                saveReceiver_phone.text,
+                                                "receiver_email":
+                                                saveReceiver_email
+                                                    .text,
+                                                "receiver_info":
+                                                saveReceiver_info
+                                                    .text,
+                                              }
+                                          );
                                           form.save();
                                           Random random =
                                           new Random();
@@ -689,7 +708,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                                   saveReceiver_last_name
                                                       .text,
                                                   "receiver_phone":
-                                                  saveReceiver_phone
+                                                  saveReceiver_phoneEntreprise
                                                       .text,
                                                   "receiver_email":
                                                   saveReceiver_email
@@ -697,16 +716,20 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                                   "receiver_info":
                                                   saveReceiver_info
                                                       .text,
+                                                  "is_company": false,
                                                 }
                                               ]));
-                                          Navigator.push(
+
+                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    ExpenseTrackerApp()),
+                                                    ExpenseTrackerApp()
+                                            ),
                                           );
                                         }
                                       },
+
                                     ),
                                   ),
                                 )
@@ -731,7 +754,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                   )),
               Builder(
                   builder: (context) => Form(
-                    key: _formKey,
+                    key: _formKey2,
                     child: SingleChildScrollView(
                       child: Container(
                         child: (_futureBeneficiaire == null)
@@ -765,8 +788,8 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                 )),
                             Padding(
                                 padding: EdgeInsets.only(
-                                    left: 25.0,
-                                    right: 25.0,
+                                    left: 20.0,
+                                    right: 20.0,
                                     top: 20.0),
                                 child: new Row(
                                   mainAxisSize: MainAxisSize.max,
@@ -774,7 +797,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                     new Flexible(
                                         child: Container(
                                           padding: const EdgeInsets.only(
-                                              left: 10.0, right: 10.0),
+                                              left: 100.0, right: 90.0),
                                           decoration: BoxDecoration(
                                               borderRadius:
                                               BorderRadius.circular(
@@ -813,7 +836,6 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                                           if (!f[
                                                           'country_isdisponible'])
                                                             {
-                                                              print(f),
                                                               saveReceiver_countryEntreprise =
                                                               1,
                                                               showAlertDialog(context),
@@ -845,7 +867,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
                                         new Text(
-                                          'Raison Sociale',
+                                          'Raison Sociale*',
                                           style: TextStyle(
                                               fontSize: 16.0,
                                               fontWeight:
@@ -865,13 +887,17 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                   children: <Widget>[
                                     Flexible(
                                         child: TextFormField(
+                                          validator: (value) {
+                                            if (value.isEmpty) {
+                                              return 'Veuillez saisir une raison socaile';
+                                            }
+                                            return null;
+                                          },
                                           onSaved: (val) => setState(() =>
                                           saveReceiver_raisonEntreprise
                                               .text = val),
-                                          controller: TextEditingController()
-                                            ..text =
-                                                saveReceiver_raisonEntreprise
-                                                    .text,
+                                          controller:
+                                                saveReceiver_raisonEntreprise,
                                           decoration:
                                           const InputDecoration(
                                             hintText:
@@ -917,10 +943,8 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                           onSaved: (val) => setState(() =>
                                           saveReceiver_sitewebEntreprise
                                               .text = val),
-                                          controller: TextEditingController()
-                                            ..text =
-                                                saveReceiver_sitewebEntreprise
-                                                    .text,
+                                          controller:
+                                                saveReceiver_sitewebEntreprise,
                                           decoration:
                                           const InputDecoration(
                                             hintText:
@@ -944,7 +968,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
                                         new Text(
-                                          'Nom*',
+                                          'Nom du contact*',
                                           style: TextStyle(
                                               fontSize: 16.0,
                                               fontWeight:
@@ -954,7 +978,6 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                     ),
                                   ],
                                 )),
-                            //  const SizedBox(height: 5.0),
                             Padding(
                                 padding: EdgeInsets.only(
                                     left: 25.0,
@@ -964,16 +987,72 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                   children: <Widget>[
                                     Flexible(
                                         child: TextFormField(
+                                          validator: (value) {
+                                            if (value.isEmpty) {
+                                              return 'Veuillez entre un nom';
+                                            }
+                                            else {
+                                              return null;
+                                            }
+                                          },
                                           onSaved: (val) => setState(() =>
-                                          saveReceiver_last_name
+                                          saveReceiver_first_nameEntreprise
                                               .text = val),
-                                          controller:
-                                          TextEditingController()
-                                            ..text =
-                                                saveReceiver_last_name
-                                                    .text,
+                                          controller:saveReceiver_first_nameEntreprise,
                                           decoration:
                                           const InputDecoration(
+                                            hintText: "Entrez le Nom",
+                                            border: OutlineInputBorder(),
+                                          ),
+                                        )),
+                                  ],
+                                )),
+
+                            Padding(
+                                padding: EdgeInsets.only(
+                                    left: 25.0,
+                                    right: 25.0,
+                                    top: 25.0),
+                                child: new Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: <Widget>[
+                                    new Column(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        new Text(
+                                          'Prenom du contact*',
+                                          style: TextStyle(
+                                              fontSize: 16.0,
+                                              fontWeight:
+                                              FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                )),
+                            Padding(
+                                padding: EdgeInsets.only(
+                                    left: 25.0,
+                                    right: 25.0,
+                                    top: 5.0),
+                                child: Row(
+                                  children: <Widget>[
+                                    Flexible(
+                                        child: TextFormField(
+                                          validator: (value) {
+                                            if (value.isEmpty) {
+                                              return 'Veuillez entre un prenom';
+                                            }
+                                            else {
+                                              return null;
+                                            }
+                                          },
+                                          onSaved: (val) => setState(() =>
+                                          saveReceiver_last_nameEntreprise.text = val),
+                                          controller: saveReceiver_last_nameEntreprise,
+                                          decoration:const InputDecoration(
                                             hintText: "Entrez le Nom",
                                             border: OutlineInputBorder(),
                                           ),
@@ -1019,8 +1098,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                                 .validate(value)
                                                 ? null
                                                 : "Veuillez saisir un e-mail valide",*/
-                                          controller: TextEditingController()
-                                            ..text = saveReceiver_emailEntreprise.text,
+                                          controller:saveReceiver_emailEntreprise,
                                           decoration:
                                           const InputDecoration(
                                             hintText:
@@ -1099,7 +1177,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                         child: ButtonTheme(
                                           alignedDropdown: true,
                                           child: DropdownButton(
-                                            value: _selectedCountryCode,
+                                            value: _selectedCountryCodeEntreprise,
                                             items: _countryCodes.map((String value) {
                                               return new DropdownMenuItem<String>(
                                                   value: value,
@@ -1110,7 +1188,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                             }).toList(),
                                             onChanged: (value) {
                                               setState(() {
-                                                _selectedCountryCode = value;
+                                                _selectedCountryCodeEntreprise = value;
                                               });
                                             },
                                             style: Theme.of(context).textTheme.title,
@@ -1150,9 +1228,12 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                             margin: new EdgeInsets.only(top: 10.0, bottom: 10.0, right: 3.0),
                                             color: Colors.white,
                                             child: new TextFormField(
+                                              maxLength: 8,
+                                              onSaved: (val) => setState(() => saveReceiver_phoneEntreprise.text = val),
+                                              controller: saveReceiver_phoneEntreprise,
                                               validator: (value) {
                                                 if (value.isEmpty) {
-                                                  return 'Please enter some text';
+                                                  return 'Veuillez entrer un telephone';
                                                 }
                                                 else {
                                                   return null;
@@ -1222,7 +1303,8 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                             "Information complémentaire",
                                             border: OutlineInputBorder(),
                                           ),
-                                        )),
+                                        )
+                                    ),
                                   ],
                                 )),
                             const SizedBox(height: 20.0),
@@ -1245,47 +1327,60 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                       color: kPrimaryColor,
                                       textColor: Colors.white,
                                       onPressed: () {
-                                        print(saveReceiver_countryEntreprise);
-                                        final form =
-                                            _formKey.currentState;
-                                        if (_formKey.currentState
-                                            .validate()) {
 
-                                          form.save();
+                                        final form =
+                                            _formKey2.currentState;
+                                        if (_formKey2.currentState
+                                            .validate()) {
                                           Random random =
                                           new Random();
                                           int randomId =
                                           random.nextInt(100);
+                                          print(
+                                              {
+                                                "id": randomId,
+                                                "receiver_last_name":
+                                              saveReceiver_last_nameEntreprise.text,
+                                                "receiver_first_name":
+                                                saveReceiver_first_nameEntreprise.text,
+                                                "receiver_company":
+                                                saveReceiver_raisonEntreprise
+                                                    .text,
+                                                "receiver_phone":
+                                                saveReceiver_phoneEntreprise
+                                                    .text,
+                                                "receiver_country":
+                                                saveReceiver_countryEntreprise,
+                                                "receiver_email":
+                                                saveReceiver_emailEntreprise
+                                                    .text,
+                                                "receiver_siteweb":
+                                                saveReceiver_sitewebEntreprise
+                                                    .text,
+                                                "receiver_description":
+                                                saveReceiver_infoEntreprise
+                                                    .text,
+                                                "is_company": true,
+                                              }
+                                          );
+                                          form.save();
                                           storage.write(
                                               key: "beneficiaireNew",
                                               value: json.encode([
                                                 {
                                                   "id": randomId,
-                                                  "receiver_last_name":
-                                                  '',
-                                                  "receiver_first_name":
-                                                  '',
-                                                  "receiver_company":
-                                                  saveReceiver_raisonEntreprise
-                                                      .text,
-                                                  "receiver_phone":
-                                                  saveReceiver_phoneEntreprise
-                                                      .text,
-                                                  "receiver_country":
-                                                  saveReceiver_countryEntreprise,
-                                                  "receiver_email":
-                                                  saveReceiver_emailEntreprise
-                                                      .text,
-                                                  "receiver_siteweb":
-                                                  saveReceiver_sitewebEntreprise
-                                                      .text,
-                                                  "receiver_description":
-                                                  saveReceiver_infoEntreprise
-                                                      .text,
+                                                  "receiver_last_name": saveReceiver_last_nameEntreprise.text,
+                                                  "receiver_first_name":saveReceiver_first_nameEntreprise.text,
+                                                  "receiver_company": saveReceiver_raisonEntreprise.text,
+                                                  "receiver_phone": saveReceiver_phoneEntreprise.text,
+                                                  "receiver_country": saveReceiver_countryEntreprise,
+                                                  "receiver_email": saveReceiver_emailEntreprise.text,
+                                                  "receiver_siteweb": saveReceiver_sitewebEntreprise.text,
+                                                  "receiver_description": saveReceiver_infoEntreprise.text,
                                                   "is_company": true,
                                                 }
                                               ]));
-                                          Navigator.push(
+                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>

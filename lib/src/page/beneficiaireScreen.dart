@@ -238,7 +238,6 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       this.commission = this.amount * this._taux;
       this.amountTotal = this.amount + this.commission;
     }
-    print(_senderCurrency);
   }
 
   Future<double> _doConversionUSD() async {

@@ -156,7 +156,6 @@ class _MainPageState extends State<PagePrincipale> {
             onChanged: (val) {
               setState(() {
                 _selectedCurrency = val;
-                print(_selectedCurrency);
                 if (_selectedCurrency == 2) {
                   if (fromTextControllerSender.text == null) {
                     _displaySnackMessage();
@@ -182,15 +181,11 @@ class _MainPageState extends State<PagePrincipale> {
 
   checkLoginStatus() async {
     var jwt = await storage.read(key: "jwt");
-    print(jwt);
     Map<String, dynamic> responseJwtLogin = json.decode(jwt);
-    print(responseJwtLogin['access_token']);
     respresponseJwtLogin = responseJwtLogin['access_token'];
     if (responseJwtLogin['access_token'] == null) {
       MaterialPageRoute(builder: (BuildContext context) => LoginPage());
-      print('je suis null');
     } else {
-      print('je suis jwt');
       return jwt;
     }
   }
@@ -229,14 +224,12 @@ class _MainPageState extends State<PagePrincipale> {
   }
 
   Future<double> _doConversionDollard() async {
-    print(_conversion_usd);
     if (fromTextControllerSender.text != '') {
       fromTextControllergnf.text =
           (double.parse(fromTextControllerSender.text) * _conversion_usd)
               .toString();
       fromTextControllerReceive.text =
           double.parse(fromTextControllerSender.text).toString();
-      print(fromTextControllergnf.text);
     }
   }
 
@@ -278,7 +271,6 @@ class _MainPageState extends State<PagePrincipale> {
               (responseBody["rates"][toCurrency]))
           .toStringAsFixed(2);
     });
-    //print(result);
     return "Success";
   }
 
