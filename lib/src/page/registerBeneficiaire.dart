@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:animated_dialog_box/animated_dialog_box.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:fancy_alert_dialog/fancy_alert_dialog.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:international_phone_input/international_phone_input.dart';
@@ -490,7 +491,8 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                     left: 25.0,
                                     right: 25.0,
                                     top: 5.0),
-                                child: Row(
+                                child:
+                                Row(
                                   children: <Widget>[
                                     Flexible(
                                       child:
@@ -549,7 +551,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                             margin: new EdgeInsets.only(top: 10.0, bottom: 10.0, right: 3.0),
                                             color: Colors.white,
                                             child: new TextFormField(
-                                              maxLength: 8,
+                                              maxLength: 9,
                                               onSaved: (val) => setState(() => saveReceiver_phone.text = val),
                                               controller: saveReceiver_phone,
                                               validator: (value) {
@@ -562,6 +564,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                               },
                                               keyboardType: TextInputType.number,
                                               decoration: new InputDecoration(
+                                                  counter: Offstage(),
                                                   contentPadding: const EdgeInsets.all(12.0),
                                                   border: new OutlineInputBorder(
                                                       borderSide:
@@ -1209,7 +1212,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                             margin: new EdgeInsets.only(top: 10.0, bottom: 10.0, right: 3.0),
                                             color: Colors.white,
                                             child: new TextFormField(
-                                              maxLength: 8,
+                                              maxLength: 9,
                                               onSaved: (val) => setState(() => saveReceiver_phoneEntreprise.text = val),
                                               controller: saveReceiver_phoneEntreprise,
                                               validator: (value) {
@@ -1222,6 +1225,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                               },
                                               keyboardType: TextInputType.number,
                                               decoration: new InputDecoration(
+                                                  counter: Offstage(),
                                                   contentPadding: const EdgeInsets.all(12.0),
                                                   border: new OutlineInputBorder(
                                                       borderSide:
@@ -1438,3 +1442,4 @@ class ListItem {
   String name;
   ListItem(this.value, this.name);
 }
+

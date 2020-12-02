@@ -358,6 +358,7 @@ class _MainPageState extends State<PagePrincipale> {
 
   @override
   Widget build(BuildContext context) {
+    double c_width = MediaQuery.of(context).size.width*0.75;
     return MaterialApp(
       home: FutureBuilder(
         future: jwtOrEmpty,
@@ -709,11 +710,11 @@ class _MainPageState extends State<PagePrincipale> {
                                                           child: TextFormField(
                                                             controller:
                                                             fromTextControllerSender,
+                                                            readOnly: true,
                                                             decoration: InputDecoration(
                                                               border: InputBorder.none,
                                                               hintText:
                                                               "1000€",
-
                                                               //OutlineInputBorder(),
                                                             ),
                                                             keyboardType: TextInputType
@@ -761,10 +762,49 @@ class _MainPageState extends State<PagePrincipale> {
                                       ),
                                     ),
                                   ),
+
+                                  const SizedBox(height: 10),
+                                  Card(
+                                    elevation: 1.5,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(16.0))),
+                                    child: SizedBox(
+                                      width: 450.0,
+                                      height: 100.0,
+                                      child: Column(
+                                        children: <Widget>[
+                                          Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Center(
+                                                  child: Row(
+                                                    children: <Widget>[
+                                                        Container(
+                                                          width: c_width,
+                                                          margin: EdgeInsets.only(left: 5,top: 20),
+                                                          child:Center(
+                                                            child: Text(
+                                                                'Envoyez de l\'argent partout en Guinée avec des taux défiants toutes concurrences',
+                                                                maxLines:3
+                                                                ,style: TextStyle(color:Colors.blue,fontWeight: FontWeight.w500 )
+                                                            ),
+                                                          )
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                   const SizedBox(height: 5),
                                   Text('En cliquant sur Continuer, j\'accepte les CGU',
                                       style: TextStyle(color:Colors.blue)
-                                     ),
+                                  ),
                                 // ,
                                   /* SizedBox(
                       width: 360,

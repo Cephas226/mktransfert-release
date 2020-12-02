@@ -4,7 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mktransfert/src/contant/constant.dart';
-import 'package:mktransfert/src/page/paymentPageXXX.dart';
+import 'package:mktransfert/src/page/paymentPageXYX.dart';
 import 'package:mktransfert/src/page/registerBeneficiaire.dart';
 import 'package:mktransfert/src/page/transaction.dart';
 import 'package:mktransfert/src/widget/round_corner_image.dart';
@@ -132,6 +132,9 @@ class _HomePageState extends State<HomePage> {
   String _devise_receive = "";
   String _currencySend = "";
   String _senderCurrencySymbole = "";
+  String _selectedCountryCode='+224';
+  String _selectedCountryCodeEntreprise='+224';
+  List<String> _countryCodes = ['+224'];
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
   displayPaymentInfo() async {
@@ -305,9 +308,10 @@ class _HomePageState extends State<HomePage> {
                                         b["receiver_description"];
                                   }
                                 });
-                                return ListView.builder(
+                                return
+                                  ListView.builder(
                                     shrinkWrap: true,
-                                    padding: EdgeInsets.all(8),
+                                   // padding: EdgeInsets.all(8),
                                     itemCount: 1,
                                     itemBuilder:
                                         (BuildContext context, int index) {
@@ -494,37 +498,82 @@ class _HomePageState extends State<HomePage> {
                                                       ],
                                                     )),
                                                 const SizedBox(height: 20.0),
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 25.0,
-                                                        right: 25.0,
-                                                        top: 2.0),
-                                                    child: new Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      children: <Widget>[
-                                                        new Flexible(
-                                                          child:
-                                                              new TextFormField(
-                                                                keyboardType: TextInputType.number,
-                                                                maxLength: 8,
-                                                            onSaved: (val) =>
-                                                                setState(() =>
-                                                                    editReceiver_phone
-                                                                            .text =
-                                                                        val),
-                                                            controller:
-                                                                      editReceiver_phone
-                                                                          ,
-                                                            decoration: const InputDecoration(
-                                                                hintText:
-                                                                    "Entre un téléphone",
-                                                                border:
-                                                                    OutlineInputBorder()),
-                                                          ),
+                                                Row(
+                                                  children: <Widget>[
+                                                    Expanded(
+                                                      child: Center(
+                                                        child: Row(
+                                                          children: <Widget>[
+                                                            Container(
+                                                              width: 80,
+                                                              /* margin: const EdgeInsets.only(bottom: 10.0),
+                                                               decoration: BoxDecoration(
+                                                                   borderRadius: BorderRadius.circular(10.0),
+                                                                   color: Colors.cyan),*/
+                                                              child:  DropdownButtonHideUnderline(
+                                                                child: ButtonTheme(
+                                                                  alignedDropdown: true,
+                                                                  child: DropdownButton(
+                                                                    value: _selectedCountryCodeEntreprise,
+                                                                    items: _countryCodes.map((String value) {
+                                                                      return new DropdownMenuItem<String>(
+                                                                          value: value,
+                                                                          child: new Text(
+                                                                            value,
+                                                                            style: TextStyle(fontSize: 12.0),
+                                                                          ));
+                                                                    }).toList(),
+                                                                    onChanged: (value) {
+                                                                      setState(() {
+                                                                        _selectedCountryCodeEntreprise = value;
+                                                                      });
+                                                                    },
+                                                                    style: Theme.of(context).textTheme.title,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              width: 140,
+                                                              child: Row(
+                                                                children: <Widget>[
+                                                                  Expanded(child: Container(
+                                                                    color: Colors.white,
+                                                                    child: new TextFormField(
+                                                                      maxLength: 8,
+                                                                      onSaved: (val) => setState(() => editReceiver_phone.text = val),
+                                                                      controller: editReceiver_phone,
+                                                                      validator: (value) {
+                                                                        if (value.isEmpty) {
+                                                                          return 'Veuillez entre un numero valide';
+                                                                        }
+                                                                        else {
+                                                                          return null;
+                                                                        }
+                                                                      },
+                                                                      keyboardType: TextInputType.number,
+                                                                      decoration: new InputDecoration(
+                                                                        //contentPadding: const EdgeInsets.all(10.0),
+                                                                          counter: Offstage(),
+                                                                          border: new OutlineInputBorder(
+                                                                              borderSide:
+                                                                              new BorderSide(color: const Color(0xFFE0E0E0), width: 0.1)),
+                                                                          fillColor: Colors.white,
+                                                                          //prefixIcon: countryDropDown,
+                                                                          hintText: 'Telephone',
+                                                                          labelText: 'Telephone'),
+                                                                    ),
+                                                                  )),
+                                                                  // more widgets
+                                                                ],
+                                                              ),
+                                                            )
+                                                          ],
                                                         ),
-                                                      ],
-                                                    )),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
                                                 const SizedBox(height: 20.0),
                                                 Padding(
                                                     padding: EdgeInsets.only(
@@ -736,7 +785,7 @@ class _HomePageState extends State<HomePage> {
                                                       ],
                                                     )),
                                                 const SizedBox(height: 20.0),
-                                                Padding(
+                                                /*Padding(
                                                     padding: EdgeInsets.only(
                                                         left: 25.0,
                                                         right: 25.0,
@@ -768,7 +817,83 @@ class _HomePageState extends State<HomePage> {
                                                               ),
                                                         ),
                                                       ],
-                                                    )),
+                                                    )),*/
+                                                Row(
+                                                  children: <Widget>[
+                                                    Expanded(
+                                                      child: Center(
+                                                        child: Row(
+                                                          children: <Widget>[
+                                                             Container(
+                                                                width: 80,
+                                                              /* margin: const EdgeInsets.only(bottom: 10.0),
+                                                               decoration: BoxDecoration(
+                                                                   borderRadius: BorderRadius.circular(10.0),
+                                                                   color: Colors.cyan),*/
+                                                                child:  DropdownButtonHideUnderline(
+                                                  child: ButtonTheme(
+                                                  alignedDropdown: true,
+                                                  child: DropdownButton(
+                                                    value: _selectedCountryCode,
+                                                    items: _countryCodes.map((String value) {
+                                                      return new DropdownMenuItem<String>(
+                                                          value: value,
+                                                          child: new Text(
+                                                            value,
+                                                            style: TextStyle(fontSize: 12.0),
+                                                          ));
+                                                    }).toList(),
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        _selectedCountryCode = value;
+                                                      });
+                                                    },
+                                                    style: Theme.of(context).textTheme.title,
+                                                  ),
+                                                ),
+                                        ),
+                                                            ),
+                                                            Container(
+                                                              width: 140,
+                                                              child: Row(
+                                                                children: <Widget>[
+                                                                  Expanded(child: Container(
+                                                                    color: Colors.white,
+                                                                    child: new TextFormField(
+                                                                      maxLength: 8,
+                                                                      onSaved: (val) => setState(() => editReceiver_phone.text = val),
+                                                                      controller: editReceiver_phone,
+                                                                      validator: (value) {
+                                                                        if (value.isEmpty) {
+                                                                          return 'Veuillez entre un numero valide';
+                                                                        }
+                                                                        else {
+                                                                          return null;
+                                                                        }
+                                                                      },
+                                                                      keyboardType: TextInputType.number,
+                                                                      decoration: new InputDecoration(
+                                                                        //contentPadding: const EdgeInsets.all(10.0),
+                                                                          counter: Offstage(),
+                                                                          border: new OutlineInputBorder(
+                                                                              borderSide:
+                                                                              new BorderSide(color: const Color(0xFFE0E0E0), width: 0.1)),
+                                                                          fillColor: Colors.white,
+                                                                          //prefixIcon: countryDropDown,
+                                                                          hintText: 'Telephone',
+                                                                          labelText: 'Telephone'),
+                                                                    ),
+                                                                  )),
+                                                                  // more widgets
+                                                                ],
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
                                                 const SizedBox(height: 20.0),
                                                 Padding(
                                                     padding: EdgeInsets.only(
@@ -946,9 +1071,7 @@ class _HomePageState extends State<HomePage> {
                                 "receiver_phone": editReceiver_phone.text,
                                 "receiver_country": _mySelectionCountry,
                                 "receiver_description": editReceiver_description.text,
-
                                 //transaction
-
                                 "montant_send": _montant_send,
                                 "montant_receive": _montant_receive,
                                 "transac_commission": _transac_commission.toStringAsFixed(2),
@@ -957,7 +1080,8 @@ class _HomePageState extends State<HomePage> {
                                 "devise_sender": _currencySend,
                                 "point_retrait": _mySelectionPointRetrait,
                                 "transac_num": _transac_num,
-                                "is_company": editReceiver_Is_company
+                                "is_company": editReceiver_Is_company,
+                                "selectedCountryCode":_selectedCountryCode
                               }
                             ]));
 
@@ -1017,7 +1141,7 @@ class _HomePageState extends State<HomePage> {
       _amount = transaction['transac_total'];
       _montant_send = transaction['montant_send'];
       _senderCurrencySymbole = transaction['devise_send_symbol'];
-      _transac_commission = transaction['transac_commission'];
+      _transac_commission = double.parse(transaction['transac_commission']);
       _montant_receive = transaction['montant_receive'];
       _stripeAmount = transaction['transac_total'];
       _devise_receive = transaction['devise_receive'];

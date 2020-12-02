@@ -114,9 +114,26 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
           actions: <Widget>[
             FlatButton(
                 onPressed: () {
+                  setState(() {
+                    /*this.amountWaitted=9999;
+                    this.amount=9999;
+                    this.myAmountController.text=this.amount.toString();*/
+                    if (_selectedItemReceiver.name != 'GNF') {
+                      this.amount = 9999;
+                      this.amountWaitted = this.amount.toDouble();
+                      this.commission = this.amount * this._taux;
+                      this.myAmountController.text=this.amount.toString();
+                    }
+                    if (_selectedItemReceiver.name == 'GNF') {
+                      this.amount = 9999;
+                      this.myAmountController.text=this.amount.toString();
+                      _doConversionEur();
+                    }
+                  });
                   Navigator.of(context).pop();
                 },
-                child: Text("Ok"))
+                child: Text("Ok")
+            )
           ],
         );
       },
@@ -462,13 +479,14 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
             children: <Widget>[
               Container(
                 padding: EdgeInsets.only(left: 2),
-                child: Row(
+                child:
+                Row(
                   children: <Widget>[
                     Text(
                       "$amountWaitted",
                       style: TextStyle(
                         color: kPrimaryColor,
-                        fontSize: 35,
+                        fontSize: 30,
                       ),
                     ),
                     SizedBox(
@@ -516,13 +534,23 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                                 color: Colors.white,
                                 fontWeight: FontWeight.w500),
                           ),
-                          trailing: Text(
+                          trailing:
+                          _selectedItemReceiver.name=='GNF'?
+                          Text(
                               this.amountWaitted.toString() +
                                   ' ' +
                                   _selectedItemReceiver.name,
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontWeight: FontWeight.w500)),
+                                  fontWeight: FontWeight.w500)
+                          ):Text(
+                              this.amount.toString() +
+                                  ' ' +
+                                  _selectedItemReceiver.name,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500)
+                          ),
                         )),
                   )
                 ],
@@ -555,10 +583,12 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                                 fontWeight: FontWeight.w500),
                           ),
                           trailing: this.commission != null?Text(
-                          this.commission.toStringAsFixed(2),
+                          this.commission.toStringAsFixed(2)+ ' ' +
+                             _senderCurrencySymbole,
                               style: TextStyle(
                                   color: Colors.black,
-                                  fontWeight: FontWeight.w500)):CircularProgressIndicator(),
+                                  fontWeight: FontWeight.w500)
+                          ):CircularProgressIndicator(),
                         )),
                   )
                 ],
@@ -694,24 +724,34 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
             Expanded(
               child: RaisedButton(
                 onPressed: () {
+                  double reciprocal(double d) => 1 / d;
                   storage.write(
                       key: "transactionResume",
                       value: json.encode([
                         {
                           "montant_send": this.amount,
-                          "montant_receive": this.amountWaitted,
-                          "transac_commission": this.commission,
+                          "montant_receive": _selectedItemReceiver.name=='GNF'?this.amountWaitted:this.amount.toDouble(),
+                          "transac_commission": this.commission.toStringAsFixed(2),
                           "transac_total": this.amountTotal,
                           "devise_send": _senderCurrency,
                           "devise_send_symbol": _senderCurrencySymbole,
                           "devise_receive": _selectedItemReceiver.name
                         }
                       ]));
-                  Navigator.push(
+                   Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => ExpenseTrackerApp()),
                   );
+                  print({
+                    "montant_send": this.amount,
+                    "montant_receive": _selectedItemReceiver.name=='GNF'?this.amountWaitted:this.amount,
+                    "transac_commission": this.commission.toStringAsFixed(2),
+                    "transac_total": this.amountTotal,
+                    "devise_send": _senderCurrency,
+                    "devise_send_symbol": _senderCurrencySymbole,
+                    "devise_receive": _selectedItemReceiver.name
+                  });
                 },
                 color: kPrimaryColor,
                 textColor: Colors.white,

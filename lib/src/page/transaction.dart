@@ -12,7 +12,7 @@ import 'package:mktransfert/src/page/mesclasses/beneficiaireClasses.dart';
 import 'package:mktransfert/src/page/operations/beneficiaireOperations.dart';
 import 'package:mktransfert/src/page/pagePrincipale.dart';
 import 'package:mktransfert/src/page/payement-NoTouch.dart';
-import 'package:mktransfert/src/page/paymentPageXXX.dart';
+import 'package:mktransfert/src/page/paymentPageXYX.dart';
 import 'package:mktransfert/src/page/registerBeneficiaire.dart';
 import 'package:mktransfert/src/utils/oval-right-clipper.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';

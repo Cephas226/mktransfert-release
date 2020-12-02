@@ -386,22 +386,22 @@ class PaymentSuccessDialog extends StatelessWidget {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: <Widget>[
-                                              _Is_company==false?
+                                        //      _Is_company==false?
                                                   Text(
                                                       'NOM & PRENOM',
                                                       style: TextStyle(
                                                         color: Colors.black
                                                             .withOpacity(0.5),
                                                       ),
-                                                    ): Text(
+                                                    ),
+                                                  /*    : Text(
                                                 '',
                                                 style: TextStyle(
                                                   color: Colors.black
                                                       .withOpacity(0.5),
                                                 ),
-                                              ),
-                                              _Is_company==false
-                                                  ?
+                                              ),*/
+                                                 // ?
                                                Text(
                                                       _first_name +
                                                           ' ' +
@@ -414,7 +414,8 @@ class PaymentSuccessDialog extends StatelessWidget {
                                                             FontWeight.w600,
                                                       ),
                                                     )
-                                                 : Text(
+                                                /* :
+                                               Text(
                                                       '',
                                                       overflow:
                                                           TextOverflow.ellipsis,
@@ -423,7 +424,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                                                         fontWeight:
                                                             FontWeight.w600,
                                                       ),
-                                                    ),
+                                                    ),*/
                                             ],
                                           ),
                                         ),
@@ -617,24 +618,25 @@ class HomePageState extends State<PaymentPage> {
         );
         details.add("Prenom:" + element["receiver_first_name"]);
         details.add(
-          "Telephone:" + element["receiver_phone"],
+          "Telephone:" +element["selectedCountryCode"]+ element["receiver_phone"],
+        );
+        details.add(
+          "Montant à recevoir:" +
+              element["montant_receive"].toString() +
+              ' ' +
+              ( element["devise_receive"]=='eur'?'Euros':element["devise_receive"].toString().toUpperCase()),
         );
         details.add(
           "Email:" + element["receiver_email"] ,
         );
-        details.add(
+        /*details.add(
           "Commission:" +
               element["transac_commission"].toString() +
               ' ' +
               ( element["devise_sender"]=='eur'?'Euros':element["devise_sender"].toString().toUpperCase()),
-        );
-        details.add(
-          "Montant à recevoir:" +
-              element["montant_send"].toString() +
-              ' ' +
-              ( element["devise_sender"]=='eur'?'Euros':element["devise_sender"].toString().toUpperCase()),
-        );
+        );*/
       }
+      //montant_receive
       else {
 
         details.add(
@@ -642,15 +644,16 @@ class HomePageState extends State<PaymentPage> {
         );
         details.add("Nom du répresentant:" + element["receiver_first_name"]);
         details.add("Prenom du répresentant:" + element["receiver_last_name"]);
-        details.add("Telephone:" + element["receiver_phone"]);
+        details.add("Telephone:" +element["selectedCountryCode"]+ element["receiver_phone"]);
+        details.add("Montant à recevoir:" + element["montant_receive"].toString() +
+            ' ' +( element["devise_sender"]=='eur'?'Euros':element["devise_receive"].toString().toUpperCase()),
+        );
         details.add("Email:" + element["receiver_email"]);
-        details.add("Commission:" + element["transac_commission"].toString() +
+       /* details.add("Commission:" + element["transac_commission"].toString() +
               ' ' +
               ( element["devise_sender"]=='eur'?'Euros':element["devise_sender"].toString().toUpperCase()),
-        );
-        details.add("Montant à recevoir:" + element["montant_send"].toString() +
-              ' ' +( element["devise_sender"]=='eur'?'Euros':element["devise_sender"].toString().toUpperCase()),
-        );
+        );*/
+
       }
 
 
