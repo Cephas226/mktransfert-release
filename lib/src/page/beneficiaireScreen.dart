@@ -4,6 +4,7 @@ import 'dart:ffi';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:minimize_app/minimize_app.dart';
 import 'package:mktransfert/src/contant/constant.dart';
 import 'package:mktransfert/src/page/navigation.dart';
 import 'package:mktransfert/src/page/pagePrincipale.dart';
@@ -15,6 +16,7 @@ import 'package:mktransfert/src/widget/round_corner_image.dart';
 import 'package:http/http.dart' as http;
 import '../../recipients_provider.dart';
 import 'AccueilBottomBar.dart';
+import 'accueil.dart';
 import 'transfertRecap.dart';
 
 class PaymentsScreen extends StatefulWidget {
@@ -50,27 +52,57 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
   var receiver_point_retait = List();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawerEnableOpenDragGesture: false,
-      // drawer:   _buildDrawer(),
-      appBar: AppBar(
-        leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => PagePrincipale()))),
-        backgroundColor: Colors.transparent,
-        automaticallyImplyLeading: true,
-        title: Text(
-          "Envoyer de l'argent",
+    Future<bool> _onBackPressed() {
+      return showDialog(
+        context: context,
+        builder: (context) => new AlertDialog(
+          title: new Text('Êtes-vous sûr?'),
+          content: new Text('Voulez-vous quitter l\'application'),
+          actions: <Widget>[
+            new GestureDetector(
+              onTap: () => Navigator.of(context).pop(false),
+              child: Text("Non"),
+            ),
+            SizedBox(height: 16),
+            new GestureDetector(
+              onTap: () => {
+                Navigator.of(context).pop(false),
+                Navigator.push(context,  MaterialPageRoute(
+                    builder: (context) => AccueilPage()),
+                ),
+                MinimizeApp.minimizeApp(),
+              },
+              child: Text("Oui"),
+            ),
+          ],
         ),
-        elevation: 0,
-        centerTitle: true,
-      ),
-      backgroundColor: kPrimaryColor,
-      body: _buildBody(),
+      ) ??
+          false;
+    }
+    return
+      new WillPopScope(
+        onWillPop: _onBackPressed,
+        child: Scaffold(
+          drawerEnableOpenDragGesture: false,
+          // drawer:   _buildDrawer(),
+          appBar: AppBar(
+            leading: IconButton(
+                icon: Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => PagePrincipale()))),
+            backgroundColor: Colors.transparent,
+            automaticallyImplyLeading: true,
+            title: Text(
+              "Envoyer de l'argent",
+            ),
+            elevation: 0,
+            centerTitle: true,
+          ),
+          backgroundColor: kPrimaryColor,
+          body: _buildBody(),
 
-      bottomNavigationBar: _buildButtonsSection(),
-    );
+          bottomNavigationBar: _buildButtonsSection(),
+        ));
   }
 
   displayMontantSend() async {

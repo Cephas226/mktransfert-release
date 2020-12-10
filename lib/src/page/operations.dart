@@ -73,7 +73,6 @@ class _OperationListPageState extends State<OperationListPage> {
     _dataTransactionProgress.forEach((element) {
       _dataTransactionProgressRefactored.add(element);
     });
-
     return _dataTransactionProgressRefactored;
   }
 
@@ -105,7 +104,6 @@ class _OperationListPageState extends State<OperationListPage> {
 
   @override
   Widget build(BuildContext context) {
-    fetchMyTransaction();
     return MaterialApp(
       home: DefaultTabController(
         length: 2,
@@ -189,6 +187,21 @@ class _OperationListPageState extends State<OperationListPage> {
                                                                         ' ' +
                                                                         (snapshot.data[index]['transac_devise_sender'] !=
                                                                                 null
+                                                                            ? snapshot.data[index]['transac_devise_sender'].toString().toUpperCase()
+                                                                            : '')
+                                                                    : '',
+                                                              )
+                                                              /*  Text(
+                                                                snapshot.data[index]
+                                                                            [
+                                                                            'transac_montant_send'] !=
+                                                                        null
+                                                                    ? snapshot.data[index]
+                                                                            [
+                                                                            'transac_montant_send'] +
+                                                                        ' ' +
+                                                                        (snapshot.data[index]['transac_devise_sender'] !=
+                                                                                null
                                                                             ?
                                                                         (snapshot.data[index]['transac_devise_sender'].toString()=='eur'?
                                                                             "Euros":
@@ -196,7 +209,8 @@ class _OperationListPageState extends State<OperationListPage> {
                                                                         )
                                                                             : '')
                                                                     : '',
-                                                              )))),
+                                                              )*/
+                                                              ))),
                                                   // more widgets
                                                 ],
                                               ),
@@ -225,22 +239,22 @@ class _OperationListPageState extends State<OperationListPage> {
                                                     ),
                                                     SizedBox(
                                                       width: 150.0,
-                                                     child:  Text(
-                                                       snapshot.data[index][
-                                                       'receiver_first_name'] !=
-                                                           null
-                                                           ? snapshot.data[index]
-                                                       [
-                                                       'receiver_first_name'] +
-                                                           ' ' +
-                                                           snapshot.data[
-                                                           index][
-                                                           'receiver_last_name']
-                                                           : '',
-                                                       overflow:
-                                                       TextOverflow.ellipsis,
-                                                     ),
-                                                   )
+                                                      child: Text(
+                                                        snapshot.data[index][
+                                                                    'receiver_first_name'] !=
+                                                                null
+                                                            ? snapshot.data[
+                                                                        index][
+                                                                    'receiver_first_name'] +
+                                                                ' ' +
+                                                                snapshot.data[
+                                                                        index][
+                                                                    'receiver_last_name']
+                                                            : '',
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    )
                                                   ]),
                                                 ],
                                               ),
@@ -329,7 +343,6 @@ class _OperationListPageState extends State<OperationListPage> {
                         future: fetchMyTransactionDelivery(),
                         builder: (BuildContext context,
                             AsyncSnapshot<List<dynamic>> snapshot) {
-                          print(snapshot.data);
                           if (snapshot.hasData) {
                             final List<dynamic> data = snapshot.data;
                             return ListView.builder(
@@ -396,20 +409,19 @@ class _OperationListPageState extends State<OperationListPage> {
                                                 ),
                                                 SizedBox(
                                                   width: 150.0,
-                                                  child:  Text(
+                                                  child: Text(
                                                     snapshot.data[index][
-                                                    'receiver_first_name'] !=
-                                                        null
-                                                        ? snapshot.data[index]
-                                                    [
-                                                    'receiver_first_name'] +
-                                                        ' ' +
-                                                        snapshot.data[
-                                                        index][
-                                                        'receiver_last_name']
+                                                                'receiver_first_name'] !=
+                                                            null
+                                                        ? snapshot.data[index][
+                                                                'receiver_first_name'] +
+                                                            ' ' +
+                                                            snapshot.data[index]
+                                                                [
+                                                                'receiver_last_name']
                                                         : '',
                                                     overflow:
-                                                    TextOverflow.ellipsis,
+                                                        TextOverflow.ellipsis,
                                                   ),
                                                 )
                                               ]),

@@ -1257,7 +1257,7 @@ class _HomePageState extends State<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              _amount.toString() + ' ' + _senderCurrencySymbole,
+                              _montant_send.toString() + ' ' + _senderCurrencySymbole,
                               style: TextStyle(
                                   fontSize: 40,
                                   fontWeight: FontWeight.bold,

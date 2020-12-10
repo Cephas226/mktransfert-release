@@ -46,7 +46,6 @@ class _LoginPageState extends State<LoginPage> {
 
   checkLoginStatus() async {
     var jwt = await storage.read(key: "jwt");
-    print(jwt);
     if (jwt == null){
       setState(() {
         formVisible = false;
@@ -365,9 +364,6 @@ class _LoginState extends State<LoginForm> {
                     var jwtUser = await logMe(username, password);
                     var jwt = await logMe(username, password);
                     if (_formKey.currentState.validate()) {
-                    // final form = _formKey.currentState;
-                    // form.save();
-                     print(jwt);
                   Map<String, dynamic> responseJwtLogin = json.decode(jwt);
                     if (responseJwtLogin['message']=='invalide'){
                       _onAlertLogin(context);

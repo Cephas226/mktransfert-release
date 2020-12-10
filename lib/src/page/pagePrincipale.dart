@@ -36,6 +36,7 @@ class _MainPageState extends State<PagePrincipale> {
   final fromTextControllerReceive = TextEditingController();
   final fromTextControllerCommission = TextEditingController();
   final fromTextControllerTotal = TextEditingController();
+  String marketingWord = '';
   Future<String> get jwtOrEmpty async {
     var jwt = await storage.read(key: "jwt");
     if (jwt == null) return "";
@@ -65,22 +66,24 @@ class _MainPageState extends State<PagePrincipale> {
       _dataTransaction.add(v[0]);
     });
     storage.write(key: "alltransactionInfo", value: json.encode(_dataTransaction));
-
-    /*_dataTransaction.forEach((element) {
-      storage.write(key: "alltransactionInfo", value: json.encode([
-        {
-          "receiver_first_name": element['receiver_first_name'],
-          "receiver_last_name": element['receiver_last_name'],
-          "transac_status": element['transac_status'],
-          "transac_num":element['transac_num'],
-          "transac_date": element['transac_date'],
-          "transac_montant_send": element['transac_montant_send'],
-          "transac_devise_sender":  element['transac_devise_sender'],
-          "isvalide": element['isvalide'],
-        }
-      ]));*/
-    //});
     return transactionList;
+  }
+
+ displayMarketingInfo() async {
+    var jwt = await storage.read(key: "jwt");
+    Map<String, dynamic> responseJson = json.decode(jwt);
+    String token = responseJson["access_token"];
+    int user_id = responseJson["user_id"];
+    print(token);
+    var res = await http.get(
+        Uri.encodeFull(
+            'https://www.mktransfert.com/api/marketing'),
+        headers: {
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        }).then((value) => {
+          this.marketingWord=json.decode(value.body)['phrase_marketing']
+        });
   }
 
   double _conversion_eur;
@@ -240,6 +243,7 @@ class _MainPageState extends State<PagePrincipale> {
     storage.delete(key: "beneficiaire");
     this.checkLoginStatus();
     _loadCurrencies();
+    this.displayMarketingInfo();
     this.fetchMyTransaction();
     _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
     _selectedItem = _dropdownMenuItems[0].value;
@@ -785,9 +789,8 @@ class _MainPageState extends State<PagePrincipale> {
                                                           margin: EdgeInsets.only(left: 5,top: 20),
                                                           child:Center(
                                                             child: Text(
-                                                                'Envoyez de l\'argent partout en Guinée avec des taux défiants toutes concurrences',
-                                                                maxLines:3
-                                                                ,style: TextStyle(color:Colors.blue,fontWeight: FontWeight.w500 )
+                                                                this.marketingWord,
+                                                                style: TextStyle(color:Colors.blue)
                                                             ),
                                                           )
                                                       ),

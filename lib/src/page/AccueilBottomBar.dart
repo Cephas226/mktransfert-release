@@ -114,7 +114,29 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
                         Icons.power_settings_new,
                         color: active,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        FancyAlertDialog.showFancyAlertDialog(
+                          context,
+                          'Confirmation',
+                          'Voulez vous vous déconnectez ?',
+                          kPrimaryColor,
+                          icon: Icon(
+                            Icons.clear,
+                            color: Colors.white,
+                          ),
+                          labelPositiveButton: 'OK',
+                          onTapPositiveButton: () {
+                            storage.delete(key: "jwt");
+                            Navigator.pop(context);
+                            checkLoginStatus();
+                          },
+                          labelNegativeButton: 'Annulez',
+                          onTapNegativeButton: () {
+                            Navigator.pop(context);
+                            print('tap negative button');
+                          },
+                        );
+                      },
                     ),
                   ),
                   Container(
@@ -257,10 +279,6 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
     return
       Scaffold(
         backgroundColor: Colors.grey[100],
-        /*appBar: AppBar(
-          title: Text('Bottom Navigation Bar'),
-          centerTitle: true,
-        ),*/
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             FancyAlertDialog.showFancyAlertDialog(
@@ -275,12 +293,6 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
               labelPositiveButton: 'OK',
               onTapPositiveButton: () {
                 storage.delete(key: "jwt");
-              /*  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => LoginPage()
-                )
-                );*/
                 Navigator.pop(context);
                 checkLoginStatus();
               },
