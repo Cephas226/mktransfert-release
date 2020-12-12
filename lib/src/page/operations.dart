@@ -11,9 +11,8 @@ import 'loginPage.dart';
 import 'operations/beneficiaireOperations.dart';
 
 List<Operations> operation = [];
-var _dataTransaction = List();
-var _dataTransactionDeliveryRefactored = List();
-var _dataTransactionProgressRefactored = List();
+
+
 
 Future<dynamic> futureTransaction;
 
@@ -29,21 +28,21 @@ class _OperationListPageState extends State<OperationListPage> {
   bool isLoading = true;
   GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   GlobalKey<FormState> _abcKey = GlobalKey<FormState>();
-  var transactionList = List();
+
   @override
   void initState() {
     super.initState();
-    fetchMyTransaction();
+  //  fetchMyTransaction();
     fetchMyTransactionDelivery();
   }
 
-  Future<String> displayTransactionInfo() async {
+/*  Future<String> displayTransactionInfo() async {
     var alltransactionInfo = await storage.read(key: "alltransactionInfo");
     var alltransactionInfoTraited = json.decode(alltransactionInfo);
     alltransactionInfoTraited?.forEach((k, v) {
       _dataTransaction.add(v[0]);
     });
-  }
+  }*/
 
   var resBody;
   Future<List<dynamic>> fetchMyTransaction() async {
@@ -63,16 +62,23 @@ class _OperationListPageState extends State<OperationListPage> {
     json.decode(res.body);
 
     resBody = json.decode(res.body);
-
+    List _dataTransaction = List();
+    List _dataTransactionProgressRefactored = List();
     resBody['data_transactions']?.forEach((k, v) {
       _dataTransaction.add(v[0]);
     });
-    _dataTransaction = transactionList;
-    var _dataTransactionProgress = _dataTransaction
-        .where((element) => element['transac_status'] == 'encours');
-    _dataTransactionProgress.forEach((element) {
-      _dataTransactionProgressRefactored.add(element);
+
+/*
+        .where((element) => element['transac_status'] == 'encours');*/
+
+    var _dataTransactionProgress = _dataTransaction;
+   // _dataTransactionProgressRefactored=null;
+    _dataTransaction.forEach((element) {
+      if (element['transac_status'] == 'encours'){
+        _dataTransactionProgressRefactored.add(element);
+      }
     });
+    print(_dataTransaction);
     return _dataTransactionProgressRefactored;
   }
 
@@ -92,8 +98,9 @@ class _OperationListPageState extends State<OperationListPage> {
       print("Got error: ${e.error}");
     });
     json.decode(res.body);
-
     resMyBody = json.decode(res.body);
+    List _dataTransaction = List();
+    List _dataTransactionDeliveryRefactored = List();
     var _dataTransactionProgressDelivery = _dataTransaction
         .where((element) => element['transac_status'] != 'encours');
     _dataTransactionProgressDelivery.forEach((element) {
@@ -104,6 +111,7 @@ class _OperationListPageState extends State<OperationListPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       home: DefaultTabController(
         length: 2,
@@ -326,7 +334,7 @@ class _OperationListPageState extends State<OperationListPage> {
                                 });
                           } else {
                             return Center(
-                              child: CircularProgressIndicator(),
+                              child: Text('En cours'),
                             );
                           }
                         },

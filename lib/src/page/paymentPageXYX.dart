@@ -406,8 +406,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                                                       _first_name +
                                                           ' ' +
                                                           _last_name,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
+                                                      overflow:TextOverflow.ellipsis,
                                                       maxLines: 1,
                                                       style: TextStyle(
                                                         fontWeight:

@@ -18,10 +18,10 @@ PODS:
   - sqflite (0.0.1):
     - Flutter
     - FMDB (~> 2.7.2)
-  - Stripe (20.1.1)
+  - Stripe (19.4.0)
   - stripe_payment (1.0.0):
     - Flutter
-    - Stripe (>= 19.0.1)
+    - Stripe (~> 19.4.0)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -67,9 +67,9 @@ SPEC CHECKSUMS:
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
-  Stripe: 2cb10595133247a96ece092eb0614786c604382f
-  stripe_payment: ad86f099179edb7b9fe12b9b62ac3746d5e56802
+  Stripe: 92f1c73a9dbd3c54277ed06a1fea6e08f20414c6
+  stripe_payment: 1cbe9c339c21b5ecf01035e80eea351067c67c56
 
-PODFILE CHECKSUM: 30517025a2fecca2d72dac25f08abb5b9a8f1a56
+PODFILE CHECKSUM: cc1f88378b4bfcf93a6ce00d2c587857c6008d3b
 
 COCOAPODS: 1.10.0

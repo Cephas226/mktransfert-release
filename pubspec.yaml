@@ -35,7 +35,7 @@ dependencies:
   fancy_dialog: ^1.0.4
   http: any
   device_preview: ^0.4.1
-  stripe_payment: ^1.0.8
+  stripe_payment: ^1.0.9
   expandable: ^4.1.4
   fancy_alert_dialog: ^0.0.1
   email_validator: ^1.0.5
