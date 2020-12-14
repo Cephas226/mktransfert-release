@@ -13,6 +13,7 @@ import 'package:mktransfert/src/utils/oval-right-clipper.dart';
 
 import 'accueil.dart';
 import 'beneficiaireScreen.dart';
+import 'contactUs.dart';
 import 'cooly.dart';
 import 'items/help_page.dart';
 import 'items/stats_page.dart';
@@ -75,7 +76,7 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
           ),
         ),
       ),
-     /* appBar: new AppBar(
+      /* appBar: new AppBar(
         title: const Text(''),
       ),
       drawer:   _buildDrawer(),*/
@@ -94,7 +95,7 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
     );
   }
   _buildDrawer() {
-   // this.displayUserInfo();
+    // this.displayUserInfo();
     return ClipPath(
       clipper: OvalRightBorderClipper(),
       child: Drawer(
@@ -153,7 +154,7 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
                     ),
                   ),
                   SizedBox(height: 20.0),
-                 /* displayUser_first_name != null?
+                  /* displayUser_first_name != null?
                   Text(
                     displayUser_first_name+' '+displayUser_last_name,
                     style: TextStyle(
@@ -170,28 +171,28 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
                   Center(
                     child: CircularProgressIndicator(),
                   ),*/
-                 // SizedBox(height: 30.0),
+                  // SizedBox(height: 30.0),
                   _buildRow(Icons.home, "Accueil",
-                      '/accueilBottom'
+                      AccueilBootomBarPage()
                   ),
                   _buildDivider(),
                   _buildRow(Icons.person_pin, "Mon profil",
-                      '/profil'
+                      UserProfilPage()
                   ),
                   _buildDivider(),
                   _buildRow(Icons.monetization_on, "Mes transactions",
-                      '/transaction'
+                      OperationListPage()
                   ),
                   _buildDivider(),
                   _buildRow(Icons.clean_hands, "Transferer",
-                      '/accueilBottom'
+                      AccueilBootomBarPage()
                   ),
                   _buildDivider(),
                   _buildRow(Icons.email, "Nous contacter",
-                      '/contactUsPage'
+                      ContactUsPage()
                   ),
                   _buildDivider(),
-                 /* _buildRow(Icons.settings, "Aide",
+                  /* _buildRow(Icons.settings, "Aide",
                       '/principale'
                   ),*/
                 ],
@@ -235,14 +236,15 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
   Widget _buildRow(
       IconData icon,
       String title,
-      String route
+      Widget route
       ) {
     final TextStyle tStyle = TextStyle(color: active, fontSize: 16.0);
     return Container(
         padding: const EdgeInsets.symmetric(vertical: 5.0),
         child:InkWell(
           onTap: () {
-            Navigator.pushNamed(context, route);
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (BuildContext context) => AccueilPage()));
           },
           child: Row(children: [
             Icon(
@@ -271,8 +273,8 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
           MaterialPageRoute(builder: (BuildContext context) => PagePrincipale()),
           ModalRoute.withName("/principale")
       )*/;
-      return jwt;
-    }
+    return jwt;
+  }
 
   Widget _buildBottomBar() {
 

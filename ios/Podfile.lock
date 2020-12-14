@@ -58,7 +58,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/stripe_payment/ios"
 
 SPEC CHECKSUMS:
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   libphonenumber: bd14d5abfc5939ab0b0767234e2d8e2593af258e
@@ -70,6 +70,6 @@ SPEC CHECKSUMS:
   Stripe: 92f1c73a9dbd3c54277ed06a1fea6e08f20414c6
   stripe_payment: 1cbe9c339c21b5ecf01035e80eea351067c67c56
 
-PODFILE CHECKSUM: cc1f88378b4bfcf93a6ce00d2c587857c6008d3b
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
 COCOAPODS: 1.10.0

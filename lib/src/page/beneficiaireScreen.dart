@@ -70,7 +70,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                 Navigator.push(context,  MaterialPageRoute(
                     builder: (context) => AccueilPage()),
                 ),
-                MinimizeApp.minimizeApp(),
+               // MinimizeApp.minimizeApp(),
               },
               child: Text("Oui"),
             ),
@@ -89,7 +89,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
             leading: IconButton(
                 icon: Icon(Icons.arrow_back, color: Colors.white),
                 onPressed: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => PagePrincipale()))),
+                    MaterialPageRoute(builder: (context) => PagePrincipale()))
+            ),
             backgroundColor: Colors.transparent,
             automaticallyImplyLeading: true,
             title: Text(

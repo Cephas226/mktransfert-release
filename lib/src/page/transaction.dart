@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:direct_select/direct_select.dart';
 import 'package:fancy_alert_dialog/fancy_alert_dialog.dart';
-import 'package:fancy_dialog/fancy_dialog.dart';
+//import 'package:fancy_dialog/fancy_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;

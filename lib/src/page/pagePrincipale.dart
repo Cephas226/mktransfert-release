@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:direct_select/direct_select.dart';
 import 'package:fancy_alert_dialog/fancy_alert_dialog.dart';
-import 'package:fancy_dialog/fancy_dialog.dart';
+//import 'package:fancy_dialog/fancy_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

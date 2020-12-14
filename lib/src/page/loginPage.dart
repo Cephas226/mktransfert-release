@@ -365,7 +365,7 @@ class _LoginState extends State<LoginForm> {
                     var jwt = await logMe(username, password);
                     if (_formKey.currentState.validate()) {
                   Map<String, dynamic> responseJwtLogin = json.decode(jwt);
-                    if (responseJwtLogin['message']=='invalide'){
+                    if (responseJwtLogin['message']=='invalide50'){
                       _onAlertLogin(context);
                     }
                     else{
@@ -374,7 +374,8 @@ class _LoginState extends State<LoginForm> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => PagePrincipale()));
+                              builder: (context) => PagePrincipale())
+                      );
                     }
                   }
                 },

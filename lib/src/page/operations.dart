@@ -240,7 +240,7 @@ class _OperationListPageState extends State<OperationListPage> {
                                                         .account_circle_outlined),
                                                     const SizedBox(width: 5),
                                                     Text(
-                                                      'Nom & Prenom(s):',
+                                                      'Nom & Prénom(s):',
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold),
@@ -277,7 +277,7 @@ class _OperationListPageState extends State<OperationListPage> {
                                                     Icon(Icons.watch_later),
                                                     const SizedBox(width: 5),
                                                     Text(
-                                                      'Status:',
+                                                      'Statut:',
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold),
@@ -413,7 +413,7 @@ class _OperationListPageState extends State<OperationListPage> {
                                                 const SizedBox(
                                                     width: 15.0, height: 30),
                                                 Text(
-                                                  'Nom & Prenom(s):',
+                                                  'Nom & Prénom(s):',
                                                 ),
                                                 SizedBox(
                                                   width: 150.0,
@@ -444,7 +444,7 @@ class _OperationListPageState extends State<OperationListPage> {
                                               Row(children: <Widget>[
                                                 const SizedBox(
                                                     width: 15.0, height: 30),
-                                                Text('Status:'),
+                                                Text('Statut:'),
                                                 Text(
                                                     snapshot.data[index][
                                                                 'transac_status'] !=
