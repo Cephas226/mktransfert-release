@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:mktransfert/core/presentation/res/assets.dart';
+import 'package:mktransfert/src/page/loginPage.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
 class StripeTransactionResponse {
@@ -13,22 +14,40 @@ class StripeTransactionResponse {
 }
 
 class StripeService {
+
   static String apiBase = 'https://api.stripe.com/v1';
   static String paymentApiUrl = '${StripeService.apiBase}/payment_intents';
   static String secret = 'sk_test_51HNmJoCNGrJkhMzwsY47bg0Lu1GP1RItPqtIpXFP0nYyPoeDOdgkEvE9xk2lSR95xY8Kyf5Q9wQfu6rECcvkehY500zrfWkpLe';
-  static Map<String, String> headers = {
-    'Authorization': 'Bearer ${StripeService.secret}',
-    'Content-Type': 'application/x-www-form-urlencoded'
-  };
-  static init() {
+  static String stripe_secret_key;
+  getSuccesInfo() async {
+
+  }
+  static init() async {
+    var jwt = await storage.read(key: "jwt");
+    Map<String, dynamic> responseJson = json.decode(jwt);
+    String token = responseJson["access_token"];
+    int user_id = responseJson["user_id"];
+    http.Response response = await http.get(
+        'https://www.mktransfert.com/api/stripe',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
+        });
+    var resBody = json.decode(response.body);
+    print(resBody['stripe_public_key']);
+    var stripe_public_key=resBody['stripe_public_key'];
+      stripe_secret_key=resBody['stripe_secret_key'];
+    // _transac_num = resBody["API_transac_data"];
     StripePayment.setOptions(
         StripeOptions(
-            publishableKey: "pk_test_51HNmJoCNGrJkhMzw3HkzG7ce5sI60PcDIdRHPAiITkO12v4MElGRi8oCJFo23LX0vWC8qm3Qo3dYTJDknXLCNJCk00rhbPwdFz",
+            publishableKey:stripe_public_key,
             merchantId: "Test",
             androidPayMode: 'test'
         )
     );
   }
+
+
 
   static Future<StripeTransactionResponse> payViaExistingCard({String amount, String currency, CreditCard card,BuildContext context}) async{
     try {
@@ -117,8 +136,12 @@ class StripeService {
         success: false
     );
   }
-
+  static Map<String, String> headers = {
+    'Authorization': 'Bearer ${StripeService.stripe_secret_key}',
+    'Content-Type': 'application/x-www-form-urlencoded'
+  };
   static Future<Map<String, dynamic>> createPaymentIntent(String amount, String currency) async {
+
     try {
       Map<String, dynamic> body = {
         'amount': amount,

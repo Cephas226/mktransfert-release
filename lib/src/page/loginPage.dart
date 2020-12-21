@@ -14,7 +14,7 @@ import 'package:mktransfert/src/page/pagePrincipale.dart';
 import 'package:http/http.dart' as https;
 import 'accueil.dart';
 import 'mesclasses/user.model.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:http/io_client.dart';
 import 'dart:io';
@@ -150,6 +150,23 @@ class _LoginPageState extends State<LoginPage> {
                        ],
                      ),
                      const SizedBox(height: 20.0),
+                     RaisedButton(
+                       color: Colors.grey.shade700,
+                       textColor: Colors.white,
+                       elevation: 0,
+                       shape: RoundedRectangleBorder(
+                         borderRadius: BorderRadius.circular(20.0),
+                       ),
+                       child: Text("Mot de passe oublié"),
+                       onPressed: ()async{
+                         const url = 'https://www.mktransfert.com/reset';
+
+                         if (await canLaunch(url)) {
+                         await launch(url, forceSafariVC: false);
+                         } else {
+                         throw 'Could not launch $url';
+                         }
+                       }),
                    ],
                  ),
                ),
@@ -234,6 +251,15 @@ class _LoginPageState extends State<LoginPage> {
                )
              ],
            )));
+  }
+}
+
+_launchURL() async {
+  const url = "https://google.com";
+  if (await canLaunch(url)) {
+    await launch(url, forceWebView: true); //forceWebView
+  } else {
+    throw 'Could not launch $url';
   }
 }
 

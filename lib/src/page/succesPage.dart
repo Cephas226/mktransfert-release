@@ -16,6 +16,7 @@ class SuccesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Success',
       home: Scaffold(
         appBar: AppBar(

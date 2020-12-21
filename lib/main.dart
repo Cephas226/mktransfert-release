@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: kPrimaryColor,
         accentColor: kPrimaryColor,
@@ -37,8 +38,6 @@ class MyApp extends StatelessWidget {
       ),
       title: 'Bienvenu sur MK TRANSFERT',
       home: AccueilPage(),
-      debugShowCheckedModeBanner: false,
-
       routes: {
         '/home': (context) => PaymentPage(),
         //'/existing-cards': (context) => ExistingCardsPage(),

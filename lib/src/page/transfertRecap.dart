@@ -318,6 +318,7 @@ class _HomePageState extends State<HomePage> {
                                       if (editReceiver_Is_company == false) {
                                         return Container(
                                           child: Form(
+                                            key: _formKey,
                                             child: Column(
                                               children: <Widget>[
                                                 Padding(
@@ -544,7 +545,7 @@ class _HomePageState extends State<HomePage> {
                                                                       onSaved: (val) => setState(() => editReceiver_phone.text = val),
                                                                       controller: editReceiver_phone,
                                                                       validator: (value) {
-                                                                        if (value.isEmpty) {
+                                                                        if (value.isEmpty||value.length<9) {
                                                                           return 'Veuillez entre un numero valide';
                                                                         }
                                                                         else {
@@ -611,6 +612,7 @@ class _HomePageState extends State<HomePage> {
                                       else {
                                         return Container(
                                           child: Form(
+                                            key: _formKey2,
                                             child: Column(
                                               children: <Widget>[
                                                 Padding(
@@ -854,7 +856,7 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                                             ),
                                                             Container(
-                                                              width: 140,
+                                                              width: 180,
                                                               child: Row(
                                                                 children: <Widget>[
                                                                   Expanded(child: Container(
@@ -864,7 +866,7 @@ class _HomePageState extends State<HomePage> {
                                                                       onSaved: (val) => setState(() => editReceiver_phone.text = val),
                                                                       controller: editReceiver_phone,
                                                                       validator: (value) {
-                                                                        if (value.isEmpty) {
+                                                                        if (value.isEmpty||value.length<9) {
                                                                           return 'Veuillez entre un numero valide';
                                                                         }
                                                                         else {
@@ -994,11 +996,11 @@ class _HomePageState extends State<HomePage> {
                   ],
                 )),
             actions: <Widget>[
-              Row(
+              editReceiver_Is_company == false?Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Container(
-                    width: 120,
+                    width: 180,
                     child: RaisedButton(
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -1024,7 +1026,9 @@ class _HomePageState extends State<HomePage> {
                     width: 120,
                     child: RaisedButton(
                       onPressed: () {
-                      print( {
+                        if(
+                        _formKey.currentState.validate()){
+                        print( {
                         "receiver_company":saveReceiver_raisonEntreprise.text,
                         "receiver_siteweb": saveReceiver_sitewebEntreprise.text,
                         //receiver
@@ -1036,79 +1040,81 @@ class _HomePageState extends State<HomePage> {
                         "receiver_description": editReceiver_description.text,
                         });
                         storage.write(
-                            key: "beneficiaireInfo",
-                            value: json.encode([
-                              {
-                                "id": _beneficiaireID,
-                                "receiver_first_name":
-                                    editReceiver_first_name.text,
-                                "receiver_last_name":
-                                    editReceiver_last_name.text,
-                                "receiver_email": editReceiver_email.text,
-                                "receiver_phone": editReceiver_phone.text,
-                                "receiver_country": editReceiver_country.text,
-                                "receiver_description":
-                                    editReceiver_description.text,
-                              }
-                            ]));
+                        key: "beneficiaireInfo",
+                        value: json.encode([
+                        {
+                        "id": _beneficiaireID,
+                        "receiver_first_name":
+                        editReceiver_first_name.text,
+                        "receiver_last_name":
+                        editReceiver_last_name.text,
+                        "receiver_email": editReceiver_email.text,
+                        "receiver_phone": editReceiver_phone.text,
+                        "receiver_country": editReceiver_country.text,
+                        "receiver_description":
+                        editReceiver_description.text,
+                        }
+                        ]));
                         storage.write(
-                            key: "transactionBackend",
-                            value: json.encode([
-                              {
-                                "user_id": user_id,
-                                //sender
-                                "first_name": first_name,
-                                "last_name": last_name,
-                                "country": country,
-                                "phone": phone,
-                                "email": email,
-                                "receiver_company":saveReceiver_raisonEntreprise.text,
-                                "receiver_siteweb": saveReceiver_sitewebEntreprise.text,
-                                //receiver
-                                "receiver_first_name": editReceiver_first_name.text,
-                                "receiver_last_name": editReceiver_last_name.text,
-                                "receiver_email": editReceiver_email.text != null?editReceiver_email.text:'non renseigné',
-                                "receiver_phone": editReceiver_phone.text,
-                                "receiver_country": _mySelectionCountry,
-                                "receiver_description": editReceiver_description.text,
-                                //transaction
-                                "montant_send": _montant_send,
-                                "montant_receive": _montant_receive,
-                                "transac_commission": _transac_commission.toStringAsFixed(2),
-                                "transac_total": _stripeAmount,
-                                "devise_receive": _devise_receive,
-                                "devise_sender": _currencySend,
-                                "point_retrait": _mySelectionPointRetrait,
-                                "transac_num": _transac_num,
-                                "is_company": editReceiver_Is_company,
-                                "selectedCountryCode":_selectedCountryCode
-                              }
-                            ]));
+                        key: "transactionBackend",
+                        value: json.encode([
+                        {
+                        "user_id": user_id,
+                        //sender
+                        "first_name": first_name,
+                        "last_name": last_name,
+                        "country": country,
+                        "phone": phone,
+                        "email": email,
+                        "receiver_company":saveReceiver_raisonEntreprise.text,
+                        "receiver_siteweb": saveReceiver_sitewebEntreprise.text,
+                        //receiver
+                        "receiver_first_name": editReceiver_first_name.text,
+                        "receiver_last_name": editReceiver_last_name.text,
+                        "receiver_email": editReceiver_email.text != null?editReceiver_email.text:'non renseigné',
+                        "receiver_phone": editReceiver_phone.text,
+                        "receiver_country": _mySelectionCountry,
+                        "receiver_description": editReceiver_description.text,
+                        //transaction
+                        "montant_send": _montant_send,
+                        "montant_receive": _montant_receive,
+                        "transac_commission": _transac_commission.toStringAsFixed(2),
+                        "transac_total": _stripeAmount,
+                        "devise_receive": _devise_receive,
+                        "devise_sender": _currencySend,
+                        "point_retrait": _mySelectionPointRetrait,
+                        "transac_num": _transac_num,
+                        "is_company": editReceiver_Is_company,
+                        "selectedCountryCode":_selectedCountryCode
+                        }
+                        ]));
 
                         storage.write(
-                            key: "transaction",
-                            value: json.encode([
-                              {
-                                "montant_send": this._montant_send,
-                                "montant_receive": this._montant_receive,
-                                "transac_commission":_transac_commission.toStringAsFixed(2),
-                                "transac_total": _stripeAmount,
-                                "devise_send": _currencySend,
-                                "receiver_name": editReceiver_first_name.text,
-                                "receiver_last_name":editReceiver_last_name.text,
-                                "receiver_email": editReceiver_email.text,
-                                "devise_receive": _devise_receive,
-                                "point_retrait": _mySelectionPointRetrait,
-                              }
-                            ]));
+                        key: "transaction",
+                        value: json.encode([
+                        {
+                        "montant_send": this._montant_send,
+                        "montant_receive": this._montant_receive,
+                        "transac_commission":_transac_commission.toStringAsFixed(2),
+                        "transac_total": _stripeAmount,
+                        "devise_send": _currencySend,
+                        "receiver_name": editReceiver_first_name.text,
+                        "receiver_last_name":editReceiver_last_name.text,
+                        "receiver_email": editReceiver_email.text,
+                        "devise_receive": _devise_receive,
+                        "point_retrait": _mySelectionPointRetrait,
+                        }
+                        ]));
                         Navigator.of(context).pop();
                         Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  PaymentPage()),
-                          //   ModalRoute.withName('/')
+                        context,
+                        MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                        PaymentPage()),
+                        //   ModalRoute.withName('/')
                         );
+                        }
+
                       },
                       color: kPrimaryColor,
                       textColor: Colors.white,
@@ -1122,6 +1128,141 @@ class _HomePageState extends State<HomePage> {
                           borderRadius: BorderRadius.all(Radius.circular(
                         8,
                       ))),
+                    ),
+                  )
+                ],
+              ):Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    width: 120,
+                    child: RaisedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      color: Colors.grey.shade300,
+                      textColor: Colors.grey.shade600,
+                      child: Text(
+                        "Annuler",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(
+                            8,
+                          ))),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 16,
+                  ),
+                  Container(
+                    width: 120,
+                    child: RaisedButton(
+                      onPressed: () {
+                        if(
+                        _formKey2.currentState.validate()){
+                          print( {
+                            "receiver_company":saveReceiver_raisonEntreprise.text,
+                            "receiver_siteweb": saveReceiver_sitewebEntreprise.text,
+                            //receiver
+                            "receiver_first_name": editReceiver_first_name.text,
+                            "receiver_last_name": editReceiver_last_name.text,
+                            "receiver_email": editReceiver_email.text != null?editReceiver_email.text:'non renseigné',
+                            "receiver_phone": editReceiver_phone.text,
+                            "receiver_country": _mySelectionCountry,
+                            "receiver_description": editReceiver_description.text,
+                          });
+                          storage.write(
+                              key: "beneficiaireInfo",
+                              value: json.encode([
+                                {
+                                  "id": _beneficiaireID,
+                                  "receiver_first_name":
+                                  editReceiver_first_name.text,
+                                  "receiver_last_name":
+                                  editReceiver_last_name.text,
+                                  "receiver_email": editReceiver_email.text,
+                                  "receiver_phone": editReceiver_phone.text,
+                                  "receiver_country": editReceiver_country.text,
+                                  "receiver_description":
+                                  editReceiver_description.text,
+                                }
+                              ]));
+                          storage.write(
+                              key: "transactionBackend",
+                              value: json.encode([
+                                {
+                                  "user_id": user_id,
+                                  //sender
+                                  "first_name": first_name,
+                                  "last_name": last_name,
+                                  "country": country,
+                                  "phone": phone,
+                                  "email": email,
+                                  "receiver_company":saveReceiver_raisonEntreprise.text,
+                                  "receiver_siteweb": saveReceiver_sitewebEntreprise.text,
+                                  //receiver
+                                  "receiver_first_name": editReceiver_first_name.text,
+                                  "receiver_last_name": editReceiver_last_name.text,
+                                  "receiver_email": editReceiver_email.text != null?editReceiver_email.text:'non renseigné',
+                                  "receiver_phone": editReceiver_phone.text,
+                                  "receiver_country": _mySelectionCountry,
+                                  "receiver_description": editReceiver_description.text,
+                                  //transaction
+                                  "montant_send": _montant_send,
+                                  "montant_receive": _montant_receive,
+                                  "transac_commission": _transac_commission.toStringAsFixed(2),
+                                  "transac_total": _stripeAmount,
+                                  "devise_receive": _devise_receive,
+                                  "devise_sender": _currencySend,
+                                  "point_retrait": _mySelectionPointRetrait,
+                                  "transac_num": _transac_num,
+                                  "is_company": editReceiver_Is_company,
+                                  "selectedCountryCode":_selectedCountryCode
+                                }
+                              ]));
+
+                          storage.write(
+                              key: "transaction",
+                              value: json.encode([
+                                {
+                                  "montant_send": this._montant_send,
+                                  "montant_receive": this._montant_receive,
+                                  "transac_commission":_transac_commission.toStringAsFixed(2),
+                                  "transac_total": _stripeAmount,
+                                  "devise_send": _currencySend,
+                                  "receiver_name": editReceiver_first_name.text,
+                                  "receiver_last_name":editReceiver_last_name.text,
+                                  "receiver_email": editReceiver_email.text,
+                                  "devise_receive": _devise_receive,
+                                  "point_retrait": _mySelectionPointRetrait,
+                                }
+                              ]));
+                          Navigator.of(context).pop();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    PaymentPage()),
+                            //   ModalRoute.withName('/')
+                          );
+                        }
+
+                      },
+                      color: kPrimaryColor,
+                      textColor: Colors.white,
+                      child: Text(
+                        "Confirmer",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(
+                            8,
+                          ))),
                     ),
                   )
                 ],

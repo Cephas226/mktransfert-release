@@ -364,6 +364,7 @@ class _MainPageState extends State<PagePrincipale> {
   Widget build(BuildContext context) {
     double c_width = MediaQuery.of(context).size.width*0.75;
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: FutureBuilder(
         future: jwtOrEmpty,
         builder: (context, snapshot) {

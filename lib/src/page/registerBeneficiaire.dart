@@ -173,6 +173,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
   /*  key:
     myGlobals.scaffoldKey;*/
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: DefaultTabController(
         length: 2,
         child: Scaffold(
@@ -555,7 +556,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                               onSaved: (val) => setState(() => saveReceiver_phone.text = val),
                                               controller: saveReceiver_phone,
                                               validator: (value) {
-                                                if (value.isEmpty) {
+                                                if (value.isEmpty||value.length<9) {
                                                   return 'Veuillez entre un numero valide';
                                                 }
                                                 else {
@@ -1216,8 +1217,8 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                               onSaved: (val) => setState(() => saveReceiver_phoneEntreprise.text = val),
                                               controller: saveReceiver_phoneEntreprise,
                                               validator: (value) {
-                                                if (value.isEmpty) {
-                                                  return 'Veuillez entrer un telephone';
+                                                if (value.isEmpty||value.length<9) {
+                                                  return 'Veuillez entrer un numero valide';
                                                 }
                                                 else {
                                                   return null;

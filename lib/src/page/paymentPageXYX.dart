@@ -112,7 +112,7 @@ class PaymentSuccessDialog extends StatelessWidget {
               children: <Widget>[
                 CircleAvatar(
                   radius: 50,
-                  backgroundColor: Colors.green,
+                f  backgroundColor: Colors.green,
                   child: Icon(Icons.check_circle,size: 90,color: Colors.white,),
                 ),
                 SizedBox(height: 5.0),
@@ -286,6 +286,7 @@ class PaymentSuccessDialog extends StatelessWidget {
     return new WillPopScope(
         onWillPop: _onBackPressed,
         child: MaterialApp(
+          debugShowCheckedModeBanner: false,
           home: Scaffold(
             appBar: AppBar(
               backgroundColor: kPrimaryColor,
