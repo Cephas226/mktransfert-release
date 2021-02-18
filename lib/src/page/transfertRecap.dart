@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mktransfert/src/contant/constant.dart';
 import 'package:mktransfert/src/page/paymentPageXYX.dart';
@@ -17,7 +18,7 @@ import 'items/help_page.dart';
 import 'items/stats_page.dart';
 import 'loginPage.dart';
 import 'operations/beneficiaireOperations.dart';
-
+final storage = FlutterSecureStorage();
 class ExpenseTrackerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -43,7 +44,7 @@ Future<AlertDialog> showAlertDialogPointRetrait(BuildContext context) {
           child: Form(
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: <Widget>[Text(' Montant Reçu en dévise locale')],
+              children: <Widget>[Text('Réception uniquement en francs guinéens pour ce point de retrait')],
             ),
           ),
         ),
@@ -455,7 +456,7 @@ class _HomePageState extends State<HomePage> {
                                                           decoration:
                                                               const InputDecoration(
                                                             hintText:
-                                                                "Entrez un prenom",
+                                                                "Entrez un prénom",
                                                             border:
                                                                 OutlineInputBorder(),
                                                           ),
@@ -949,7 +950,7 @@ class _HomePageState extends State<HomePage> {
                                                             editReceiver_last_name,
                                                             decoration: const InputDecoration(
                                                                 hintText:
-                                                                    "Entrer un prenom",
+                                                                    "Entrer un prénom",
                                                                 border:
                                                                     OutlineInputBorder())),
                                                         ),
@@ -1409,7 +1410,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             ListTile(
                               title: Text(
-                                'Commission',
+                                'dont la commission',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white),

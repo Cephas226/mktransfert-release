@@ -4,6 +4,7 @@ import 'dart:ffi';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:minimize_app/minimize_app.dart';
 import 'package:mktransfert/src/contant/constant.dart';
 import 'package:mktransfert/src/page/navigation.dart';
@@ -18,7 +19,7 @@ import '../../recipients_provider.dart';
 import 'AccueilBottomBar.dart';
 import 'accueil.dart';
 import 'transfertRecap.dart';
-
+final storage = FlutterSecureStorage();
 class PaymentsScreen extends StatefulWidget {
   @override
   _PaymentsScreenState createState() => _PaymentsScreenState();

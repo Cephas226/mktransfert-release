@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:animated_dialog_box/animated_dialog_box.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:fancy_alert_dialog/fancy_alert_dialog.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:international_phone_input/international_phone_input.dart';
 import 'package:mktransfert/src/contant/constant.dart';
@@ -18,7 +18,7 @@ import 'chooseBeneficiaire.dart';
 import 'loginPage.dart';
 import 'mesclasses/beneficiaireClasses.dart';
 import 'operations/beneficiaireOperations.dart';
-
+final storage = FlutterSecureStorage();
 List countrydata = List();
 //MyGlobals myGlobals = MyGlobals();
 
@@ -376,7 +376,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
                                         new Text(
-                                          'Entrez un prenom*',
+                                          'Entrez un prénom*',
                                           style: TextStyle(
                                               fontSize: 16.0,
                                               fontWeight:
@@ -397,7 +397,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                         child: TextFormField(
                                           validator: (value) {
                                             if (value.isEmpty) {
-                                              return 'Veuillez saisir un prenom';
+                                              return 'Veuillez saisir un prénom';
                                             }
                                             return null;
                                           },
@@ -409,7 +409,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                                    ,
                                           decoration:
                                           const InputDecoration(
-                                            hintText: "Entrez un prenom",
+                                            hintText: "Entrez un prénom",
                                             border: OutlineInputBorder(),
                                           ),
                                         )),
@@ -1007,7 +1007,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
                                         new Text(
-                                          'Prenom du contact*',
+                                          'Prénom du contact*',
                                           style: TextStyle(
                                               fontSize: 16.0,
                                               fontWeight:
@@ -1028,7 +1028,7 @@ class RegisterBeneficiairePageState extends State<RegisterBeneficiairePage> {
                                         child: TextFormField(
                                           validator: (value) {
                                             if (value.isEmpty) {
-                                              return 'Veuillez entre un prenom';
+                                              return 'Veuillez entre un prénom';
                                             }
                                             else {
                                               return null;

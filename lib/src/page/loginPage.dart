@@ -5,6 +5,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+//import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mktransfert/core/presentation/res/assets.dart';
 import 'package:mktransfert/src/contant/constant.dart';
@@ -39,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-   checkLoginStatus();
+   //checkLoginStatus();
     formVisible = false;
     _formsIndex = 1;
   }
@@ -67,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomPadding: true,
+        //resizeToAvoidBottomPadding: true,
          body: Container(
            decoration: BoxDecoration(
              image: DecorationImage(
@@ -323,8 +324,6 @@ class _LoginState extends State<LoginForm> {
     print(response.statusCode);*/
     return response.body;
   }
-
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -341,8 +340,8 @@ class _LoginState extends State<LoginForm> {
             children: <Widget>[
               TextFormField(
                 controller: _usernameController,
-                onSaved: (val) => setState(() => _user.email = val),
-                validator: (value) => EmailValidator.validate(value) ? null : "Veuillez saisir un e-mail valide",
+                onSaved: (val) => setState(() => _user.email = val.trim()),
+                validator: (value) => EmailValidator.validate(value.trim()) ? null : "Veuillez saisir un e-mail valide",
                 decoration: InputDecoration(
                   hintText: "Entrer un email",
                   border: OutlineInputBorder(),
@@ -391,21 +390,23 @@ class _LoginState extends State<LoginForm> {
                     var jwt = await logMe(username, password);
                     if (_formKey.currentState.validate()) {
                   Map<String, dynamic> responseJwtLogin = json.decode(jwt);
-                    if (responseJwtLogin['message']=='invalide50'){
+                  print(responseJwtLogin["message"]);
+                    if (responseJwtLogin['message']=='invalide'){
                       _onAlertLogin(context);
                     }
-                    else{
+                    if (responseJwtLogin["message"]=="Vous n\'avez pas confirmé votre inscription par mail"){
+                      _onAlertMailCheck(context);
+                    }
+                     if (responseJwtLogin['message']!='invalide'){
                       storage.write(key: "jwt", value: jwt);
                       storage.write(key: "userInfo", value: jwtUser);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => PagePrincipale())
-                      );
+                              builder: (context) => PagePrincipale()));
                     }
                   }
                 },
-
                 /*  _user.email == "" || _user.password == ""
                     ? null
                     : () async {
@@ -499,6 +500,42 @@ class _SignupFormState extends State<SignupPage> {
       );
     }
     return items;
+  }
+  showAlertDialogSuccess(BuildContext context) {  // set up the button
+    return showDialog<AlertDialog>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Container(
+            margin: EdgeInsets.all(8.0),
+            child: Form(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                      'Merci pour votre inscription.Merci de'
+                          +' confirmer en cliquant sur le lien envoyé par mail '
+                  )
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              LoginPage())
+                  );
+                },
+                child: Text("Ok")),
+          ],
+        );
+      },
+    );
   }
 
   List<ListItem> _dropdownItems = [
@@ -650,7 +687,7 @@ class _SignupFormState extends State<SignupPage> {
                               if (value.isEmpty)
                                 return 'Veuillez confirmer votre mot de passe';
                               if(value != _pass.text)
-                                return 'mot de passe incorrecte';
+                                return 'Mot de passe incorrect';
                               return null;
                             },
                             decoration: InputDecoration(
@@ -691,12 +728,7 @@ class _SignupFormState extends State<SignupPage> {
                                       _user.password,
                                     );
                                     if (res == 200) {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  LoginPage())
-                                      );
+                                      this.showAlertDialogSuccess(context);
                                       _showDialog(context);
                                       /* displayDialog(context, "Success",
                                         "The user was created. Log in now.");*/
@@ -802,7 +834,23 @@ _onAlertLogin(context) {
       animType: AnimType.TOPSLIDE,
       title: 'Erreur',
       desc:
-      'Le mot de passe ou le mail est incorrect',
+      'Le mot de passe ou le mail est incorrect'
+          + ' ou adresse mail non activé'
+      ,
+      btnCancelOnPress: () {},
+      btnOkOnPress: () {})
+    ..show();
+}
+
+_onAlertMailCheck(context) {
+  AwesomeDialog(
+      context: context,
+      dialogType: DialogType.ERROR,
+      headerAnimationLoop: false,
+      animType: AnimType.TOPSLIDE,
+      title: 'Erreur',
+      desc:
+      'Vous n\'avez pas confirmé votre inscription par mail',
       btnCancelOnPress: () {},
       btnOkOnPress: () {})
     ..show();

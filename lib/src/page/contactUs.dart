@@ -373,15 +373,18 @@ import 'dart:convert';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mktransfert/src/contant/constant.dart';
 import 'package:mktransfert/src/page/AccueilBottomBar.dart';
 import 'package:http/http.dart' as http;
 
 import 'loginPage.dart';
+import 'mesclasses/user.model.dart';
 
 final _bodyController = TextEditingController(
   text: 'Votre message',
 );
+final storage = FlutterSecureStorage();
 final _nom = TextEditingController();
 final _prenom = TextEditingController();
 final _email = TextEditingController();
@@ -438,12 +441,12 @@ class ContactUsPage extends StatelessWidget {
                                     horizontal: 12, vertical: 4),
                                 leading: Icon(Icons.my_location),
                                 title: Text("Siège Social"),
-                                subtitle: Text("61, Square Anatole France, 77350 Le Mée-Sur-Seine"),
+                                subtitle: Text("Adresse : 61 Square Anatole France, 77350 Le Mée-Sur-Seine, France"),
                               ),
                               ListTile(
                                 leading: Icon(Icons.email),
                                 title: Text("Addresse Email"),
-                                subtitle: Text("mktransfert20@gmail.com"),
+                                subtitle: Text("contact@mktransfert.com"),
                               ),
                               ListTile(
                                 leading: Icon(Icons.phone),
@@ -452,8 +455,8 @@ class ContactUsPage extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Text("0661217174"),
-                                    Text("0033661217174"),
+                                    Text("+33 760 562 143"),
+                                    Text("+33 661 217 174"),
                                   ],
                                 ),
                               ),

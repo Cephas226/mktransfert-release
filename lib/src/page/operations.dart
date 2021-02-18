@@ -2,14 +2,16 @@ import 'dart:convert';
 
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mktransfert/core/presentation/widget/customClipper.dart';
 import 'package:http/http.dart' as http;
 import 'package:mktransfert/src/contant/constant.dart';
 import 'AccueilBottomBar.dart';
 import 'loginPage.dart';
+import 'mesclasses/user.model.dart';
 import 'operations/beneficiaireOperations.dart';
-
+final storage = FlutterSecureStorage();
 List<Operations> operation = [];
 
 

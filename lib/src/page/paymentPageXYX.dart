@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:minimize_app/minimize_app.dart';
 import 'package:mktransfert/core/presentation/res/assets.dart';
@@ -56,7 +57,7 @@ int _montant_send;
 double _montant_receive;
 String _transac_commission;
 List<String> details = <String>[];
-
+final storage = FlutterSecureStorage();
 class PaymentPage extends StatefulWidget {
   PaymentPage({Key key}) : super(key: key);
 
@@ -616,9 +617,9 @@ class HomePageState extends State<PaymentPage> {
         details.add(
           "Nom:" + element["receiver_last_name"],
         );
-        details.add("Prenom:" + element["receiver_first_name"]);
+        details.add("Prénom:" + element["receiver_first_name"]);
         details.add(
-          "Telephone:" +element["selectedCountryCode"]+ element["receiver_phone"],
+          "Téléphone:" +element["selectedCountryCode"]+ element["receiver_phone"],
         );
         details.add(
           "Montant à recevoir:" +
@@ -643,8 +644,8 @@ class HomePageState extends State<PaymentPage> {
           "Raison socaile:" + element["receiver_company"],
         );
         details.add("Nom du répresentant:" + element["receiver_first_name"]);
-        details.add("Prenom du répresentant:" + element["receiver_last_name"]);
-        details.add("Telephone:" +element["selectedCountryCode"]+ element["receiver_phone"]);
+        details.add("Prénom du répresentant:" + element["receiver_last_name"]);
+        details.add("Téléphone:" +element["selectedCountryCode"]+ element["receiver_phone"]);
         details.add("Montant à recevoir:" + element["montant_receive"].toString() +
             ' ' +( element["devise_sender"]=='eur'?'Euros':element["devise_receive"].toString().toUpperCase()),
         );

@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:direct_select/direct_select.dart';
-import 'package:fancy_alert_dialog/fancy_alert_dialog.dart';
+//import 'package:fancy_alert_dialog/fancy_alert_dialog.dart';
 //import 'package:fancy_dialog/fancy_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:mktransfert/src/contant/constant.dart';
 import 'package:mktransfert/src/page/mesclasses/beneficiaireClasses.dart';
@@ -65,6 +66,7 @@ class _TransactionState extends State<TransactionPage> {
   List data = List();
   var testCountry = List();
   List countrydata = List();
+  final storage = FlutterSecureStorage();
   Future<List<dynamic>> getSWData() async {
     var jwt = await storage.read(key: "jwt");
     Map<String, dynamic> responseJson = json.decode(jwt);
@@ -911,7 +913,7 @@ class _TransactionState extends State<TransactionPage> {
                           child: Text("Effectuer un transfert"),
                           onPressed: () {
                             if (fromTextControllerSender.text.isEmpty) {
-                              FancyAlertDialog.showFancyAlertDialog(
+                            /*  FancyAlertDialog.showFancyAlertDialog(
                                 context,
                                 'Alerte',
                                 'Veillez remplir le montant',
@@ -929,9 +931,9 @@ class _TransactionState extends State<TransactionPage> {
                                   Navigator.pop(context);
                                   print('tap negative button');
                                 },
-                              );
+                              );*/
                             } else {
-                              FancyAlertDialog.showFancyAlertDialog(
+                             /* FancyAlertDialog.showFancyAlertDialog(
                                 context,
                                 'Confirmation',
                                 'Le montant a envoyé est de' +
@@ -989,7 +991,7 @@ class _TransactionState extends State<TransactionPage> {
                                   Navigator.pop(context);
                                   print('tap negative button');
                                 },
-                              );
+                              );*/
                             }
                           },
                         ),

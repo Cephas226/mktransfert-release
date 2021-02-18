@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:direct_select/direct_select.dart';
-import 'package:fancy_alert_dialog/fancy_alert_dialog.dart';
-//import 'package:fancy_dialog/fancy_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -809,76 +807,6 @@ class _MainPageState extends State<PagePrincipale> {
                                   Text('En cliquant sur Continuer, j\'accepte les CGU',
                                       style: TextStyle(color:Colors.blue)
                                   ),
-                                // ,
-                                  /* SizedBox(
-                      width: 360,
-                      height: 50.0,
-                      child: RaisedButton(
-                        color: Colors.blue,
-                        textColor: Colors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        child: ListTile(
-                          title: Text(("Effectuer un transfert"),style: TextStyle(color:Colors.white)),
-                          trailing: Icon(
-                            Icons.arrow_forward,
-                            color: Colors.white,
-                          ),
-                        ),
-                        onPressed: () {
-                          if(fromTextController.text.isEmpty){
-                            FancyAlertDialog.showFancyAlertDialog(
-                              context,
-                              'Alerte',
-                              'Veillez remplir le montant',
-                              Colors.blue,
-                              icon: Icon(
-                                Icons.warning,
-                                color: Colors.white,
-                              ),
-                              labelPositiveButton: 'Ok',
-                              onTapPositiveButton: () {
-                                Navigator.pop(context);
-                              },
-                              labelNegativeButton: '',
-                              onTapNegativeButton: () {
-                                Navigator.pop(context);
-                                print('tap negative button');
-                              },
-                            );
-                          }
-                          else{
-                            FancyAlertDialog.showFancyAlertDialog(
-                              context,
-                              'Confirmation',
-                              'Le montant a envoyé est de'+fromTextController.text
-                                  +'.Le montant à recevoir est de' + (double.parse(result) + 12).toStringAsFixed(2)
-                                  +'.Le montant de la commission est de' + 12.toString()
-                                  +'.Le montant total est de ' + (double.parse(fromTextController.text) + 12).toStringAsFixed(2),
-                              Colors.blue,
-                              icon: Icon(
-                                Icons.clear,
-                                color: Colors.white,
-                              ),
-                              labelPositiveButton: 'OK',
-                              onTapPositiveButton: () {
-                                Navigator.pop(context);
-                                // Navigator.pop(context);
-                                Navigator.push(context, MaterialPageRoute(builder: (context) =>TransactionPage()),);
-                              },
-                              labelNegativeButton: 'Annulez',
-                              onTapNegativeButton: () {
-                                Navigator.pop(context);
-                                print('tap negative button');
-                              },
-                            );
-                          }
-                          //  Navigator.push(context, MaterialPageRoute(builder: (context) =>BeneficiairePage()),);
-                        },
-                      ),
-                    ),*/
                                 ],
                               ),
                             ],

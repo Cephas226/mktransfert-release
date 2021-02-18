@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:mktransfert/core/presentation/widget/rounded_bordered_container.dart';
@@ -8,9 +9,11 @@ import 'package:mktransfert/src/page/transaction.dart';
 
 import 'chooseBeneficiaire.dart';
 import 'loginPage.dart';
+import 'mesclasses/user.model.dart';
 import 'navigation.dart';
 import 'operations/beneficiaireOperations.dart';
 List transactionDetails = List();
+final storage = FlutterSecureStorage();
 Future<List<dynamic>> fetchMyBeneficiaire() async {
   var jwt = await storage.read(key: "jwt");
   Map<String, dynamic> responseJson = json.decode(jwt);

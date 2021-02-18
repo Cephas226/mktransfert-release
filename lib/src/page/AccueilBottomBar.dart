@@ -1,23 +1,18 @@
 import 'dart:convert';
-
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
-import 'package:fancy_alert_dialog/fancy_alert_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:mktransfert/src/contant/constant.dart';
 import 'package:mktransfert/src/page/operations.dart';
 
-import 'package:mktransfert/src/page/transaction.dart';
 import 'package:mktransfert/src/page/user.dart';
 import 'package:mktransfert/src/utils/oval-right-clipper.dart';
 
-import 'accueil.dart';
 import 'beneficiaireScreen.dart';
 import 'contactUs.dart';
-import 'cooly.dart';
-import 'items/help_page.dart';
-import 'items/stats_page.dart';
 import 'loginPage.dart';
+import 'mesclasses/user.model.dart';
 
 
 /*class ExpenseTrackerApp extends StatelessWidget {
@@ -47,6 +42,7 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
   double amount = 10;
   int currentTabSelected = 0;
   int currentIndex = 0;
+  final storage = FlutterSecureStorage();
   @override
   void initState() {
     super.initState();
@@ -94,6 +90,7 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
       ),
     );
   }
+
   _buildDrawer() {
     // this.displayUserInfo();
     return ClipPath(
@@ -116,27 +113,7 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
                         color: active,
                       ),
                       onPressed: () {
-                        FancyAlertDialog.showFancyAlertDialog(
-                          context,
-                          'Confirmation',
-                          'Voulez vous vous déconnectez ?',
-                          kPrimaryColor,
-                          icon: Icon(
-                            Icons.clear,
-                            color: Colors.white,
-                          ),
-                          labelPositiveButton: 'OK',
-                          onTapPositiveButton: () {
-                            storage.delete(key: "jwt");
-                            Navigator.pop(context);
-                            checkLoginStatus();
-                          },
-                          labelNegativeButton: 'Annulez',
-                          onTapNegativeButton: () {
-                            Navigator.pop(context);
-                            print('tap negative button');
-                          },
-                        );
+                        print("hello");
                       },
                     ),
                   ),
@@ -275,7 +252,44 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
       )*/;
     return jwt;
   }
+  showAlertDialogSuccess(BuildContext context) {  // set up the button
+    return showDialog<AlertDialog>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Container(
+            margin: EdgeInsets.all(8.0),
+            child: Form(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                      'Voulez vraiment quitter ?'
+                  )
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  print('tap negative button');
+                },
+                child: Text("Annulez")),
+            FlatButton(
+                onPressed: () {
+                  storage.delete(key: "jwt");
+                  Navigator.pop(context);
+                  checkLoginStatus();
+                },
+                child: Text("Ok")),
 
+          ],
+        );
+      },
+    );
+  }
   Widget _buildBottomBar() {
 
     return
@@ -283,27 +297,7 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
         backgroundColor: Colors.grey[100],
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            FancyAlertDialog.showFancyAlertDialog(
-              context,
-              'Confirmation',
-              'Voulez vous vous déconnectez ?',
-              kPrimaryColor,
-              icon: Icon(
-                Icons.clear,
-                color: Colors.white,
-              ),
-              labelPositiveButton: 'OK',
-              onTapPositiveButton: () {
-                storage.delete(key: "jwt");
-                Navigator.pop(context);
-                checkLoginStatus();
-              },
-              labelNegativeButton: 'Annulez',
-              onTapNegativeButton: () {
-                Navigator.pop(context);
-                print('tap negative button');
-              },
-            );
+           showAlertDialogSuccess(context);
           },
           child: Icon(Icons.power_settings_new),
           backgroundColor: Colors.red,
@@ -382,3 +376,4 @@ class _ExpenseTrackerState extends State<AccueilBootomBarPage> {
   }
 
 }
+
