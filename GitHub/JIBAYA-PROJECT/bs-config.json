@@ -1,9 +1,0 @@
-{
-    "port": 3001,
-    " serveur " : {
-      " baseDir " : "dist" ,
-      " itinéraires " : {
-        " / node_modules " : " node_modules "
-      }
-    }
-  }

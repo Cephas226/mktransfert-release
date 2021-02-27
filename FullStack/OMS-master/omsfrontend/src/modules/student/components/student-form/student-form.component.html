@@ -1,0 +1,521 @@
+
+  <div class="row" *ngIf="id">
+    <div class="col-sm-2">
+      <div class="card bg-light">
+        <strong class="card-header bg-dark">
+
+          <div style="color: white" *ngIf='selectedStudent.code'>
+           Code : {{selectedStudent.code}}
+          </div>
+        </strong>
+        <div class="card-body">
+          <div class="card">
+            <img src="/assets/avatar/avatar-3.png" alt="employee-logo" class="img-thumbnail">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-10">
+      <div class="card bg-light">
+        <strong class="card-header bg-dark">
+          <div style="color: white">
+            <i class="fa fa-user-circle-o" aria-hidden="true"></i>  {{selectedStudent.firstName}} {{selectedStudent.lastName}}
+          </div>
+        </strong>
+        <div class="card-body">
+          <!-- <form [formGroup]="editStudentForm" (validSubmit)="onSubmit()">
+            <pre>
+              {{editStudentForm.value|json}}
+             </pre>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="firstname">First name</label>
+                <input type="text" class="form-control" id="firstname"
+                       formControlName="firstName"
+                       placeholder="First name">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="lastname">Last name</label>
+                <input type="text" class="form-control" id="lastname"
+                       formControlName="lastName"
+                       placeholder="Last name">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="email">Email</label>
+                <input type="email" class="form-control"
+                       formControlName="email"
+                       id="email" placeholder="Email">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="phone1">Phone</label>
+                <input class="form-control" type="tel"
+                       formControlName="phone1"
+                       value="(+212)639607953" id="phone1">
+              </div>
+            </div>
+            <div class="form-row">
+
+              <div class="form-group col-md-6">
+                <label for="course">Course</label>
+                <input class="form-control" type="text"
+                       formControlName="course"
+                       value="" id="course">
+              </div>
+              <div class="form-group col-md-3">
+                <label for="gender">Sex</label>
+                <select class="custom-select" (change)="changeGender($event)" id ="gender" formControlName="gender">
+                  <option value="M">M</option>
+                  <option value="F">F</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="cityOfResidence">Residence</label>
+                <input type="text" class="form-control"
+                       formControlName="cityOfResidence"
+                       id="cityOfResidence" placeholder="Casablanca">
+              </div>
+              <div class="form-group col-md-3">
+                <label for="inscriptionDateAtGA">Inscription date</label>
+                <input type="date" class="form-control"
+                       formControlName="inscriptionDateAtGA"
+                       id="inscriptionDateAtGA" placeholder="23/01/2021">
+              </div>
+              <div class="form-group col-md-3">
+                <label for="Bithdaydate">Bithday date</label>
+                <input type="date" class="form-control"
+                       formControlName="Bithdaydate"
+                       id="Bithdaydate" placeholder="23/01/2021">
+              </div>
+            </div>
+            <div class="float-right">
+              <button type="submit" class="btn btn-danger mr-1" routerLink="/students">Annuler</button>
+              <button type="button" class="btn btn-dark mr-1" (click)="onSubmit()">Enregistrer</button>
+            </div>
+          </form> -->
+
+          <form [formGroup]="editStudentForm" (validSubmit)="onSubmit()">    
+            <pre>
+              {{createStudentForm.value|json}}
+             </pre>  
+            <div class="form-row">
+              <div class="form-group col-md-2">
+                <label for="code">Code</label>
+                <input type="text" class="form-control" id="code"
+                       formControlName="code"
+                       placeholder="GAL001">
+              </div>
+              <div class="form-group col-md-4">
+                <label for="firstname">First name</label>
+                <input type="text" class="form-control" id="firstname"
+                       formControlName="firstName"
+                       placeholder="John">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="lastname">Last name</label>
+                <input type="text" class="form-control" id="lastname"
+                       formControlName="lastName"
+                       placeholder="Doe">
+              </div>
+            </div>
+  
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="gender">Sex</label>
+                <select class="custom-select" (change)="changeGender($event)" id ="gender" formControlName="gender">
+                  <option value="M">M</option>
+                  <option value="F">F</option>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="phone">Phone</label>
+                <input class="form-control" type="tel"
+                       formControlName="phone" placeholder="(+212)639607953"
+                       value="(+212)639607953" id="phone">
+              </div>
+  
+             
+              
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="email">Email</label>
+                <input type="email" class="form-control"
+                       formControlName="email"
+                       id="email" placeholder="john@example.com">
+              </div>
+              <div class="form-group col-md-3">
+                <label for="Bithdaydate">Bithday date</label>
+                <input type="date" class="form-control"
+                       formControlName="Bithdaydate"
+                       id="Bithdaydate" placeholder="23/01/2021">
+              </div>
+              <div class="form-group col-md-3">
+                <label for="inscriptionDateAtGA">Inscription date</label>
+                <input type="date" class="form-control"
+                       formControlName="inscriptionDateAtGA"
+                       id="inscriptionDateAtGA" placeholder="23/01/2021">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="address">Address</label>
+                <input type="text" class="form-control"
+                       formControlName="address"
+                       id="address" placeholder="HEEC, Boulevard Abou Oubeida Al Jarah, Marrakech – Maroc">
+              </div>
+              <div class="form-group col-md-3">
+                <label for="cityOfResidence">City</label>
+                <input type="text" class="form-control"
+                       formControlName="cityOfResidence"
+                       id="cityOfResidence" placeholder="Casablanca">
+              </div>
+              <div class="form-group col-md-3">
+                <label for="country">Country</label>
+                <select class="custom-select" (change)="changeCountry($event)" id ="country" formControlName="country">
+                  <option value="Morocco">Morocco</option>
+                  <option value="Senegal">Senegal</option>
+                  <option value="Burkina">Burkina</option>
+                  <option value="Benin">Benin</option>
+                </select>
+              </div>
+               
+            </div>
+            <div class="form-row">
+              <!-- <div class="form-group col-md-6">
+                <label for="cityOfResidence">Certificate</label>
+                <input type="text" class="form-control"
+                       formControlName="cityOfResidence"
+                       id="cityOfResidence" placeholder="Casablanca">
+              </div> -->
+              <div class="form-group col-md-6">
+                <label for="nationnality ">Nationnality </label>
+                <input type="text" class="form-control"
+                       formControlName="nationnality"
+                       id="nationnality" placeholder="Marocain">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="level">Language level</label>
+                <select class="custom-select" (change)="changeLevel($event)" id ="level" formControlName="level">
+                  <option value="A 1">A 1</option>
+                  <option value="A 2">A 2</option>
+                  <option value="B 1 preparation">B 1 preparation</option>
+                  <option value="B 2 books">B 2 books</option>
+                  <option value="C 1">C 1</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+               <div class="form-group col-md-3">
+                <label for="course">Course</label>
+                <select class="custom-select" (change)="changeCourse($event)" id ="course" formControlName="course">
+                  <option value="A 1.1">A 1.1</option>
+                  <option value="A 1.2">A 1.2</option>
+                  <option value="A 1 preparation">A 1 preparation</option>
+                  <option value="A 1 book">A 1 book</option>
+                  <option value="B 1.1">B 1.1</option>
+                  <option value="B 1.2">B 1.2</option>
+                  <option value="B 1.3">B 1.3</option>
+                  <option value="B 1 preparation">B 1 preparation</option>
+                  <option value="B 1 books">B 1 books</option>
+                  <option value="B 2.1">B 2.1</option>
+                  <option value="B 2.2">B 2.2</option>
+                  <option value="B 2.3">B 2.3</option>
+                  <option value="B 2 preparation">B 2 preparation</option>
+                  <option value="C 1.1">C 1.1</option>
+                  <option value="C 1.2">C 1.2</option>
+                  <option value="C 1.3">C 1.3</option>
+                  <option value="C 1 preparation">C 1 preparation</option>
+                </select>
+              </div>
+              <div class="form-group col-md-3">
+                <label for="inscriptionDateAtGA">Books</label>
+                <select class="custom-select" (change)="changeBooks($event)" id ="books" formControlName="books">
+                  <option value="A 1 Arbeitsbuch">A 1 Arbeitsbuch</option>
+                  <option value="A 2 Kursbuch">A 2 Kursbuch</option>
+                  <option value="A 2 Arbeitsbuch">A 2 Arbeitsbuch</option>
+                  <option value="B 1 Kursbuch">B 1 Kursbuch</option>
+                  <option value="A 1 - B 1 Kursbuch">A 1 - B 1 Kursbuch</option>
+                  <option value="A 1 - B 1 Arbeitsbuch">A 1 - B 1 Arbeitsbuch</option>
+                  <option value="B 2 Kursbuch">B 2 Kursbuch</option>
+                  <option value="C 1 Kursbuch">C 1 Kursbuch</option>
+                  <option value="B 2 Kursbuch">B 2 Kursbuch</option>
+                  <option value="C 1 Arbeitsbuch">C 1 Arbeitsbuch</option>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="grade">Grade</label>
+                <select class="custom-select" (change)="changeGrade($event)" id ="grade" formControlName="grade">
+                  <option value="Bac">Bac</option>
+                  <option value="Bachelor">Bachelor</option>
+                  <option value="Master">Master</option>
+                  <option value="Doctorate">Doctorate</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="type">Type</label>
+                <select class="custom-select" (change)="changeType($event)" id ="type" formControlName="type">
+                  <option value="presentiel">Presentiel</option>
+                  <option value="virtuel">Virtuel</option>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="site">Site</label>
+                <select class="custom-select" (change)="changeSite($event)" id ="site" formControlName="site">
+                  <option value="casablanca">Casablanca</option>
+                  <option value="marrakech">Marrakech</option>
+                </select>
+              </div>
+            </div>
+            <div class="float-right">
+              <button type="button" class="btn btn-danger mr-1" routerLink="/students">Annuler</button>
+              <button type="submit" class="btn btn-dark mr-1" (click)="onSubmit()">Enregistrer</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+<div class="row" *ngIf="!id">
+  <div class="col-sm-2">
+    <div class="card bg-light">
+      <strong class="card-header bg-dark">
+        <div style="color: white">
+
+        </div>
+      </strong>
+      <div class="card-body">
+        <div class="card">
+          <img src="/assets/avatar/newuserAvatar.png" alt="employee-logo" class="img-thumbnail">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-10">
+    <div class="card bg-light">
+      <strong class="card-header bg-dark">
+        <div style="color: white">
+
+        </div>
+      </strong>
+      <div class="card-body">
+        <form [formGroup]="createStudentForm" (validSubmit)="onSubmit()">    
+         <!-- <pre>
+            {{createStudentForm.value|json}}
+           </pre>  -->
+          <div class="form-row">
+            <!-- <div class="form-group col-md-2">
+              <label for="code">Code</label>
+              <input type="text" class="form-control" id="code"
+                     formControlName="code"
+                     placeholder="GAL001">
+            </div> -->
+            <div class="form-group col-md-6">
+              <label for="firstname">First name</label>
+              <input type="text" class="form-control" id="firstname"
+                     formControlName="firstName"
+                     placeholder="John">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="lastname">Last name</label>
+              <input type="text" class="form-control" id="lastname"
+                     formControlName="lastName"
+                     placeholder="Doe">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="gender">Sex</label>
+              <select class="custom-select" (change)="changeGender($event)" id ="gender" formControlName="gender">
+                <option value="M">M</option>
+                <option value="F">F</option>
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="phone">Phone</label>
+              <input class="form-control" type="tel"
+                     formControlName="phone" placeholder="(+212)639607953"
+                     value="(+212)639607953" id="phone">
+            </div>
+
+           
+            
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-3">
+              <label for="email">Email</label>
+              <input type="email" class="form-control"
+                     formControlName="email"
+                     id="email" placeholder="john@example.com">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="status">Status</label>
+              <select class="custom-select" (change)="changeStatus($event)" id ="status" formControlName="status">
+                <option value="paid">Paid</option>
+                <option value="notpaid">Not paid</option>
+              </select>
+              </div>
+            <div class="form-group col-md-3">
+              <label for="Bithdaydate">Bithday date</label>
+              <input type="date" class="form-control"
+                     formControlName="Bithdaydate"
+                     id="Bithdaydate" placeholder="23/01/2021">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="inscriptionDateAtGA">Inscription date</label>
+              <input type="date" class="form-control"
+                     formControlName="inscriptionDateAtGA"
+                     id="inscriptionDateAtGA" placeholder="23/01/2021">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="address">Address</label>
+              <input type="text" class="form-control"
+                     formControlName="address"
+                     id="address" placeholder="HEEC, Boulevard Abou Oubeida Al Jarah, Marrakech – Maroc">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="cityOfResidence">City</label>
+              <input type="text" class="form-control"
+                     formControlName="cityOfResidence"
+                     id="cityOfResidence" placeholder="Casablanca">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="country">Country</label>
+              <select class="custom-select" (change)="changeCountry($event)" id ="country" formControlName="country">
+                <option value="Morocco">Morocco</option>
+                <option value="Senegal">Senegal</option>
+                <option value="Burkina">Burkina</option>
+                <option value="Benin">Benin</option>
+              </select>
+            </div>
+             
+          </div>
+          <div class="form-row">
+            <!-- <div class="form-group col-md-6">
+              <label for="cityOfResidence">Certificate</label>
+              <input type="text" class="form-control"
+                     formControlName="cityOfResidence"
+                     id="cityOfResidence" placeholder="Casablanca">
+            </div> -->
+            <div class="form-group col-md-6">
+              <label for="nationnality ">Nationnality </label>
+              <input type="text" class="form-control"
+                     formControlName="nationnality"
+                     id="nationnality" placeholder="Marocain">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="level">Language level</label>
+              <select class="custom-select" (change)="changeLevel($event)" id ="level" formControlName="level">
+                <option value="A 1">A 1</option>
+                <option value="A 2">A 2</option>
+                <option value="B 1">B 1</option>
+                <option value="B 2">B 2</option>
+                <option value="C 1">C 1</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+             <div class="form-group col-md-3">
+              <label for="course">Course</label>
+              <select multiple class="form-control"
+                      (change)="changeCourse($event)" id ="course" formControlName="course">
+                <option value="A 1.1">A 1.1</option>
+                <option value="A 1.2">A 1.2</option>
+                <option value="A 1 preparation">A 1 preparation</option>
+                <option value="B 1.1">B 1.1</option>
+                <option value="B 1.2">B 1.2</option>
+                <option value="B 1.3">B 1.3</option>
+                <option value="B 1 preparation">B 1 preparation</option>
+                <option value="B 2.1">B 2.1</option>
+                <option value="B 2.2">B 2.2</option>
+                <option value="B 2.3">B 2.3</option>
+                <option value="B 2 preparation">B 2 preparation</option>
+                <option value="C 1.1">C 1.1</option>
+                <option value="C 1.2">C 1.2</option>
+                <option value="C 1.3">C 1.3</option>
+                <option value="C 1 preparation">C 1 preparation</option>
+              </select>
+            </div>
+            <div class="form-group col-md-3">
+              <label for="inscriptionDateAtGA">Books</label>
+              <select class="custom-select"
+                      multiple class="form-control"
+                      (change)="changeBooks($event)" id ="books" formControlName="books">
+                <option value="A 1 Arbeitsbuch">A 1 Arbeitsbuch</option>
+                <option value="A 2 Kursbuch">A 2 Kursbuch</option>
+                <option value="A 2 Arbeitsbuch">A 2 Arbeitsbuch</option>
+                <option value="B 1 Kursbuch">B 1 Kursbuch</option>
+                <option value="A 1 - B 1 Kursbuch">A 1 - B 1 Kursbuch</option>
+                <option value="A 1 - B 1 Arbeitsbuch">A 1 - B 1 Arbeitsbuch</option>
+                <option value="B 2 Kursbuch">B 2 Kursbuch</option>
+                <option value="C 1 Kursbuch">C 1 Kursbuch</option>
+                <option value="B 2 Kursbuch">B 2 Kursbuch</option>
+                <option value="C 1 Arbeitsbuch">C 1 Arbeitsbuch</option>
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="grade">Grade</label>
+              <select class="custom-select" (change)="changeGrade($event)" id ="grade" formControlName="grade">
+                <option value="Bac">Bac</option>
+                <option value="Bachelor">Bachelor</option>
+                <option value="Master">Master</option>
+                <option value="Doctorate">Doctorate</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="type">Type</label>
+              <select class="custom-select" (change)="changeType($event)" id ="type" formControlName="type">
+                <option value="presentiel">Presentiel</option>
+                <option value="virtuel">Virtuel</option>
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="site">Site</label>
+              <select class="custom-select" (change)="changeSite($event)" id ="site" formControlName="site">
+                <option value="casablanca">Casablanca</option>
+                <option value="marrakech">Marrakech</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <ngx-dropzone (change)="onSelect($event)">
+                <ngx-dropzone-label>Drop certificat file here</ngx-dropzone-label>
+                <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+                  <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+                </ngx-dropzone-preview>
+              </ngx-dropzone>
+            </div>
+            <div class="form-group col-md-6">
+              <ngx-dropzone (change)="onSelect($event)">
+                <ngx-dropzone-label>Drop diploma file here</ngx-dropzone-label>
+                <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+                  <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+                </ngx-dropzone-preview>
+              </ngx-dropzone>
+            </div>
+          </div>
+          <div class="float-right">
+            <button type="button" class="btn btn-danger mr-1" routerLink="/students">Annuler</button>
+            <button type="submit" class="btn btn-dark mr-1" (click)="onSubmit()">Enregistrer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+

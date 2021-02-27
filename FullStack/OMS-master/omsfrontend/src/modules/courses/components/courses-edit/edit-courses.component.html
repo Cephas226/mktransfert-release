@@ -1,0 +1,364 @@
+
+  <div class="row" *ngIf="id">
+   <!-- <div class="col-sm-2">
+      <div class="card bg-light">
+        <strong class="card-header bg-dark">
+          <div style="color: white" *ngIf="selectedEmploy?.id">
+            <i class="fa fa-id-card-o" aria-hidden="true"></i>
+           Code : {{selectedEmploy.id}}
+          </div>
+        </strong>
+        <div class="card-body">
+          <div class="card">
+            <img src="/assets/avatar/avatar-3.png" alt="employee-logo" class="img-thumbnail">
+          </div>
+        </div>
+      </div>
+    </div>-->
+    <div class="col-sm-12">
+      <div class="card bg-light">
+        <strong class="card-header bg-dark">
+          <div style="color: white">
+            <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+            {{selectedEmploy?.firstName}} {{selectedEmploy?.lastName}}
+          </div>
+        </strong>
+        <div class="card-body">
+          <form [formGroup]="editCourseForm" (validSubmit)="onSubmit()">
+            <!-- <pre>
+              {{editCourseForm.value|json}}
+             </pre>-->
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="couresRoot">Course Root</label>
+                <input type="text" class="form-control" id="couresRoot"
+                       formControlName="couresRoot"
+                       placeholder="A 1">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="courseName">Course Name</label>
+                <input type="text" class="form-control" id="courseName"
+                       formControlName="coursesName"
+                       placeholder="A 1.1">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="frequency">Frequency</label>
+                <select class="custom-select" (change)="changeFrequency($event)" id ="frequency" formControlName="coursesFrequency">
+                  <option value="Daily">Daily</option>
+                  <option value="Mo/Di/Do">Mo/Di/Do</option>
+                </select>
+              </div>
+              <div class="form-group col-md-3">
+                <label for="startDate">Start date</label>
+                <input type="date" class="form-control"
+                       formControlName="startDate"
+                       id="startDate" placeholder="23/01/2021">
+              </div>
+              <div class="form-group col-md-3">
+                <label for="endDate">End date</label>
+                <input type="date" class="form-control"
+                       formControlName="endDate"
+                       id="endDate" placeholder="23/01/2021">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="totalUnit">Total Unit</label>
+                <input class="form-control" type="text"
+                       formControlName="coursesUnit" placeholder="Total Unit"
+                       value="" id="totalUnit">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="email">Course Type</label>
+                <select class="custom-select" (change)="changeType($event)" id ="gender" formControlName="coursesType">
+                  <option value="Intensif">Intensif</option>
+                  <option value="Cours du soir">Cours du soir</option>
+                  <option value="Preparation">Preparation</option>
+                </select>
+              </div>
+              <!-- <div class="form-group col-md-3">
+                 <label for="gender">Status</label>
+                 <select class="custom-select" (change)="changeStatus($event)" id ="status" formControlName="status">
+                   <option value="Employee">Employee</option>
+                   <option value="Intern">Intern</option>
+                   <option value="Freelancer">Freelancer</option>
+                 </select>
+               </div>
+               <div class="form-group col-md-3">
+                 <label for="jobRole">Job Role</label>
+                 <input class="form-control" type="text"
+                       formControlName="jobRole" placeholder="Software developper"
+                       value="" id="jobRole">
+               </div>
+               <div class="form-group col-md-3">
+                 <label for="department">Department</label>
+                 <select class="form-control" (change)="changeDepartment($event)" id ="department" formControlName="department">
+                   <option value="Admission">Admission</option>
+                   <option value="IT">IT</option>
+                   <option value="Teaching">Teaching</option>
+                   <option value="Leadership">Leadership</option>
+                   <option value="Sales & Marketing">Sales & Marketing</option>
+                 </select>
+               </div>
+               <div class="form-group col-md-2" *ngIf="showSuperAdminComp">
+                 <label for="roles">Role</label>
+                 <select class="custom-select" id ='roles'(change)="changeRole($event)" formControlName="roles">
+                   <option *ngFor="let role of eRole | keyvalue" [ngValue]="role.key">{{role.value}}</option>
+                 </select>
+               </div>
+               <div class="form-group col-md-2" *ngIf="showAdminComp">
+                 <label for="roles">Role</label>
+                 <select class="custom-select" (change)="changeRole($event)" id ="roles" formControlName="roles">
+                   <option value="Moderator">Moderator</option>
+                 </select>
+               </div>-->
+            </div>
+            <!-- <div class="card" class="form-row">
+               <div class="form-group col-md-6">
+                 <div class="card-header bg-dark">
+
+                   <span class="text-light">
+                     Historical
+                   </span>
+                   <span class="text-light float-right"  (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed">
+                     <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                    </span>
+                   </div>
+                   <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+                     <div class="card">
+                       <div class="card-body">
+                         <span class="text-light btn btn-dark mr-1 mb-3" (click)="addHistorical()">
+                           Add new info
+                         </span>
+
+                         <ng-container *ngIf="historicals.controls.length>0" formArrayName="historique" >
+                           <ng-template ngFor let-historical [ngForOf]="historicals.controls" let-i="index">
+                               <div class="card mb-3">
+                                   <div class="card-body" [formGroupName]="i">
+                                     <div class="form-row">
+                                       <div class="form-group col-md-4">
+                                         <input class="form-control" id="year" type="text" placeholder="Year"
+                                          formControlName="year" type="text">
+                                       </div>
+                                       <div class="form-group col-md-7">
+                                         <input class="form-control" id="entitled" type="text" placeholder="Entitled"
+                                          formControlName="entitled" type="text">
+                                       </div>
+                                       <div class="form-group col-md-1">
+                                         <span (click)="removeHistorical(i)">
+                                           <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                                         </span>
+                                       </div>
+                                     </div>
+                                   </div>
+                               </div>
+                           </ng-template>
+                       </ng-container>
+                       </div>
+                     </div>
+                   </div>
+
+                 </div>
+             </div>-->
+            <div class="form-row">
+
+              <div class="form-group col-md-6">
+                <label for="roles">Time</label>
+                <input class="form-control" id="time" type="text" placeholder="Time"
+                       formControlName="coursesTime" type="text">
+              </div>
+            </div>
+            <div class="float-right">
+              <button type="button" class="btn btn-danger mr-1" routerLink="/courses">Annuler</button>
+              <button type="submit" class="btn btn-dark mr-1">Enregistrer</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="!id">
+    <!--<div class="col-sm-2">
+      <div class="card bg-light">
+        <strong class="card-header bg-dark">
+          <div style="color: white">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+            Edit picture
+          </div>
+        </strong>
+        <div class="card-body">
+          <div class="card">
+            <img src="/assets/avatar/newuserAvatar.png" alt="employee-logo" class="img-thumbnail">
+          </div>
+        </div>
+      </div>
+    </div>-->
+    <div class="col-sm-12">
+      <div class="card bg-light">
+        <strong class="card-header bg-dark">
+          <div style="color: white">
+            <i class="fa fa-user-plus" aria-hidden="true"></i>
+            Create course
+          </div>
+        </strong>
+        <div class="card-body">
+          <form [formGroup]="createCourseForm" (validSubmit)="onSubmit()">
+            <!-- <pre>
+              {{createCourseForm.value|json}}
+             </pre>-->
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="couresRoot">Course Root</label>
+                <input type="text" class="form-control" id="couresRoot"
+                       formControlName="couresRoot"
+                       placeholder="A 1">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="courseName">Course Name</label>
+                <input type="text" class="form-control" id="courseName"
+                       formControlName="coursesName"
+                       placeholder="A 1.1">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="frequency">Frequency</label>
+                <select class="custom-select" (change)="changeFrequency($event)" id ="frequency" formControlName="coursesFrequency">
+                  <option value="Daily">Daily</option>
+                  <option value="Mo/Di/Do">Mo/Di/Do</option>
+                </select>
+              </div>
+              <div class="form-group col-md-3">
+                <label for="startDate">Start date</label>
+                <input type="date" class="form-control"
+                       formControlName="startDate"
+                       id="startDate" placeholder="23/01/2021">
+              </div>
+              <div class="form-group col-md-3">
+                <label for="endDate">End date</label>
+                <input type="date" class="form-control"
+                       formControlName="endDate"
+                       id="endDate" placeholder="23/01/2021">
+              </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="totalUnit">Total Unit</label>
+                  <input class="form-control" type="text"
+                         formControlName="coursesUnit" placeholder="Total Unit"
+                         value="" id="totalUnit">
+                </div>
+              <div class="form-group col-md-6">
+                <label for="email">Course Type</label>
+                <select class="custom-select" (change)="changeType($event)" id ="gender" formControlName="coursesType">
+                  <option value="Intensif">Intensif</option>
+                  <option value="Cours du soir">Cours du soir</option>
+                  <option value="Preparation">Preparation</option>
+                </select>
+              </div>
+               <!-- <div class="form-group col-md-3">
+                  <label for="gender">Status</label>
+                  <select class="custom-select" (change)="changeStatus($event)" id ="status" formControlName="status">
+                    <option value="Employee">Employee</option>
+                    <option value="Intern">Intern</option>
+                    <option value="Freelancer">Freelancer</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="jobRole">Job Role</label>
+                  <input class="form-control" type="text"
+                        formControlName="jobRole" placeholder="Software developper"
+                        value="" id="jobRole">
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="department">Department</label>
+                  <select class="form-control" (change)="changeDepartment($event)" id ="department" formControlName="department">
+                    <option value="Admission">Admission</option>
+                    <option value="IT">IT</option>
+                    <option value="Teaching">Teaching</option>
+                    <option value="Leadership">Leadership</option>
+                    <option value="Sales & Marketing">Sales & Marketing</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-2" *ngIf="showSuperAdminComp">
+                  <label for="roles">Role</label>
+                  <select class="custom-select" id ='roles'(change)="changeRole($event)" formControlName="roles">
+                    <option *ngFor="let role of eRole | keyvalue" [ngValue]="role.key">{{role.value}}</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-2" *ngIf="showAdminComp">
+                  <label for="roles">Role</label>
+                  <select class="custom-select" (change)="changeRole($event)" id ="roles" formControlName="roles">
+                    <option value="Moderator">Moderator</option>
+                  </select>
+                </div>-->
+            </div>
+           <!-- <div class="card" class="form-row">
+              <div class="form-group col-md-6">
+                <div class="card-header bg-dark">
+
+                  <span class="text-light">
+                    Historical
+                  </span>
+                  <span class="text-light float-right"  (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed">
+                    <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                   </span>
+                  </div>
+                  <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+                    <div class="card">
+                      <div class="card-body">
+                        <span class="text-light btn btn-dark mr-1 mb-3" (click)="addHistorical()">
+                          Add new info
+                        </span>
+
+                        <ng-container *ngIf="historicals.controls.length>0" formArrayName="historique" >
+                          <ng-template ngFor let-historical [ngForOf]="historicals.controls" let-i="index">
+                              <div class="card mb-3">
+                                  <div class="card-body" [formGroupName]="i">
+                                    <div class="form-row">
+                                      <div class="form-group col-md-4">
+                                        <input class="form-control" id="year" type="text" placeholder="Year"
+                                         formControlName="year" type="text">
+                                      </div>
+                                      <div class="form-group col-md-7">
+                                        <input class="form-control" id="entitled" type="text" placeholder="Entitled"
+                                         formControlName="entitled" type="text">
+                                      </div>
+                                      <div class="form-group col-md-1">
+                                        <span (click)="removeHistorical(i)">
+                                          <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                              </div>
+                          </ng-template>
+                      </ng-container>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+            </div>-->
+            <div class="form-row">
+
+          <div class="form-group col-md-6">
+            <label for="roles">Time</label>
+            <input class="form-control" id="time" type="text" placeholder="Time"
+                   formControlName="coursesTime" type="text">
+              </div>
+            </div>
+            <div class="float-right">
+              <button type="button" class="btn btn-danger mr-1" routerLink="/courses">Annuler</button>
+              <button type="submit" class="btn btn-dark mr-1">Enregistrer</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
