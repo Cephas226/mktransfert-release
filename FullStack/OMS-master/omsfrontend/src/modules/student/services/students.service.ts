@@ -81,7 +81,6 @@ export class StudentService {
   getAllStudents(){
     return this.http.get(environment.USERS_API.API_STUDENTS, { responseType: 'json' }).subscribe(
       (stud:any)=>{
-        console.log(stud.content)
         this._students$.next(stud.content);
         this._studentsExport$.next(stud.content)
         this._total$.next(stud.content.length)
@@ -106,15 +105,28 @@ export class StudentService {
   getSelectedStudent(id: string | null){
     return this.http.get(environment.USERS_API.API_STUDENTS +'/'+id, { responseType: 'json' });
   }
-  updateStudent(student:any,id: string | undefined){
+  updateStudent(student:any,id: number | null){
     return this.http.put(environment.USERS_API.API_STUDENTS +'/'+id,student, { responseType: 'json' }).subscribe(
       ()=> {this.getAllStudents(),this.router.navigateByUrl('/students')}
     );
   }
   createStudent(student:any){
-    return this.http.post(environment.USERS_API.API_STUDENTS ,student, { responseType: 'json' }).subscribe(
-      ()=> this.getAllStudents()
+    return this.http.post('http://localhost:8400/api/students' ,student, { responseType: 'json' })
+        .subscribe(
+      e=> {
+        console.log(e)
+        this.getAllStudents(),this.router.navigateByUrl('/students')
+      }
     );
+  }
+  createStudentParent(parent:any){
+    return this.http.post('http://localhost:8400/api/parents' ,parent, { responseType: 'json' })
+  }
+  updateStudentParent(parent:any,id: number | null){
+    return this.http.patch('http://localhost:8400/api/parents' +'/'+id,parent, { responseType: 'json' })
+  }
+  getStudentParent(parent:any){
+    return this.http.get('http://localhost:8400/api/parents', { responseType: 'json' });
   }
   deleteStudent(id: string | undefined){
     return this.http.delete(environment.USERS_API.API_STUDENTS +'/'+id, { responseType: 'json' }).subscribe(

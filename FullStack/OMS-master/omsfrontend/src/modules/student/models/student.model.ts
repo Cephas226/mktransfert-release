@@ -1,3 +1,5 @@
+import {Courses} from '@modules/employees/models';
+
 export interface Country {
     [key: string]: string | number;
     id: number;
@@ -8,23 +10,38 @@ export interface Country {
 }
 export interface Students {
 
-  id: number,
-  code:string,
-  firstName:string,
-  lastName:string,
-  gender:string,
-  email: string,
-  phone:string,
-  status:string,
-  inscriptionDateAtGA:string,
-  Bithdaydate:string,
-  cityOfResidence: string,
-  course:string,
-  parents: [
-    {
-      "firstName": string,
-      "lastName": string,
-      "gender": string,
-      "phone":string,
-    }]
+    id: number | null,
+    "code": string,
+    "lastName":string,
+    "firstName":string,
+    "gender": string,
+    "country": string,
+    "nationnality": string,
+    "site": string,
+    "grade": string,
+    "type": string,
+    "inscriptionDateAtGA": string,
+    "email": string,
+    "phone": string,
+    "address": string,
+    "level": string,
+    "books": string,
+    "cityOfResidence": string,
+    "status": boolean,
+    "courses": Courses,
+    "bithdaydate": string,
+    "parents":Parent
+}
+
+
+
+export interface Parent {
+
+    id: number | null,
+    "lastName":string,
+    "firstName":string,
+    "gender": string,
+    "email": string,
+    "phone": string,
+    "address": string,
 }

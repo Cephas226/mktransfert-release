@@ -158,29 +158,6 @@
                           </ng-template>
                         </ng-container>
                       </div>
-                      <!-- <ng-container  formArrayName="historique">
-                        <div *ngFor="let hist of historicals.controls; let i=index">
-                          <div class="card mb-3">
-                            <div class="card-body" [formGroupName]="i">
-                              <div class="form-row">
-                                <div class="form-group col-md-4">
-                                  <input class="form-control" id="year" type="text" placeholder="Year"
-                                         formControlName="year" type="text">
-                                </div>
-                                <div class="form-group col-md-7">
-                                  <input class="form-control" id="entitled" type="text" placeholder="Entitled"
-                                         formControlName="entitled" type="text">
-                                </div>
-                                <div class="form-group col-md-1">
-                                        <span (click)="removeHistorical(i)">
-                                          <i class="fa fa-minus-circle" aria-hidden="true"></i>
-                                        </span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </ng-container>-->
                     </div>
                   </div>
                 </div>
@@ -223,7 +200,6 @@
         </strong>
         <div class="card-body">
           <form [formGroup]="createEmployForm" (validSubmit)="onSubmit()">
-
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="lastname">Last name</label>

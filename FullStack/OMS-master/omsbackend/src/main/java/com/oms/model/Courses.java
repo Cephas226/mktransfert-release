@@ -1,7 +1,8 @@
 package com.oms.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -19,27 +20,23 @@ public class Courses {
     @Column (name = "coursesType")
     private String coursesType;
 
-    @Column (name = "startDate")
-    private String startDate;
-
-    @Column (name = "endDate")
-    private String endDate;
-
-    @Column (name = "coursesTime")
-    private String coursesTime;
-
-    @Column (name = "coursesFrequency")
-    private String coursesFrequency;
-
     @Column (name = "coursesUnit")
     private String coursesUnit;
 
+    @Column (name = "available")
+    private boolean available=true;
+
     @ManyToMany
-    @JoinTable(
-            name = "course_student",
-            joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id"))
+    @JsonIgnore
+    @JoinTable(name = "course_student",joinColumns = @JoinColumn(name = "student_id"),inverseJoinColumns = @JoinColumn(name = "course_id"))
     Set<Student> student;
+
+   /* @JsonIgnore
+    @OneToMany(mappedBy="courses")
+    private Set<PlannedCourse> plannedCourse;*/
+   @JsonIgnore
+    @OneToMany(mappedBy="courses")
+    private Set<PlannedCourse> plannedCourse;
 
     public Long getIdCourses() {
         return IdCourses;
@@ -72,39 +69,6 @@ public class Courses {
     public void setCoursesType(String coursesType) {
         this.coursesType = coursesType;
     }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
-
-    public String getCoursesTime() {
-        return coursesTime;
-    }
-
-    public void setCoursesTime(String coursesTime) {
-        this.coursesTime = coursesTime;
-    }
-
-    public String getCoursesFrequency() {
-        return coursesFrequency;
-    }
-
-    public void setCoursesFrequency(String coursesFrequency) {
-        this.coursesFrequency = coursesFrequency;
-    }
-
     public String getCoursesUnit() {
         return coursesUnit;
     }
@@ -121,19 +85,45 @@ public class Courses {
         this.student = student;
     }
 
-    public Courses(Long idCourses, String couresRoot, String coursesName, String coursesType, String startDate, String endDate, String coursesTime, String coursesFrequency, String coursesUnit, Set<Student> student) {
-        IdCourses = idCourses;
+    public Courses() {
+    }
+
+    public Set<PlannedCourse> getPlannedCourse() {
+        return plannedCourse;
+    }
+
+    public void setPlannedCourse(Set<PlannedCourse> plannedCourse) {
+        this.plannedCourse = plannedCourse;
+    }
+
+    public Courses(String couresRoot, String coursesName, String coursesType, String coursesUnit, boolean available, Set<Student> student, Set<PlannedCourse> plannedCourse) {
         this.couresRoot = couresRoot;
         this.coursesName = coursesName;
         this.coursesType = coursesType;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.coursesTime = coursesTime;
-        this.coursesFrequency = coursesFrequency;
         this.coursesUnit = coursesUnit;
+        this.available = available;
         this.student = student;
+        this.plannedCourse = plannedCourse;
     }
 
-    public Courses() {
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
+    @Override
+    public String toString() {
+        return "Courses{" +
+                "couresRoot='" + couresRoot + '\'' +
+                ", coursesName='" + coursesName + '\'' +
+                ", coursesType='" + coursesType + '\'' +
+                ", coursesUnit='" + coursesUnit + '\'' +
+                ", available=" + available +
+                ", student=" + student +
+                ", plannedCourse=" + plannedCourse +
+                '}';
     }
 }

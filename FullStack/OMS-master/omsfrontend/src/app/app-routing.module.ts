@@ -37,6 +37,11 @@ const routes: Routes = [
             import('modules/tables/tables-routing.module').then(m => m.TablesRoutingModule),
     },
     {
+        path: 'classroom',
+        loadChildren: () =>
+            import('modules/classroom/classroom-routing.module').then(m => m.ClassroomRoutingModule),
+    },
+    {
         path: 'employees',
         loadChildren: () =>
             import('@modules/employees/employees-routing.module').then(m => m.EmployeesRoutingModule),
@@ -50,6 +55,11 @@ const routes: Routes = [
         path: 'students',
         loadChildren: () =>
             import('modules/student/student-tables-routing.module').then(m => m.StudentTablesRoutingModule),
+    },
+    {
+        path: 'books',
+        loadChildren: () =>
+            import('modules/books/book-routing.module').then(m => m.BookRoutingModule),
     },
     {
         path: 'teacher',

@@ -137,7 +137,7 @@
   ],
   "teachers": [
     {
-      "firstName": "Abdeljalil ",
+      "firstName": "Abdeljalil",
       "lastName": "Dakir",
       "gender": "M",
       "jobRole": "Enseignant",
@@ -203,11 +203,11 @@
       "firstName": "Manuel",
       "lastName": "Wiederhold",
       "gender": "M",
-      "jobRole": "Enseignant",
-      "departement": "Admission",
       "email": "manuel@germanacademy.education",
-      "businessPhone": "0639607953",
+      "jobRole": "Enseignant",
       "privatePhone": "0639607953",
+      "departement": "Admission",
+      "businessPhone": "0639607953",
       "workLocation": "Marrakech",
       "status": "Employee",
       "isArchived": false,
@@ -561,6 +561,143 @@
     }
   ],
   "courses": [
+    {
+      "id": 1,
+      "name": "A 1.1_01",
+      "descriptions": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris",
+      "dateStart": "23/02/2020",
+      "dateEnd": "23/03/2020",
+      "teacher": "Abdeldjalil Dakir",
+      "typeCourse": "Presentiel"
+    },
+    {
+      "id": 2,
+      "name": "A 1.2_01",
+      "descriptions": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris",
+      "dateStart": "23/02/2020",
+      "dateEnd": "23/03/2020",
+      "teacher": "Abdeldjalil Dakir",
+      "typeCourse": "Presentiel"
+    },
+    {
+      "id": 3,
+      "name": "A 1 preparation",
+      "descriptions": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris",
+      "dateStart": "23/02/2020",
+      "dateEnd": "23/03/2020",
+      "teacher": "Abdeldjalil Dakir",
+      "typeCourse": "Presentiel"
+    },
+    {
+      "id": 4,
+      "name": "B 1.1_01",
+      "descriptions": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris",
+      "dateStart": "23/02/2020",
+      "dateEnd": "23/03/2020",
+      "teacher": "Abdeldjalil Dakir",
+      "typeCourse": "Presentiel"
+    },
+    {
+      "id": 5,
+      "name": "B 1.2_01",
+      "descriptions": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris",
+      "dateStart": "23/02/2020",
+      "dateEnd": "23/03/2020",
+      "teacher": "Abdeldjalil Dakir",
+      "typeCourse": "Presentiel"
+    },
+    {
+      "id": 6,
+      "name": "B 1.3_01",
+      "descriptions": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris",
+      "dateStart": "23/02/2020",
+      "dateEnd": "23/03/2020",
+      "teacher": "Abdeldjalil Dakir",
+      "typeCourse": "Presentiel"
+    },
+    {
+      "id": 7,
+      "name": "B 1 preparation",
+      "descriptions": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris",
+      "dateStart": "23/02/2020",
+      "dateEnd": "23/03/2020",
+      "teacher": "Abdeldjalil Dakir",
+      "typeCourse": "Virtual"
+    },
+    {
+      "id": 8,
+      "name": "B 2.1_01",
+      "descriptions": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris",
+      "dateStart": "23/02/2020",
+      "dateEnd": "23/03/2020",
+      "teacher": "Abdeldjalil Dakir",
+      "typeCourse": "Virtual"
+    },
+    {
+      "id": 7,
+      "name": "B 2.2_01",
+      "descriptions": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris",
+      "dateStart": "23/02/2020",
+      "dateEnd": "23/03/2020",
+      "teacher": "Abdeldjalil Dakir",
+      "typeCourse": "Virtual"
+    },
+    {
+      "id": 8,
+      "name": "B 2.3_01",
+      "descriptions": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris",
+      "dateStart": "23/02/2020",
+      "dateEnd": "23/03/2020",
+      "teacher": "Abdeldjalil Dakir",
+      "typeCourse": "Presential"
+    },
+    {
+      "id": 9,
+      "name": "B 2 preparation",
+      "descriptions": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris",
+      "dateStart": "23/02/2020",
+      "dateEnd": "23/03/2020",
+      "teacher": "Abdeldjalil Dakir",
+      "typeCourse": "Presential"
+    },
+    {
+      "id": 10,
+      "name": "C 1.1_01",
+      "descriptions": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris",
+      "dateStart": "23/02/2020",
+      "dateEnd": "23/03/2020",
+      "teacher": "Abdeldjalil Dakir",
+      "typeCourse": "Presential"
+    },
+    {
+      "id": 11,
+      "name": "C 1.2_01",
+      "descriptions": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris",
+      "dateStart": "23/02/2020",
+      "dateEnd": "23/03/2020",
+      "teacher": "Abdeldjalil Dakir",
+      "typeCourse": "Hybrid"
+    },
+    {
+      "id": 12,
+      "name": "C 1.3_01",
+      "descriptions": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris",
+      "dateStart": "23/02/2020",
+      "dateEnd": "23/03/2020",
+      "teacher": "Abdeldjalil Dakir",
+      "typeCourse": "Presentiel"
+    },
+    {
+      "id": 13,
+      "name": "C 1 preparation",
+      "descriptions": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris",
+      "dateStart": "23/02/2020",
+      "dateEnd": "23/03/2020",
+      "teacher": "Abdeldjalil Dakir",
+      "typeCourse": "Hybrid"
+    }
+  ],
+  "books": [
     {
       "id": 1,
       "name": "A 1.1_01",

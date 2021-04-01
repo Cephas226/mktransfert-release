@@ -19,10 +19,18 @@ public class CourseService {
     public Optional<Courses> findById(Long id){
         return courseRepository.findById(id);
     }
+
+    public Optional<Courses> findByName(String courseName){
+        return courseRepository.findCoursesByCoursesName(courseName);
+    }
+
     public Courses saveCourse(Courses courses){
         return courseRepository.save(courses);
     }
     public Page<Courses> findAll(Pageable pageable) {
         return courseRepository.findAll( pageable);
+    }
+    public void deleteCourse(Long Id){
+        courseRepository.deleteById(Id);
     }
 }

@@ -29,7 +29,6 @@ import {faEllipsisV} from "@fortawesome/free-solid-svg-icons";
 export class TeacherTableComponent implements OnInit {
 
   searchText: string | undefined;
-  //employee$!: Observable<Employees[]>;
   display: boolean | undefined
   total$!: Observable<number>;
   sortedColumn!: string;
@@ -147,6 +146,30 @@ export class TeacherTableComponent implements OnInit {
     }
   }
 
+  onSelect(event: any) {
+    let workBook: { SheetNames: any[]; Sheets: { [x: string]: any; }; } | null = null;
+    let jsonData = null;
+    const reader = new FileReader();
+    const file = event.addedFiles[0];
+    reader.onload = (event) => {
+      const data = reader.result;
+      workBook = XLSX.read(data, { type: 'binary' });
+      jsonData = workBook.SheetNames.reduce((initial, name) => {
+        const sheet = workBook?.Sheets[name];
+        initial[name] = XLSX.utils.sheet_to_json(sheet);
+        return initial;
+      }, {});
+      console.log(jsonData[workBook?.Sheets[name]])
+      jsonData[workBook?.Sheets[name]].map((emp:any)=>{
+        //this.employeesService.createEmployee(emp)
+      })
+    }
+    reader.readAsBinaryString(file);
+  }
+
+  onRemove(event: File) {
+    this.files.splice(this.files.indexOf(event), 1);
+  }
   public downloadPDF(): void {
 
     var tableEmployeeExport: any[] = [];
@@ -183,50 +206,6 @@ export class TeacherTableComponent implements OnInit {
  //   this.employeesService.exportExcel(this.excelDataToExport, 'Employee');
   }
 
-  onSelect(event: any) {
-/*
-
-        this.files.push(...event.addedFiles);
-        readXlsxFile(this.files[0]).then((rows:any) => {
-          rows.forEach((item: any, i: number)=> {
-            if(i !== 0) {
-              this.exelImportTab.push(item)
-            };
-          })
-         // console.log(this.exelImportTab)
-          console.log(constructObject(this.exelImportTab))
-        })
-        const constructObject = (arr: any[]) => {
-          return arr.reduce((acc: { [x: string]: any; }, val: [any, any]) => {
-            const [key, value] = val;
-            acc[key] = value;
-            return acc;
-          }, {});
-        };
-*/
-    let workBook: { SheetNames: any[]; Sheets: { [x: string]: any; }; } | null = null;
-    let jsonData = null;
-    const reader = new FileReader();
-    const file = event.addedFiles[0];
-   reader.onload = (event) => {
-      const data = reader.result;
-      workBook = XLSX.read(data, { type: 'binary' });
-      jsonData = workBook.SheetNames.reduce((initial, name) => {
-        const sheet = workBook?.Sheets[name];
-        initial[name] = XLSX.utils.sheet_to_json(sheet);
-        return initial;
-      }, {});
-     console.log(jsonData[workBook?.Sheets[name]])
-     jsonData[workBook?.Sheets[name]].map((emp:any)=>{
-       //this.employeesService.createEmployee(emp)
-     })
-    }
-    reader.readAsBinaryString(file);
-  }
-
-  onRemove(event: File) {
-    this.files.splice(this.files.indexOf(event), 1);
-  }
 
   changeDisplay() {
     this.display=!this.display

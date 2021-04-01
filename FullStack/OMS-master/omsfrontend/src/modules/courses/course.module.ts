@@ -6,6 +6,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 /* Modules */
 import { AppCommonModule } from '@common/app-common.module';
+import {CoursesCardComponent} from '@modules/courses/components/courses-card/courses-card.component';
 import * as tablesComponents from '@modules/employees/components';
 import * as tablesContainers from '@modules/employees/containers';
 import { NavigationModule } from '@modules/navigation/navigation.module';
@@ -29,8 +30,12 @@ import * as tablesPipes from './pipes';
 import {Courscomponents, EditCoursesComponent} from './components';
 import {Ng2SearchPipeModule} from "ng2-search-filter";
 import {NgxDropzoneModule} from "ngx-dropzone";
-import { CoursesCardComponent } from './components/courses-card/courses-card.component';
+import { CoursesPlannedCardComponent } from './components/coursesPlanned-card/coursesPlanned-card.component';
 import {NgBootstrapFormValidationModule} from "ng-bootstrap-form-validation";
+import { CoursesPlannerComponent } from './components/courses-planner/courses-planner.component';
+
+import { CoursesPlannerListComponent } from './components/courses-planner-list/courses-planner-list.component';
+import { CoursePlannerListContainerComponent } from './containers/course-plannerList-container/course-plannerList-container.component';
 
 
 @NgModule({
@@ -52,12 +57,17 @@ import {NgBootstrapFormValidationModule} from "ng-bootstrap-form-validation";
         ...tablesGuards.guards,
         ...tablesDirectives.directives,
     ],
-  declarations: [
-      ...coursesComponents.Courscomponents,
-      ...coursesContainers.CoursesContainers,
-    EditCoursesComponent,
-    CoursesCardComponent,
-  ],
+    declarations: [
+        ...coursesComponents.Courscomponents,
+        ...coursesContainers.CoursesContainers,
+        EditCoursesComponent,
+        CoursesPlannedCardComponent,
+        CoursesPlannerComponent,
+        CoursesPlannerListComponent,
+        CoursePlannerListContainerComponent,
+        CoursesPlannedCardComponent,
+        CoursesCardComponent,
+    ],
     exports: [],
 })
 export class CoursesModule {}

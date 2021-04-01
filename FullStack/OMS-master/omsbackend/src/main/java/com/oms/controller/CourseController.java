@@ -1,9 +1,6 @@
 package com.oms.controller;
 
-import com.oms.model.Courses;
-import com.oms.model.Employee;
-import com.oms.model.Historique;
-import com.oms.model.Student;
+import com.oms.model.*;
 import com.oms.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,19 +37,40 @@ public class CourseController {
         return courseService.findById(Id);
     }
 
-    @PutMapping("/courses/{id}")
+    /*@PutMapping("/courses/{id}")
     @PreAuthorize("hasRole('SUPER_ADMIN')or hasRole('ADMIN')or hasRole('MODERATOR')")
     public Optional<Courses> updateCourse (@RequestBody Courses courseRequest, @PathVariable ("id") Long Id){
         return courseService.findById(Id).map(course -> {
             course.setCouresRoot(courseRequest.getCouresRoot());
-            course.setCoursesFrequency(courseRequest.getCoursesFrequency());
             course.setCoursesName(courseRequest.getCoursesName());
             course.setCoursesUnit(courseRequest.getCoursesUnit());
-            course.setEndDate(courseRequest.getEndDate());
-            course.setStartDate(courseRequest.getStartDate());
-            course.setCoursesTime(courseRequest.getCoursesTime());
-            course.setCoursesType(courseRequest.getCoursesTime());
+            course.setCoursesType(courseRequest.getCoursesType());
             return courseService.saveCourse(course);
         });
+    }*/
+    @PutMapping("/courses/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')or hasRole('ADMIN')or hasRole('MODERATOR')")
+    public Optional<Courses> updateCourse (@RequestBody Courses courseRequest, @PathVariable ("id") Long Id){
+        return courseService.findById(Id).map(course -> {
+          /*  course.setCouresRoot(courseRequest.getFirstName());
+            course.setLastName(courseRequest.getLastName());
+            course.setJobRole(courseRequest.getJobRole());
+            course.setPrivatePhone(courseRequest.getPrivatePhone());
+            course.setEmail(courseRequest.getEmail());*/
+            return courseService.saveCourse(courseRequest);
+        });
+    }
+    @PatchMapping("/courses/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')or hasRole('ADMIN')or hasRole('MODERATOR')")
+    public Optional<Courses> patchCourse (@RequestBody Courses courseRequest, @PathVariable ("id") Long Id){
+        return courseService.findById(Id).map(course -> {
+            course.setAvailable(courseRequest.isAvailable());
+            return courseService.saveCourse(course);
+        });
+    }
+    @DeleteMapping("/courses/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')or hasRole('ADMIN')or hasRole('MODERATOR')")
+    public void deleteCourse(@PathVariable ("id")Long Id){
+        courseService.deleteCourse(Id);
     }
 }

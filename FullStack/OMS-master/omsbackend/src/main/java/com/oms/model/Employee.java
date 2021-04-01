@@ -61,7 +61,7 @@ public class Employee {
     inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
 
-  @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY,mappedBy = "employee")
+  @OneToMany(mappedBy = "employee")
   private Set<Historique> historique = new HashSet<>();
 
 	public Employee() {

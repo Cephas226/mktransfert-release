@@ -1,5 +1,7 @@
 package com.oms.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -63,19 +65,42 @@ public class Student {
     @Column(name = "books")
     private String books;
 
+
+
+	/*@OneToMany(mappedBy="student")
+	private Set<Books> books;*/
+
     @Column(name = "cityOfResidence")
     private String cityOfResidence;
 
 	@Column(name = "status")
-	private String status;
+	private Boolean status=true;
 
-	@ManyToMany(mappedBy = "student")
-	Set<Courses> courses;
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(	name = "student_course",
+			joinColumns = @JoinColumn(name = "student_id"),
+			inverseJoinColumns = @JoinColumn(name = "course_id"))
+	private Set<Courses> courses = new HashSet<>();
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(	name = "student_parent",
+			joinColumns = @JoinColumn(name = "student_id"),
+			inverseJoinColumns = @JoinColumn(name = "parent_id"))
+	private Set<Parents> parents = new HashSet<>();
+
+	@ManyToMany
+	@JsonIgnore
+	Set<PlannedCourse> plannedCourses;
+
+	/*@ManyToOne
+	@JoinColumn(name="plannedCourse_id", nullable=false)
+	private PlannedCourse plannedCourse;*/
+
 
 	public Long getId() {
 		return id;
 	}
-
+///Users/mac/dumps/Dump20210305.sql
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -216,11 +241,11 @@ public class Student {
 		this.cityOfResidence = cityOfResidence;
 	}
 
-	public String getStatus() {
+	public Boolean getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Boolean status) {
 		this.status = status;
 	}
 
@@ -232,8 +257,23 @@ public class Student {
 		this.courses = courses;
 	}
 
-	public Student(Long id, String code, String lastName, String firstName, char gender, String country, String nationnality, String site, String grade, String type, String inscriptionDateAtGA, String bithdaydate, String email, String phone, String address, String level, String books, String cityOfResidence, String status, Set<Courses> courses) {
-		this.id = id;
+	public Set<Parents> getParents() {
+		return parents;
+	}
+
+	public void setParents(Set<Parents> parents) {
+		this.parents = parents;
+	}
+
+	/*public PlannedCourse getPlannedCourse() {
+		return plannedCourse;
+	}
+
+	public void setPlannedCourse(PlannedCourse plannedCourse) {
+		this.plannedCourse = plannedCourse;
+	}*/
+
+	public Student(String code, String lastName, String firstName, char gender, String country, String nationnality, String site, String grade, String type, String inscriptionDateAtGA, String bithdaydate, String email, String phone, String address, String level, String books, String cityOfResidence, Boolean status, Set<Courses> courses) {
 		this.code = code;
 		this.lastName = lastName;
 		this.firstName = firstName;
@@ -256,5 +296,39 @@ public class Student {
 	}
 
 	public Student() {
+	}
+
+	@Override
+	public String toString() {
+		return "Student{" +
+				"code='" + code + '\'' +
+				", lastName='" + lastName + '\'' +
+				", firstName='" + firstName + '\'' +
+				", gender=" + gender +
+				", country='" + country + '\'' +
+				", nationnality='" + nationnality + '\'' +
+				", site='" + site + '\'' +
+				", grade='" + grade + '\'' +
+				", type='" + type + '\'' +
+				", inscriptionDateAtGA='" + inscriptionDateAtGA + '\'' +
+				", Bithdaydate='" + Bithdaydate + '\'' +
+				", email='" + email + '\'' +
+				", phone='" + phone + '\'' +
+				", address='" + address + '\'' +
+				", level='" + level + '\'' +
+				", books='" + books + '\'' +
+				", cityOfResidence='" + cityOfResidence + '\'' +
+				", status=" + status +
+				", courses=" + courses +
+				", parents=" + parents +
+				'}';
+	}
+
+	public Set<PlannedCourse> getPlannedCourses() {
+		return plannedCourses;
+	}
+
+	public void setPlannedCourses(Set<PlannedCourse> plannedCourses) {
+		this.plannedCourses = plannedCourses;
 	}
 }

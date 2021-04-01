@@ -1,5 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {Classroom} from '@modules/classroom/models';
+import {ClassroomService} from '@modules/classroom/services';
 import {Employees, Teacher} from '@modules/employees/models';
+import {TeacherService} from '@modules/teachers/services/teacher.service';
 import {Observable} from "rxjs";
 import {EmployeesService} from "@modules/employees/services/employees.service";
 import {faEllipsisV} from "@fortawesome/free-solid-svg-icons";
@@ -14,34 +17,16 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 export class TeacherCardComponent implements OnInit {
   @Input() teacher: Teacher | undefined;
   ellipsis=faEllipsisV;
-  employeeId: string | undefined;
-  constructor(private employeesService:EmployeesService,
-              private modalService: NgbModal,private router:Router) { }
+  constructor(private router:Router,private teacherService:TeacherService,) { }
   ngOnInit(): void {
 
   }
-  editEmployee(employee:Employees) {
-    this.router.navigateByUrl('employees/edit-employee/' + employee.id);
-  }
 
-  deleteEmployeeModal(targetModal: any, employee: any) {
-    this.employeeId = employee.id
-    this.modalService.open(targetModal, {
-      centered: true,
-      backdrop: 'static'
-    });
+  viewTeacher(teacher: Teacher) {
+    this.router.navigateByUrl('teacher/profil-teacher/' + teacher.idTeacher);
   }
-
-  deleteEmployee() {
-    this.modalService.dismissAll();
-    this.employeesService.deleteEmployee(this.employeeId)
-  }
-  viewEmployee(employee: any) {
-    this.router.navigateByUrl('employees/employee-details/' + employee.id);
-  }
-
-  archiveEmployee(employees: Employees) {
-       employees.isArchived=!employees.isArchived
-    this.employeesService.pacthEmployee(employees,employees.id)
+  archiveTeacher(teacher: Teacher) {
+    teacher.archived=!teacher.archived
+    this.teacherService.pacthClassroom(teacher,teacher.idTeacher)
   }
 }

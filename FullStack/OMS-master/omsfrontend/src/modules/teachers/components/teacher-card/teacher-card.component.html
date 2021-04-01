@@ -12,18 +12,31 @@
               <fa-icon [icon]="ellipsis"></fa-icon>
             </button>
             <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-              <button ngbDropdownItem type="button" class="btn btn-light btn-sm" (click)="viewEmployee(teacher)">
+              <button ngbDropdownItem type="button" [disabled]="teacher.archived"
+                      class="btn btn-light btn-sm" (click)="viewTeacher(teacher)">
               <span class="mr-1">
                 <i class="fa fa-eye" aria-hidden="true"></i>
               </span>View
               </button>
-              <button type="button" class="btn btn-light btn-sm" ngbDropdownItem (click)="editEmployee(teacher)">
+             <!-- <button type="button" class="btn btn-light btn-sm" ngbDropdownItem (click)="editEmployee(teacher)">
                 <span class="mr-1"><i class="fa fa-pencil" aria-hidden="true"></i> </span>Edit
-              </button>
-               <button type="button" class="btn btn-light btn-sm" ngbDropdownItem (click)="archiveEmployee(teacher)">
+              </button>-->
+              <!-- <button type="button" class="btn btn-light btn-sm" ngbDropdownItem (click)="archiveEmployee(teacher)">
               <span class="mr-1">
                 <i class="fa fa-archive" aria-hidden="true"></i>
               </span>Archive
+              </button>-->
+                 <button type="button" *ngIf="!teacher.archived"
+                         class="btn btn-light btn-sm" ngbDropdownItem (click)="archiveTeacher(teacher)">
+              <span class="mr-1">
+                <i class="fa fa-archive" aria-hidden="true"></i>
+              </span>Archive
+              </button>
+               <button type="button" *ngIf="teacher.archived"
+                       class="btn btn-light btn-sm" ngbDropdownItem (click)="archiveTeacher(teacher)">
+              <span class="mr-1">
+               <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+              </span>Active
               </button>
             </div>
           </div>
@@ -39,10 +52,10 @@
             </div>-->
           </div>
           <div class="col-sm-9">
-            <p class="text-truncate">
+            <!--<p class="text-truncate">
               <i class="fa fa-briefcase" aria-hidden="true"></i>
               {{teacher.jobRole}}
-            </p>
+            </p>-->
             <p class="text-truncate">
               <i class="fa fa-envelope-o" aria-hidden="true"></i>
               {{teacher.email}}
@@ -61,6 +74,16 @@
             </p>-->
           </div>
         </div>
+          <div class="row">
+              <div class="col-sm-9">
+                  <div *ngIf="teacher.archived">
+                      <span class="badge badge-danger">Archived</span>
+                  </div>
+                  <div *ngIf="!teacher.archived">
+                      <span class="badge badge-success">Actived</span>
+                  </div>
+              </div>
+          </div>
       </div>
     </div>
   </div>

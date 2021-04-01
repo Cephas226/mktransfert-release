@@ -151,7 +151,7 @@ export class EmployeeTableComponent implements OnInit {
   }
 
   open(content: any) {
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'})
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-titlopene'})
       .result.then((result) => {
       this.closeResult = `Close with: ${result}`;
     }, (reason) => {

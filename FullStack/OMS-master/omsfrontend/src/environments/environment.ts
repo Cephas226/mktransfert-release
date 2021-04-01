@@ -15,7 +15,13 @@ export const environment = {
         API_COURSES:"http://localhost:8400/api",
     },
     Teacher_API:{
-        API_TEACHER:"  http://localhost:3000/teachers",
+        API_TEACHER:"http://localhost:8400/api/teachers",
+    },
+   Classroom_API:{
+        API_CLASSROOM:"http://localhost:8400/api/classroom",
+    },
+    Book_API:{
+        API_BOOK:"http://localhost:8400/api/books",
     }
 };
 

@@ -25,6 +25,7 @@ export class CoursesCardContainer implements OnInit {
   @Input() pageSize = 4;
   collectionSize: any;
   private course$?: Observable<Courses[]>;
+  total$!: Observable<number>;
   private coursesList: any;
   files: File[] = [];
   closeResult: string | undefined;
@@ -36,6 +37,7 @@ export class CoursesCardContainer implements OnInit {
     ngOnInit() {
       this.courseServices.pageSize = this.pageSize;
       this.course$ = this.courseServices.course$;
+
       this.course$.subscribe((e:any)=>{
         console.log(e)
         this.coursesList=e
@@ -61,10 +63,10 @@ export class CoursesCardContainer implements OnInit {
     this.modalService.dismissAll();
    // this.employeesService.deleteEmployee(this.employeeId)
   }
-  viewCourses(course: any) {
-    this.router.navigateByUrl('courses/courses-details/' + course.idCourses);
+  planCourse(course: any) {
+    this.router.navigateByUrl('courses/courses-planner/' + course.idCourses);
   }
-  editCourses(course: any) {
+  editCourse(course: any) {
     console.log(course)
     this.router.navigateByUrl('courses/edit-course/' + course.idCourses);
   }
@@ -109,9 +111,7 @@ export class CoursesCardContainer implements OnInit {
 
       jsonData['data'].forEach((course:any)=>{
 
-        this.courseServices.createCourse(course).subscribe(e=>{
-          console.log(e)
-        })
+        this.courseServices.createCourse(course)
       })
     }
     reader.readAsBinaryString(file);

@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {Classroom} from '@modules/classroom/models';
 import {CoursesService} from '@modules/courses/services/courses.service';
-import {Courses, Employees} from '@modules/employees/models';
+import {Courses, CoursesPlanned, Employees, Teacher} from '@modules/employees/models';
 import {Observable} from "rxjs";
 import {EmployeesService} from "@modules/employees/services/employees.service";
 import {faEllipsisV} from "@fortawesome/free-solid-svg-icons";
@@ -14,38 +15,37 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 })
 
 export class CoursesCardComponent implements OnInit {
- // @Input() employees: Employees | undefined;
+  @Input() course: Courses | undefined;
+  private idCourse?: number | null;
   ellipsis=faEllipsisV;
-  employeeId: string | undefined;
-  coursesList?: Courses[];
-
-  constructor(private courseServices:CoursesService,
-              private modalService: NgbModal,private router:Router) { }
+  constructor(private router:Router,
+              private courseService:CoursesService,
+              private modalService:NgbModal) { }
   ngOnInit(): void {
 
   }
-  editEmployee(employee:Employees) {
-    this.router.navigateByUrl('employees/edit-employee/' + employee.id);
+  planCourse(course: any) {
+    this.router.navigateByUrl('courses/course-planner/' + course.idCourses);
+  }
+  editCourse(course: any) {
+    console.log(course)
+    this.router.navigateByUrl('courses/edit-course/' + course.idCourses);
   }
 
-  deleteEmployeeModal(targetModal: any, employee: any) {
-    this.employeeId = employee.id
-    this.modalService.open(targetModal, {
+  deleteCourseModal( course: Courses,deleteModal: any) {
+    this.idCourse=course.idCourses
+    this.modalService.open(deleteModal, {
       centered: true,
       backdrop: 'static'
     });
   }
 
-  deleteEmployee() {
+  deleteCourse() {
     this.modalService.dismissAll();
-   // this.employeesService.deleteEmployee(this.employeeId)
+    this.courseService.deleteCourse(this.idCourse)
   }
-  viewEmployee(employee: any) {
-    this.router.navigateByUrl('employees/employee-details/' + employee.id);
-  }
-
-  archiveEmployee(employees: Employees) {
-       employees.isArchived=!employees.isArchived
-    //this.employeesService.pacthEmployee(employees,employees.id)
+  disableCourse(course: Courses) {
+    course.available=!course.available
+    this.courseService.patchCourse(course,course.idCourses)
   }
 }

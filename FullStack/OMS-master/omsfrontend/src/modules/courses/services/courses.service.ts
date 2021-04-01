@@ -5,14 +5,13 @@ import {SortDirection} from '@modules/tables/directives';
 
 import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {debounceTime, delay, switchMap, tap} from 'rxjs/operators';
-import {Courses, Employees} from '@modules/employees/models';
+import {Courses, CoursesPlanned, Employees} from '@modules/employees/models';
 import {HttpClient} from "@angular/common/http";
-
+import {environment} from "../../../environments/environment";
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import {Router} from "@angular/router";
-import {environment} from '../../../environments/environment';
-
+import { map } from 'rxjs/operators';
 interface SearchResult {
   employees: Employees[];
   total: number;
@@ -61,7 +60,8 @@ export class CoursesService {
   private _loading$ = new BehaviorSubject<boolean>(true);
   private _search$ = new Subject<void>();
   private _course$ = new BehaviorSubject<Courses[]>([]);
-  private _selectedEmployees$ = new BehaviorSubject<Employees[]>([]);
+  private _coursePlanned$ = new BehaviorSubject<CoursesPlanned[]>([]);
+  private _selectedCourse$ = new BehaviorSubject<Courses[]>([]);
   private _total$ = new BehaviorSubject<number>(0);
   private _id$ = new BehaviorSubject<number>(0);
   fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
@@ -77,13 +77,18 @@ export class CoursesService {
 
   constructor(private http: HttpClient,private pipe: DecimalPipe,private router:Router) {
     this.getAllCourses()
+      /*A REVOIR*/
+    this.getAllCoursesPlanned()
   }
 
   get course$() {
     return this._course$.asObservable();
   }
-  get selectedEmp$() {
-    return this._selectedEmployees$.asObservable();
+  get coursePlanned$() {
+    return this._coursePlanned$.asObservable();
+  }
+  get selectedCourse$() {
+    return this._selectedCourse$.asObservable();
   }
 
   get total$() {
@@ -133,34 +138,57 @@ export class CoursesService {
     Object.assign(this._state, patch);
     this._search$.next();
   }
-  /*
-    private _search(employee: any[]): Observable<SearchResult> {
-      const {sortColumn, sortDirection, pageSize, page, searchTerm} = this._state;
-
-      // 1. sort
-      let employees = sort(employee, sortColumn, sortDirection);
-
-      // 2. filter
-      employees = employees.filter(employee => matches(employee, searchTerm, this.pipe));
-      const total = employees.length;
-
-      // 3. paginate
-      employees = employees.slice((page - 1) * pageSize, (page - 1) * pageSize + pageSize);
-      return of({employees, total});
-    }*/
-
-  getAllCourses() {
-    return this.http.get(environment.COURSES_API.API_COURSES+'/courses', { responseType: 'json' }).subscribe(
-        (emp:any)=>{
-          console.log(emp.content)
-          this._course$.next(emp.content);
-          this._total$.next(emp.content.length)
+/*CoursesPlanned*/
+  getAllCoursesPlanned() {
+    return this.http.get(environment.COURSES_API.API_COURSES+'/coursesPlanned', { responseType: 'json' }).subscribe(
+        (course:any)=>{
+          this._coursePlanned$.next(course.content);
         }
     );
   }
 
-  updateCourse(course: any, id: string | undefined) {
-    return this.http.put(environment.COURSES_API.API_COURSES +'/courses'+ '/' + id, course, {responseType: 'json'})
+  getSelectedCoursePlanned(id: string | null) {
+    return this.http.get(environment.COURSES_API.API_COURSES + '/coursesPlanned/' + id, {responseType: 'json'})
+  }
+  createCoursePlanned(course: any) {
+    return this.http.post(environment.COURSES_API.API_COURSES +'/coursesPlanned', course, {responseType: 'json'})
+        .subscribe(
+            (coursePlanned:any)=>{
+              this.getAllCoursesPlanned();
+
+              this.router.navigateByUrl('/courses/course-planner-list')
+            },
+        )
+
+  }
+  updateCoursePlanned(course: any) {
+    return this.http.post(environment.COURSES_API.API_COURSES +'/coursesPlanned', course, {responseType: 'json'})
+        .subscribe(
+            ()=> {
+              this.getAllCoursesPlanned();
+                  this.router.navigateByUrl('/courses/course-planner-list')
+            }
+        );
+  }
+    deleteCoursePlanned(id: number | null | undefined) {
+        return this.http.delete(environment.COURSES_API.API_COURSES +'/coursesPlanned' + '/' + id, {responseType: 'json'})
+            .subscribe(
+                ()=>{
+                    this.getAllCoursesPlanned();
+                    this.router.navigateByUrl('/courses/course-planner-list')
+                }
+            );
+    }
+    /*Courses*/
+  getAllCourses() {
+    return this.http.get(environment.COURSES_API.API_COURSES+'/courses', { responseType: 'json' }).subscribe(
+        (course:any)=>{
+          this._course$.next(course.content);
+        }
+    );
+  }
+  patchCourse(course: any, id: number | null) {
+    return this.http.patch(environment.COURSES_API.API_COURSES +'/courses'+ '/' + id, course, {responseType: 'json'})
         .subscribe(
             ()=> {
               this.getAllCourses(),
@@ -168,33 +196,34 @@ export class CoursesService {
             }
         );
   }
-
-  pacthEmployee(employee: any, id: number | null) {
-    return this.http.patch(environment.USERS_API.API_EMPLOYEES + '/' + id, employee, {responseType: 'json'})
-        .subscribe(
-            ()=> {
-              this.getAllCourses(),
-                  this.router.navigateByUrl('/courses')
-            }
-        );
-  }
-
+    updateCourse(course: any, id: number | null) {
+        return this.http.put(environment.COURSES_API.API_COURSES +'/courses'+ '/' + id, course, {responseType: 'json'})
+            .subscribe(
+                ()=> {
+                    this.getAllCourses(),
+                        this.router.navigateByUrl('/courses')
+                }
+            );
+    }
   createCourse(course: any) {
     return this.http.post(environment.COURSES_API.API_COURSES +'/courses', course, {responseType: 'json'})
-  }
-  createHistory(history: any,id:any) {
-    return this.http.post(environment.USERS_API.API_EMPLOYEES +'employee'+'/'+id+'/historique', history, {responseType: 'json'})
-  }
-  updateHistory(history: any,id:any) {
-    return this.http.patch('http://localhost:8400/api/' +'employee'+'/'+id+'/historique', history, {responseType: 'json'})
+        .subscribe(
+            ()=>{
+              this.getAllCourses();
+              this.router.navigateByUrl('/courses')
+            }
+        )
   }
 
-  deleteEmployee(id: string | undefined) {
-    return this.http.delete(environment.USERS_API.API_EMPLOYEES + '/' + id, {responseType: 'json'})
-        .subscribe(
-            ()=>this.getAllCourses()
-        );
-  }
+    deleteCourse(id: number | null | undefined) {
+        return this.http.delete(environment.COURSES_API.API_COURSES +'/courses' + '/' + id, {responseType: 'json'})
+            .subscribe(
+                ()=>{
+                    this.getAllCourses();
+                    this.router.navigateByUrl('/courses')
+                }
+            );
+    }
 
   getSelectedCourse(id: string | null) {
     return this.http.get(environment.COURSES_API.API_COURSES + '/courses/' + id, {responseType: 'json'})

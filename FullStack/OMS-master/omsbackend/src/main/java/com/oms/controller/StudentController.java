@@ -1,7 +1,16 @@
 package com.oms.controller;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import com.oms.model.Employee;
+import com.oms.model.Parents;
+import com.oms.model.Role;
+import com.oms.service.CourseService;
+import com.oms.service.ParentService;
+import org.hibernate.annotations.Parent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -114,6 +123,12 @@ public class StudentController {
   @Autowired
   private StudentService studentService;
 
+  @Autowired
+  private CourseService courseService;
+
+  @Autowired
+  private ParentService parentService;
+
   @GetMapping("/students")
   @PreAuthorize("hasRole('SUPER_ADMIN')or hasRole('ADMIN') or hasRole('MODERATOR')")
   public Page<Student> getAllStudents(Pageable pageable){
@@ -121,21 +136,52 @@ public class StudentController {
 
   @PostMapping("/students")
   @PreAuthorize("hasRole('SUPER_ADMIN')or hasRole('ADMIN')or hasRole('MODERATOR')")
-  public Student addStudent(@RequestBody Student student){
-    return studentService.saveStudent(student);
+  public Student addStudent(@RequestBody Student studentRequest){
+    Student userStudent = new Student(
+            studentRequest.getCode(),
+            studentRequest.getLastName(),
+            studentRequest.getFirstName(),
+            studentRequest.getGender(),
+            studentRequest.getCountry(),
+            studentRequest.getNationnality(),
+            studentRequest.getSite(),
+            studentRequest.getGrade(),
+            studentRequest.getType(),
+            studentRequest.getInscriptionDateAtGA(),
+            studentRequest.getBithdaydate(),
+            studentRequest.getEmail(),
+            studentRequest.getPhone(),
+            studentRequest.getAddress(),
+            studentRequest.getLevel(),
+            studentRequest.getBooks(),
+            studentRequest.getCityOfResidence(),
+            studentRequest.getStatus(),
+            studentRequest.getCourses()
+           // studentRequest.getPlannedCourse()
+    );
+    Set<Parents> parents1 = new HashSet<>();
+    studentRequest.getParents().forEach(
+            parents -> {
+              Parents p= parentService.saveParent(parents);
+               /* Parents parent = new Parents(
+                        p.getIdParent(),
+                        p.getLastName(),
+                        p.getFirstName(),
+                        p.getPhone(),
+                        p.getEmail()
+              );*/
+              parents1.add(p);
+            }
+    );
+        studentRequest.setParents(parents1);
+    return studentService.saveStudent(studentRequest);
   }
+
   @PutMapping("/students/{id}")
   @PreAuthorize("hasRole('SUPER_ADMIN')or hasRole('ADMIN')or hasRole('MODERATOR')")
   public Optional<Student> updateStudent (@RequestBody Student studentRequest, @PathVariable ("id") Long Id){
     return studentService.findStudentById(Id).map(student -> {
-      student.setCode(studentRequest.getCode());
-      student.setLastName(studentRequest.getLastName());
-      student.setFirstName(studentRequest.getFirstName());
-      student.setGender(studentRequest.getGender());
-      student.setEmail(studentRequest.getEmail());
-      student.setPhone(studentRequest.getPhone());
-      student.setCityOfResidence(studentRequest.getCityOfResidence());
-      return studentService.saveStudent(student);
+      return studentService.saveStudent(studentRequest);
     });
   }
   @DeleteMapping("/students/{id}")

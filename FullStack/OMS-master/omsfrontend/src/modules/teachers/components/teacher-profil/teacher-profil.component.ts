@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {ActivatedRoute} from '@angular/router';
 import { TokenStorageService } from '@modules/auth/services/tokenstorageservice.service';
-import { Department, Employees, Roles } from '@modules/employees/models';
-import { EmployeesService } from '@modules/employees/services/employees.service';
+import {Teacher} from '@modules/employees/models';
+import {TeacherService} from '@modules/teachers/services/teacher.service';
 @Component({
   selector: 'sb-teacher-profil',
   templateUrl: './teacher-profil.component.html',
@@ -12,100 +13,83 @@ export class TeacherProfilComponent implements OnInit {
   isLoggedIn = false;
   isEditProfil = false;
   username?: string;
-  public editEmployForm: FormGroup;
-  private roles: string[] = [];
+  public editTeacherForm?: FormGroup;
   email?: string;
   keys = Object.keys;
-  eRole = Roles;
-  eDepartments = Department;
-  selectedEmploy: any;
-  get role() { return this.editEmployForm.get("roles") as FormArray;}
-  get department() {
-    {return this.editEmployForm.get('department');}
-  }
-  get status() {
-      {return this.editEmployForm.get('status');}
-  }
-  get sex() {
-    {return this.editEmployForm.get('gender');
+  selectedTeacher: any;
+   idTeacher:any;
+  get gender() {
+    {return this.editTeacherForm?.get('gender');
     }
   }
+
   constructor(
               private tokenStorageService:TokenStorageService, 
-              private employeesService:EmployeesService,
-              public fb: FormBuilder
+              private teacherService:TeacherService,
+              public fb: FormBuilder,
+              private activatedRoute:ActivatedRoute,
               ) { 
 
-    this.editEmployForm = this.fb.group({
+    this.editTeacherForm = this.fb.group({
       firstName: new FormControl('',   Validators.required),
       lastName: new FormControl('',   Validators.required),
       gender: new FormControl('M',   Validators.required),
-      jobRole: new FormControl('',   Validators.required),
-      department: new FormControl('',   Validators.required),
+      // jobRole: new FormControl('',   Validators.required),
       email: new FormControl('',[
         Validators.required,
         Validators.pattern(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)
       ]),
-      businessPhone: new FormControl('',   Validators.required),
-      privatePhone: new FormControl('',   Validators.required),
-      workLocation: new FormControl('',   Validators.required),
-      status: new FormControl('',   Validators.required),
-      roles: new FormControl('',  new FormArray([])),
-      password: new FormControl('',   Validators.required),
-      Cpassword: new FormControl('',   Validators.required),
+      privatePhone: new FormControl('',   Validators.required)
     });
   }
 
   ngOnInit(): void {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
+    this.idTeacher=this.activatedRoute.snapshot.paramMap.get('id')
     if (this.isLoggedIn) {
-      const user = this.tokenStorageService.getUser();
-      this.selectedEmploy=user
-      if (user.id){
-        this.employeesService.getSelectedEmployees(user.id).subscribe(
-          ( emp:any)=> {
-            this.selectedEmploy=emp;
-            if (user.id){
-              if (emp) {
-                emp.roles.map((role: any) => {
-                  this.role.patchValue(role['name'])
-                });
-              }
-              this.patchEmployeeForm(emp)
-              console.log(this.role.value)
+    /*  const teacher = this.tokenStorageService.getUser();
+      this.selectedTeacher=teacher*/
+      if (this.idTeacher){
+        this.teacherService.getSelectedTeacher(this.idTeacher).subscribe(
+          ( teacher:any)=> {
+              console.log(teacher)
+              this.selectedTeacher=teacher;
+              this.patchTeacherForm(teacher)
             }
-          }
           )
       }
-
-
     }
   }
   editProfil(){
     this.isEditProfil=!this.isEditProfil
   }
-
-  patchEmployeeForm(selectedEmploy: Employees | undefined) {
-    this.editEmployForm!.setValue({
-
-      firstName: selectedEmploy?.firstName?selectedEmploy?.firstName:null,
-      lastName: selectedEmploy?.lastName?selectedEmploy?.lastName:null,
-      gender:selectedEmploy?.gender?selectedEmploy?.gender:null,
-      jobRole: selectedEmploy?.jobRole?selectedEmploy?.jobRole:null,
-      department: selectedEmploy?.department?selectedEmploy?.department:null,
-      email: selectedEmploy?.email?selectedEmploy?.email:null,
-      businessPhone:selectedEmploy?.businessPhone?selectedEmploy?.businessPhone:null,
-      privatePhone:selectedEmploy?.privatePhone?selectedEmploy?.privatePhone:null,
-      workLocation:selectedEmploy?.workLocation?selectedEmploy?.workLocation:null,
-      status:selectedEmploy?.status?selectedEmploy?.status:null,
-      roles:this.role.value?this.role.value:null,
-      password:selectedEmploy?.password?selectedEmploy?.password:null,
-      Cpassword:selectedEmploy?.Cpassword?selectedEmploy?.Cpassword:null
+  changeGender(event: { value: any; target: { value: any; }; }) {
+    console.log(event.value)
+    if (this.idTeacher) {
+      this.gender?.setValue(event.target?.value, {
+        onlySelf: true
+      })
+    } else {
+      this.gender?.setValue(event.target?.value, {
+        onlySelf: true
+      })
+    }
+  }
+  patchTeacherForm(teacher: Teacher | undefined) {
+    this.editTeacherForm!.setValue({
+      firstName: teacher?.firstName,
+      lastName: teacher?.lastName,
+      gender:teacher?.gender,
+      // jobRole: teacher?.jobRole,
+      email: teacher?.email,
+      privatePhone:teacher?.privatePhone
     })
-    console.log(this.editEmployForm.value)
+    console.log(this.editTeacherForm?.value)
   }
   onSubmit(){
-    console.log('ok')
+    if(this.editTeacherForm?.valid){
+      this.teacherService.updateTeacher(this.editTeacherForm.value,this.idTeacher)
+    }
   }
   dismiss(){
     this.isEditProfil=false

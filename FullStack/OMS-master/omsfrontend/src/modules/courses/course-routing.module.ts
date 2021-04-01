@@ -1,6 +1,7 @@
 /* tslint:disable: ordered-imports*/
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import {CoursePlannerListContainerComponent} from '@modules/courses/containers/course-plannerList-container/course-plannerList-container.component';
 
 /* Module */
 import { CoursesModule } from './course.module';
@@ -33,11 +34,11 @@ export const ROUTES: Routes = [
         } as SBRouteData,
     },
 
-
+/*
   {
-    path: 'courses-details/:id',
+    path: 'courses-planner/:id',
     canActivate: [],
-    component: CoursesContainers.CoursesDetailsConteners,
+    component: CoursesContainers.,
     data: {
       title: 'OMS',
       breadcrumbs: [
@@ -51,12 +52,12 @@ export const ROUTES: Routes = [
           active: false,
         },
         {
-          text: 'Courses details',
+          text: 'Plan course',
           active: true,
         },
       ],
     } as SBRouteData,
-  },
+  },*/
 
    {
     path: 'course-create',
@@ -81,6 +82,99 @@ export const ROUTES: Routes = [
     ],
   } as SBRouteData,
  },
+
+    {
+        path: 'course-planner-list',
+        canActivate: [],
+        component: CoursesContainers.CoursePlannerListContainerComponent,
+        data: {
+            title: 'OMS',
+            breadcrumbs: [
+                {
+                    text: 'Dashboard',
+                    link: '/dashboard',
+                },
+                {
+                    text: 'Courses',
+                    link: '/courses',
+                    active: false,
+                },
+                {
+                    text: 'Course planner list',
+                    active: true,
+                },
+            ],
+        } as SBRouteData,
+    },
+    {
+        path: 'course-planner',
+        canActivate: [],
+        component: CoursesContainers.CoursesPlannerContainer,
+        data: {
+            title: 'OMS',
+            breadcrumbs: [
+                {
+                    text: 'Dashboard',
+                    link: '/dashboard',
+                },
+                {
+                    text: 'Courses',
+                    link: '/courses',
+                    active: false,
+                },
+                {
+                    text: 'Course planner',
+                    active: true,
+                },
+            ],
+        } as SBRouteData,
+    },
+    {
+        path: 'editCoursePlanned/:idCourse',
+        canActivate: [],
+        component: CoursesContainers.CoursesPlannerContainer,
+        data: {
+            title: 'OMS',
+            breadcrumbs: [
+                {
+                    text: 'Dashboard',
+                    link: '/dashboard',
+                },
+                {
+                    text: 'Courses',
+                    link: '/courses',
+                    active: false,
+                },
+                {
+                    text: 'Course planned edit',
+                    active: true,
+                },
+            ],
+        } as SBRouteData,
+    },
+    {
+        path: 'course-planner/:id',
+        canActivate: [],
+        component: CoursesContainers.CoursesPlannerContainer,
+        data: {
+            title: 'OMS',
+            breadcrumbs: [
+                {
+                    text: 'Dashboard',
+                    link: '/dashboard',
+                },
+                {
+                    text: 'Courses',
+                    link: '/courses',
+                    active: false,
+                },
+                {
+                    text: 'Course planner',
+                    active: true,
+                },
+            ],
+        } as SBRouteData,
+    },
   {
     path: 'edit-course/:id',
     canActivate: [],

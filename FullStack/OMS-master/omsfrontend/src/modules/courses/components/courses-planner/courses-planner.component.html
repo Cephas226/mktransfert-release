@@ -1,1 +1,222 @@
-<p>courses-planner works!</p>
+<div class="row" class="row" *ngIf="!idCoursePlanned">
+    <div class="col-sm-12">
+        <div class="card bg-light">
+            <strong class="card-header bg-dark">
+                <div style="color: white">
+                    <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                </div>
+            </strong>
+            <div class="card-body">
+                <form [formGroup]="createPlanForm" (validSubmit)="onSubmit()">
+                 <!--<pre>{{
+                     createPlanForm.value|json}}
+                    </pre>-->
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="couresRoot">Course Root</label>
+                            <input type="text" class="form-control" id="couresRoot"
+                                   formControlName="couresRoot"
+                                   placeholder="A 1" readonly>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="courseName">Course Name</label>
+                            <input type="text" class="form-control" id="courseName"
+                                   formControlName="coursesName"
+                                   placeholder="A 1.1" readonly>
+                        </div>
+                    </div>
+                   <div class="form-row">
+                     <div class="form-group col-md-2">
+                         <label for="totalUnit">Total Unit</label>
+                         <input class="form-control" type="text"
+                                formControlName="coursesUnit" placeholder="Total Unit"
+                                value="" id="totalUnit" readonly>
+                     </div>
+
+                     <fieldset class="form-group col-md-2" disabled>
+                         <div>
+                             <label for="coursesType">Course Type</label>
+                             <select class="custom-select" readonly (change)="changeType" id ="coursesType" formControlName="coursesType">
+                                 <option value="Intensif">Intensif</option>
+                                 <option value="Cours du soir">Cours du soir</option>
+                                 <option value="Preparation">Preparation</option>
+                             </select>
+                         </div>
+                     </fieldset>
+
+                     <div class="form-group col-md-3">
+                            <label for="startDate">Start date</label>
+                            <input type="date" class="form-control"
+                                   formControlName="startDate"
+                                   id="startDate" placeholder="23/01/2021">
+                          </div>
+                          <div class="form-group col-md-3">
+                            <label for="endDate">End date</label>
+                            <input type="date" class="form-control"
+                                   formControlName="endDate"
+                                   id="endDate" placeholder="23/01/2021">
+                          </div>
+                       <div class="form-group col-md-2">
+                           <label for="coursesTime">Time</label>
+                           <input class="form-control" id="coursesTime" type="text" placeholder="Time"
+                                  formControlName="coursesTime" type="text">
+                       </div>
+                        </div>
+
+                    <div class="form-row">
+
+                        <div class="form-group col-md-3">
+                            <label for="students">Student List</label>
+                            <select class="custom-select" multiple
+                                    (change)="changeFrequency" id ="students" formControlName="students">
+                                <option *ngFor="let student of student$|async" [ngValue]="student.id">{{student.lastName}} {{student.firstName}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="class">Class</label>
+                            <select class="custom-select"  id ='class'(change)="changeClassroom($event.target.value)" formControlName="class">
+                                <option *ngFor="let classroom of classrom$ | async" [ngValue]="classroom.id" [disabled]="classroom.archived">{{classroom.name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="teacher">Teacher</label>
+                            <select class="custom-select"  id ='teacher'(change)="changeTeacher($event.target.value)" formControlName="teacher">
+                                <option *ngFor="let teacher of teacher$|async" [ngValue]="teacher.idTeacher" [disabled]="teacher.archived">{{teacher.lastName}} {{teacher.firstName}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3">
+
+                            <label for="frequency">Frequency</label>
+                            <select class="custom-select" multiple
+                                    (change)="changeFrequency" id ="frequency" formControlName="coursesFrequency">
+                                <option value="M">M</option>
+                                <option value="T">T</option>
+                                <option value="W">W</option>
+                                <option value="T">T</option>
+                                <option value="M">F</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="float-right">
+                        <button type="button" class="btn btn-danger mr-1" routerLink="/courses/course-planner-list">Annuler</button>
+                        <button type="submit" class="btn btn-dark mr-1">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row" *ngIf="idCoursePlanned">
+    <div class="col-sm-12">
+        <div class="card bg-light">
+            <strong class="card-header bg-dark">
+                <div style="color: white">
+                    <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                </div>
+            </strong>
+            <div class="card-body">
+                <form [formGroup]="editPlanForm" (validSubmit)="onSubmit()">
+                    <!--cooly
+                    <pre>{{
+                        editPlanForm.value|json}}
+                    </pre>-->
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="couresRoot">Course Root</label>
+                            <input formControlName="idCourses" hidden>
+                            <input type="text" class="form-control" id="couresRoot"
+                                   formControlName="couresRoot"
+                                   placeholder="A 1" readonly>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="courseName">Course Name</label>
+                            <input type="text" class="form-control" id="courseName"
+                                   formControlName="coursesName"
+                                   placeholder="A 1.1" readonly>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label for="totalUnit">Total Unit</label>
+                            <input class="form-control" type="text"
+                                   formControlName="coursesUnit" placeholder="Total Unit"
+                                   value="" id="totalUnit" readonly>
+                        </div>
+
+                        <fieldset class="form-group col-md-3" disabled>
+                            <div>
+                                <label for="coursesType">Course Type</label>
+                                <select class="custom-select" readonly (change)="changeType" id ="coursesType" formControlName="coursesType">
+                                    <option value="Intensif">Intensif</option>
+                                    <option value="Cours du soir">Cours du soir</option>
+                                    <option value="Preparation">Preparation</option>
+                                </select>
+                            </div>
+                        </fieldset>
+
+                        <div class="form-group col-md-3">
+                            <label for="startDate">Start date</label>
+                            <input type="date" class="form-control"
+                                   formControlName="startDate"
+                                   id="startDate" placeholder="23/01/2021">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="endDate">End date</label>
+                            <input type="date" class="form-control"
+                                   formControlName="endDate"
+                                   id="endDate" placeholder="23/01/2021">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label for="coursesTime">Time</label>
+                            <input class="form-control" id="coursesTime" type="text" placeholder="Time"
+                                   formControlName="coursesTime" type="text">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="frequency">Frequency</label>
+                            <select class="custom-select" multiple
+                                    (change)="changeFrequency"
+                                    id ="frequency" formControlName="coursesFrequency">
+                                <option value="M">M</option>
+                                <option value="T">T</option>
+                                <option value="W">W</option>
+                                <option value="T">T</option>
+                                <option value="M">F</option>
+                            </select>
+                        </div>
+                       <div class="form-group col-md-3">
+                            <label for="teacher">Teacher</label>
+                            <select class="custom-select"  id ='teacher'(change)="changeTeacher($event)" formControlName="teacher">
+                                <option *ngFor="let teacher of teacher$|async" [ngValue]="teacher.idTeacher" [disabled]="teacher.archived">
+                                    {{teacher.lastName}} {{teacher.firstName}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="class">Class</label>
+                            <select class="custom-select"  id ='class'(change)="changeClassroom($event)" formControlName="class">
+                                <option *ngFor="let classroom of classrom$ | async" [ngValue]="classroom.id" [disabled]="classroom.archived">{{classroom.name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="students">Student List</label>
+                            <select class="custom-select" multiple
+                                    (change)="changeFrequency" id ="students" formControlName="students">
+                                <option *ngFor="let student of student$|async" [ngValue]="student.id">{{student.lastName}} {{student.firstName}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="float-right">
+                        <button type="button" class="btn btn-danger mr-1" routerLink="/courses/course-planner-list">Annuler</button>
+                        <button type="submit" class="btn btn-dark mr-1">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

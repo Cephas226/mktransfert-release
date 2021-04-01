@@ -32,12 +32,10 @@ export const ROUTES: Routes = [
             ],
         } as SBRouteData,
     },
-
-
   {
-    path: 'employee-details/:id',
+    path: 'create-teacher',
     canActivate: [],
-    component: teacherContainers.TeacherDetailsConteners,
+    component: teacherContainers.TeacherEditConteners,
     data: {
       title: 'OMS',
       breadcrumbs: [
@@ -47,87 +45,39 @@ export const ROUTES: Routes = [
         },
         {
           text: 'Teachers',
-          link: '/teaches',
+          link: '/teacher',
           active: false,
         },
         {
-          text: 'Teachers details',
+          text: 'Teacher add',
           active: true,
         },
       ],
     } as SBRouteData,
   },
-
-  {
-    path: 'employee-profil',
-    canActivate: [],
-    component: teacherContainers.TeacherProfilContainer,
-    data: {
-      title: 'OMS',
-      breadcrumbs: [
-        {
-          text: 'Dashboard',
-          link: '/dashboard',
-        },
-        {
-          text: 'Employees',
-          link: '/employees',
-          active: false,
-        },
-        {
-          text: 'Profil',
-          active: true,
-        },
-      ],
-    } as SBRouteData,
-  },
-
-  {
-    path: 'employee-create',
-    canActivate: [],
-    component: teacherContainers.TeacherEditConteners,
-    data: {
-      title: 'OMS',
-      breadcrumbs: [
-        {
-          text: 'Dashboard',
-          link: '/dashboard',
-        },
-        {
-          text: 'Employees',
-          link: '/employees',
-          active: false,
-        },
-        {
-          text: 'Employee add',
-          active: true,
-        },
-      ],
-    } as SBRouteData,
-  },
-  {
-    path: 'edit-employee/:id',
-    canActivate: [],
-    component: teacherContainers.TeacherEditConteners,
-    data: {
-      title: 'OMS',
-      breadcrumbs: [
-        {
-          text: 'Dashboard',
-          link: '/dashboard',
-        },
-        {
-          text: 'Employees',
-          link: '/employees',
-          active: false,
-        },
-        {
-          text: 'Employee edit',
-          active: true,
-        },
-      ],
-    } as SBRouteData,
-  },
+    {
+        path: 'profil-teacher/:id',
+        canActivate: [],
+        component: teacherContainers.TeacherProfilContainer,
+        data: {
+            title: 'OMS',
+            breadcrumbs: [
+                {
+                    text: 'Dashboard',
+                    link: '/dashboard',
+                },
+                {
+                    text: 'Teachers',
+                    link: '/teacher',
+                    active: false,
+                },
+                {
+                    text: 'teacher profil',
+                    active: true,
+                },
+            ],
+        } as SBRouteData,
+    },
 ];
 
 @NgModule({

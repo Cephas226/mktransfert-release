@@ -1,3 +1,6 @@
+import {Classroom} from '@modules/classroom/models';
+import {Students} from '@modules/student/models';
+
 export interface Country {
     [key: string]: string | number;
     id: number;
@@ -26,7 +29,7 @@ export interface Employees {
     isArchived:boolean | undefined
   }
 export interface Teacher {
-    id: number | null,
+    idTeacher: number | null,
     firstName: string,
     lastName: string,
     gender: string,
@@ -41,7 +44,7 @@ export interface Teacher {
     status:string,
     roles:Rule,
     historique:History,
-    isArchived:boolean | undefined
+    archived:boolean | undefined
 }
 export interface  Status {
   id: number | null,
@@ -49,15 +52,25 @@ export interface  Status {
 }
 
 export interface  Courses {
-    id:number | null,
+    idCourses:number | null,
     couresRoot: string,
     coursesName: string,
     coursesType:string,
+    coursesUnit:string,
+    available:boolean
+}
+
+export interface  CoursesPlanned {
+    idPlanCourse:number | null,
     startDate: string,
     endDate:string,
     coursesTime:string,
     coursesFrequency: string,
     coursesUnit:string,
+    courses:Courses,
+    teachers:Teacher,
+    classroom:Classroom,
+    students:Students
 }
 
 export interface  Departement {

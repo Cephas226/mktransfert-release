@@ -55,10 +55,10 @@ export class StudentTableComponent implements OnInit {
   excelDataToExport: any[] = []
   studentId: string | undefined;
   constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    public studentService: StudentService,
-    private modalService: NgbModal,
-    public router: Router,
+      private changeDetectorRef: ChangeDetectorRef,
+      public studentService: StudentService,
+      private modalService: NgbModal,
+      public router: Router,
   ) {
   }
 
@@ -124,7 +124,7 @@ export class StudentTableComponent implements OnInit {
   /*Dropzone function*/
   open(content: any) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'})
-      .result.then((result) => {
+        .result.then((result) => {
       this.closeResult = `Close with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
@@ -158,7 +158,7 @@ export class StudentTableComponent implements OnInit {
       }, {});
       console.log(jsonData['data'])
       jsonData['data'].forEach((student:any)=>{
-     this.studentService.createStudent(student)
+        this.studentService.createStudent(student)
       })
     }
     reader.readAsBinaryString(file);
@@ -233,26 +233,26 @@ export class StudentTableComponent implements OnInit {
     var tableStudentExport: any[] = [];
     this.studentService.studentExport$?.subscribe(e => {
       console.log(e)
-     e.forEach(student=>{
-       var studentTempObj: any = [];
-       studentTempObj.push(student.firstName);
-       studentTempObj.push(student.lastName);
-       studentTempObj.push(student.gender);
-       studentTempObj.push(student.email);
-       studentTempObj.push(student.phone);
-       studentTempObj.push(student.cityOfResidence);
-       studentTempObj.push(student.course)
-       tableStudentExport.push(studentTempObj);
-     })
+      e.forEach(student=>{
+        var studentTempObj: any = [];
+        studentTempObj.push(student.firstName);
+        studentTempObj.push(student.lastName);
+        studentTempObj.push(student.gender);
+        studentTempObj.push(student.email);
+        studentTempObj.push(student.phone);
+        studentTempObj.push(student.cityOfResidence);
+        studentTempObj.push(student.status)
+        tableStudentExport.push(studentTempObj);
+      })
     });
     const doc = new jsPDF();
-  autoTable(doc,{
-      head: [['First name', 'Last name', 'Sex', 'Email', 'Phone 1', 'Residence', 'Course']],
+    autoTable(doc,{
+      head: [['First name', 'Last name', 'Sex', 'Email', 'Phone', 'Residence', 'Status']],
       body: tableStudentExport,
-     /* headerStyles: {
-        lineWidth: 1,
-        fillColor: 'blue',
-      }*/
+      /* headerStyles: {
+         lineWidth: 1,
+         fillColor: 'blue',
+       }*/
     });
     doc.save("StudentReport.pdf");
   }
@@ -263,11 +263,16 @@ export class StudentTableComponent implements OnInit {
         "lastName":student.lastName,
         "gender":student.gender,
         "email":student.email,
-        "phone1":student.phone,
+        "phone":student.phone,
         "cityOfResidence":student.cityOfResidence,
-        "course":student.course,
+        "status":student.status,
       })
     })
     this.studentService.exportExcel(this.excelDataToExport, 'Students');
+  }
+
+  disableStudent(student: Students) {
+    student.status=!student.status
+    this.studentService.updateStudent(student,student.id)
   }
 }
