@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "163656150623",
+    "project_id": "cookla-18fb0",
+    "storage_bucket": "cookla-18fb0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:163656150623:android:d2d3aa9c9bf67cfc07b5ea",
+        "android_client_info": {
+          "package_name": "com.example.cookla"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "163656150623-botmrddhnrmlfp2l3bhjpj1qvde2m8o8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZupMKI3f3f5TOsyF9Yf7OK3HpDcyT7VY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "163656150623-botmrddhnrmlfp2l3bhjpj1qvde2m8o8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "163656150623-ogr6p3aq1oi4hvr6jm5siobo4top4nsh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.cookla"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
