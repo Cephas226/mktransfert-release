@@ -67,6 +67,7 @@ class HomePage extends GetView<HomeController> {
                               label: Text(_chipLabel[index]),
                               selected: _prodController.selectedChip == index,
                               onSelected: (bool selected) {
+                                print(_prodController.selectedChip);
                                 _prodController.selectedChip =
                                     selected ? index : null;
                                 _prodController.getChipProduct(productChip
@@ -77,7 +78,7 @@ class HomePage extends GetView<HomeController> {
                       Expanded(
                         child: new Padding(
                           padding: const EdgeInsets.all(4.0),
-                          child:_detailx(context,_prodController),
+                          child:_detailStaggered(context,_prodController,_prodController.getChipProduct(productChip.values[_prodController.selectedChip])),
                         ),
                       )
                     ],
@@ -116,7 +117,7 @@ class HomePage extends GetView<HomeController> {
                                       height: double.infinity,
                                       color: Color(0xFFF70759),
                                       child: PhotoHero(
-                                        photo: data.reversed.toList()[itemIndex]
+                                        photo: data[itemIndex]
                                             ["url"],
                                         width: double.infinity,
                                         height: double.infinity,
@@ -172,7 +173,7 @@ class HomePage extends GetView<HomeController> {
   }
 }
 
-Widget _details(context,item,meIndex) {
+Widget _details(context,item,meIndex,fonction) {
   return Scaffold(
     floatingActionButton: buildSpeedDial(),
     appBar: AppBar(
@@ -180,7 +181,7 @@ Widget _details(context,item,meIndex) {
       title: const Text('Detail'),
     ),
     body: FutureBuilder(
-        future: Dataservices.fetchProduct(),
+        future: fonction,
         builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
           final data = snapshot.data;
           return snapshot.hasData
@@ -209,7 +210,7 @@ Widget _details(context,item,meIndex) {
                           height: double.infinity,
                           color: Color(0xFFF70759),
                           child: PhotoHero(
-                            photo: data.reversed.toList()[itemIndex]["url"],
+                            photo: data[itemIndex]["url"],
                             width: double.infinity,
                             height: double.infinity,
                             onTap: () {
@@ -293,10 +294,10 @@ Widget _details(context,item,meIndex) {
   );
 }
 
-Widget _detailx(context,controller) {
+Widget _detailStaggered(context,controller,fonction) {
   return Scaffold(
     body: FutureBuilder(
-        future: Dataservices.fetchProduct(),
+        future: fonction,
         builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
           final data = snapshot.data;
           return snapshot.hasData
@@ -320,7 +321,7 @@ Widget _detailx(context,controller) {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              Get.to(_details(context, data.reversed.toList(),index));
+                              Get.to(() => _details(context, data,index,fonction));
                               /*Navigator.of(context).push(
                                   MaterialPageRoute<void>(
                                       builder: (BuildContext
@@ -337,7 +338,7 @@ Widget _detailx(context,controller) {
                               child: FadeInImage.memoryNetwork(
                                   placeholder:
                                   kTransparentImage,
-                                  image: data.reversed.toList()[index]["url"],
+                                  image: data[index]["url"],
                                   fit: BoxFit.cover),
                             ),
                           ),
@@ -350,7 +351,7 @@ Widget _detailx(context,controller) {
                                     children: [
                                       IconButton(
                                         onPressed: () {
-                                          Get.to(_details(context, data.reversed.toList(),index));
+                                          Get.to(_details(context, data,index,fonction));
                                         },
                                         icon: Icon(
                                           Icons

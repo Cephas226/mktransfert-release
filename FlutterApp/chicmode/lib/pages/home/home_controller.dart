@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_app/model/product_model.dart';
+import 'package:getx_app/services/backend_service.dart';
 import 'package:hive/hive.dart';
 import 'package:getx_app/domain/request.dart';
 class HomeController extends GetxController {
@@ -75,19 +76,23 @@ class HomeController extends GetxController {
     update(['favorite', true]);
   }
 
-  List<dynamic> getChipProduct(productChip chip) {
+  Future<List<dynamic>> getChipProduct(productChip chip) {
     switch (chip) {
       case productChip.TOUT:
-       return  dataProductChip.value=dataProduct.reversed.toList();
+        Dataservices.fetchProduct().then((value) => print(value.toList()..shuffle()));
+       return  Dataservices.fetchProduct().then((value) => value.toList()..shuffle());
 
       case productChip.RECENT:
-        return  dataProductChip.value = dataProduct;
+        Dataservices.fetchProduct().then((value) => print(value.reversed.toList()));
+        return  Dataservices.fetchProduct().then((value) => value.reversed.toList());
 
       case productChip.MIEUX_NOTE:
-        return dataProductChip.value = dataProduct.where((o) => o.note >3).toList();
+        Dataservices.fetchProduct().then((value) => print(value.toList()));
+        return Dataservices.fetchProduct().then((value) => value.toList());
 
       case productChip.ALEATOIRE:
-        return dataProductChip.toList();
+        Dataservices.fetchProduct().then((value) => print(value.reversed.toList()));
+        return Dataservices.fetchProduct().then((value) => value.reversed.toList());
     }
   }
   String setTabName(int index) {
