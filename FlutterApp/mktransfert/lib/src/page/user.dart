@@ -134,7 +134,7 @@ class ProfilePageState extends State<UserProfilPage> {
       _selectedItem.name,
     });
      await http.put(
-      'https://www.mktransfert.com/api/userprofile/'+ '$user_id',
+      'http://demo.mktransfert.com/api/userprofile/'+ '$user_id',
       headers:{
         "Accept": "application/json",
         'Authorization': 'Bearer $token',
@@ -167,7 +167,7 @@ class ProfilePageState extends State<UserProfilPage> {
     String token = responseJson["access_token"];
     int user_id = responseJson["user_id"];
     await http.put(
-      'https://www.mktransfert.com/api/userchange/'+ '$user_id',
+      'http://demo.mktransfert.com/api/userchange/'+ '$user_id',
       headers:{
         "Accept": "application/json",
         'Authorization': 'Bearer $token',

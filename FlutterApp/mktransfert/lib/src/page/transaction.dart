@@ -110,7 +110,7 @@ class _TransactionState extends State<TransactionPage> {
     int user_id = responseJson["user_id"];
     var res = await http.get(
         Uri.encodeFull(
-            'https://www.mktransfert.com/api/payment/' +
+            'http://demo.mktransfert.com/api/payment/' +
                 '$user_id'),
         headers: {
           "Accept": "application/json",

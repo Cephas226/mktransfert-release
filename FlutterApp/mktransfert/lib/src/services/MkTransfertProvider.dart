@@ -30,7 +30,7 @@ class MkTransfertProvider {
     try {
       var _response = await http.get(
           Uri.parse(
-              'https://www.mktransfert.com/api/transactions/' + '$user_id'),
+              'http://demo.mktransfert.com/api/transactions/' + '$user_id'),
           headers: {
             "Accept": "application/json",
             'Authorization': 'Bearer $token',
@@ -66,7 +66,7 @@ class MkTransfertProvider {
     try {
       var _response = await http.get(
           Uri.parse(
-              'https://www.mktransfert.com/api/transactions/' + '$user_id'),
+              'http://demo.mktransfert.com/api/transactions/' + '$user_id'),
           headers: {
             "Accept": "application/json",
             'Authorization': 'Bearer $token',
@@ -103,14 +103,15 @@ class MkTransfertProvider {
      final ioc = new HttpClient();
      ioc.badCertificateCallback =
    (X509Certificate cert, String host, int port) => true;
-     final https = new IOClient(ioc);
-    final Response response = await  https.post(
-      'https://www.mktransfert.com/api/login',
+     //final https = new IOClient(ioc);
+    final Response response = await  http.post(
+      'http://demo.mktransfert.com/api/login',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(data),
     ); 
+    print(response.body);
     return response.body;
   }
 }

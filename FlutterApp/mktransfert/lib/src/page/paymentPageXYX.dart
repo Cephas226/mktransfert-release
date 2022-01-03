@@ -81,7 +81,7 @@ class PaymentSuccessDialog extends StatelessWidget {
     int user_id = responseJson["user_id"];
     http.Response response = await http.
     get(
-        'https://www.mktransfert.com/api/success/'+'$user_id',
+        'http://demo.mktransfert.com/api/success/'+'$user_id',
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
@@ -716,7 +716,7 @@ class HomePageState extends State<PaymentPage> {
     String token = responseJson["access_token"];
     int user_id = responseJson["user_id"];
     return http.post(
-      'https://www.mktransfert.com/api/success/' + '$user_id',
+      'http://demo.mktransfert.com/api/success/' + '$user_id',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
@@ -786,7 +786,7 @@ class HomePageState extends State<PaymentPage> {
     int user_id = responseJson["user_id"];
     http.Response response = await http.
     get(
-        'https://www.mktransfert.com/api/success/'+'$user_id',
+        'http://demo.mktransfert.com/api/success/'+'$user_id',
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',

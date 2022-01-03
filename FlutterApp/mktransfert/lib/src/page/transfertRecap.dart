@@ -144,7 +144,7 @@ class _HomePageState extends State<HomePage> {
     String token = responseJson["access_token"];
     int user_id = responseJson["user_id"];
     var res = await http.get(
-        Uri.encodeFull('https://www.mktransfert.com/api/payment/' + '$user_id'),
+        Uri.encodeFull('http://demo.mktransfert.com/api/payment/' + '$user_id'),
         headers: {
           "Accept": "application/json",
           'Authorization': 'Bearer $token',
@@ -233,7 +233,7 @@ class _HomePageState extends State<HomePage> {
     String token = responseJson["access_token"];
     int user_id = responseJson["user_id"];
     http.Response response = await http.get(
-        'https://www.mktransfert.com/api/success/' + '$user_id',
+        'http://demo.mktransfert.com/api/success/' + '$user_id',
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',

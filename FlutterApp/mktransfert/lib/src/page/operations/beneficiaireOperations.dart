@@ -9,7 +9,7 @@ import 'package:mktransfert/src/page/mesclasses/beneficiaireClasses.dart';
 import '../loginPage.dart';
 
 
-final String apiUrl = "https://www.mktransfert.com/api/receiver/";
+final String apiUrl = "http://demo.mktransfert.com/api/receiver/";
 Future<List<Beneficiaire>> fetchBeneficiaire() async {
 
   var result = await http.get(apiUrl);

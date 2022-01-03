@@ -48,7 +48,7 @@ class _MainPageState extends State<PagePrincipale> {
     int user_id = responseJson["user_id"];
     var res = await http.get(
         Uri.encodeFull(
-            'https://www.mktransfert.com/api/transactions/' +
+            'http://demo.mktransfert.com/api/transactions/' +
                 '$user_id'),
         headers: {
           "Accept": "application/json",
@@ -75,7 +75,7 @@ class _MainPageState extends State<PagePrincipale> {
     print(token);
     var res = await http.get(
         Uri.encodeFull(
-            'https://www.mktransfert.com/api/marketing'),
+            'http://demo.mktransfert.com/api/marketing'),
         headers: {
           "Accept": "application/json",
           'Authorization': 'Bearer $token',
@@ -197,7 +197,7 @@ class _MainPageState extends State<PagePrincipale> {
     String token = responseJson["access_token"];
     int user_id = responseJson["user_id"];
     var res = await http.get(
-        Uri.encodeFull('https://www.mktransfert.com/api/payment/' + '$user_id'),
+        Uri.encodeFull('http://demo.mktransfert.com/api/payment/' + '$user_id'),
         headers: {
           "Accept": "application/json",
           'Authorization': 'Bearer $token',
@@ -240,7 +240,7 @@ class _MainPageState extends State<PagePrincipale> {
     this.displayPaymentInfo();
     storage.delete(key: "beneficiaire");
     this.checkLoginStatus();
-    _loadCurrencies();
+    //_loadCurrencies();
     this.displayMarketingInfo();
     this.fetchMyTransaction();
     _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);

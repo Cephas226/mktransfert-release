@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:mktransfert/src/page/operations/beneficiaireOperations.dart';
-final String apiUrlRegister =  "https://www.mktransfert.com/api/register";
-final String apiUrlLogin =  "https://www.mktransfert.com/api/login";
+final String apiUrlRegister =  "http://demo.mktransfert.com/api/register";
+final String apiUrlLogin =  "http://demo.mktransfert.com/api/login";
  
 class User {
   int id;
@@ -70,6 +70,7 @@ class User {
       },
       body: jsonEncode(data),
     );
+    print(response.body);
     if (response.statusCode == 200) { 
       return response;
     }

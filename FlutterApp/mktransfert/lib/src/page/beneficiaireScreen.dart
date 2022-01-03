@@ -182,7 +182,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     var res = await http
         .get(
             Uri.encodeFull(
-                'https://www.mktransfert.com/api/payment/' + '$user_id'),
+                'http://demo.mktransfert.com/api/payment/' + '$user_id'),
             headers: {
               "Accept": "application/json",
               'Authorization': 'Bearer $token',

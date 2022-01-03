@@ -28,7 +28,7 @@ class StripeService {
     String token = responseJson["access_token"];
     int user_id = responseJson["user_id"];
     http.Response response = await http.get(
-        'https://www.mktransfert.com/api/stripe',
+        'http://demo.mktransfert.com/api/stripe',
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',

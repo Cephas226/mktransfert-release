@@ -12,7 +12,7 @@ import 'package:mktransfert/src/contant/constant.dart';
 import 'package:mktransfert/src/page/navigation.dart';
 import 'package:http/http.dart';
 import 'package:mktransfert/src/page/pagePrincipale.dart';
-import 'package:http/http.dart' as https;
+import 'package:http/http.dart' as http;
 import 'accueil.dart';
 import 'mesclasses/user.model.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -156,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
                        ),
                        child: Text("Mot de passe oublié"),
                        onPressed: ()async{
-                         const url = 'https://www.mktransfert.com/reset';
+                         const url = 'http://demo.mktransfert.com/reset';
 
                          if (await canLaunch(url)) {
                          await launch(url, forceSafariVC: false);
@@ -282,12 +282,12 @@ class _LoginState extends State<LoginForm> {
       'email': email,
       'password': password,
     };
-     final ioc = new HttpClient();
-     ioc.badCertificateCallback =
-   (X509Certificate cert, String host, int port) => true;
-     final https = new IOClient(ioc);
-    final Response response = await  https.post(
-      'https://www.mktransfert.com/api/login',
+  //    final ioc = new HttpClient();
+  //    ioc.badCertificateCallback =
+  //  (X509Certificate cert, String host, int port) => true;
+     //final https = new IOClient(ioc);
+    final Response response = await  http.post(
+      'http://demo.mktransfert.com/api/login',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -646,7 +646,7 @@ class _SignupFormState extends State<SignupPage> {
                                     displayDialog(context, "Invalid Password",
                                         "Le mot de passe doit comporter au moins 4 caractères ");
                                   else {
-                                    var res = await _user.saveMe(
+                                    Response res = await _user.saveMe(
                                       _user.last_name,
                                       _user.first_name,
                                       _user.email,
@@ -654,24 +654,25 @@ class _SignupFormState extends State<SignupPage> {
                                       _user.country,
                                       _user.password,
                                     );
-                                    var smscode=true;
-                                    if (smscode){
-                                      storage.write(key: "smscode", value: res.statusCode.toString() );
-                                      storage.write(key: "credential",value:res.statusCode.toString() );
-                                        Get.to(SmsConfirm());
+                                    //var smscode=res.body["code_sms"];
+                                    var resBody = json.decode(res.body);
+                                    var smscode=resBody["code_sms"];
+                                    if (smscode!=null){
+                                      storage.write(key: "code_sms", value: resBody["code_sms"] );
+                                      storage.write(key: "password",value: _user.password);
+                                      storage.write(key: "email",value: _user.email);
+                                       Get.to(SmsConfirm());
+                                      
                                     }
-                                    if (res.statusCode == 200) {
-                                      this.showAlertDialogSuccess(context);
-                                      _showDialog(context); 
-                                    } else if (res.statusCode  == 403)
+                                    // if (res.statusCode == 200) {
+                                    //   this.showAlertDialogSuccess(context);
+                                    //   _showDialog(context); 
+                                    // } else
+                                     if (res.statusCode  == 403)
                                       displayDialog(
                                           context,
                                           "Ce nom d'utilisateur est déjà enregistré",
                                           "Veuillez essayer de vous inscrire en utilisant un autre nom d'utilisateur ou vous connecter si vous avez déjà un compte.");
-                                    else {
-                                      displayDialog(context, "Erreur",
-                                          "Une erreur inconnue est survenue.");
-                                    }
                                   }
                                   
                                 }
